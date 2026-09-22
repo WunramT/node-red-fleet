@@ -146,7 +146,11 @@ instances:
     variables: {}
 
   - name: srem-test
-    host: srem-svr-lin01.srem.polipol.intra
+    # The short name, because `host` is the key into the Jenkins host map and
+    # that map holds `srem-svr-lin01`. An FQDN here buys nothing — the map
+    # carries the address — and costs the run: "host is not in the Jenkins host
+    # map", for this instance only.
+    host: srem-svr-lin01
     compose_service: node-red-test
     compose_file: /home/administrator/Base_Container/docker-compose.yml
     app: srem-test

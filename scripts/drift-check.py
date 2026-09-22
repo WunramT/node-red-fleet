@@ -87,13 +87,27 @@ def main() -> int:
     target = ap.add_mutually_exclusive_group(required=True)
     target.add_argument("--instance")
     target.add_argument("--all", action="store_true")
+    # One host's instances, which is what a sweep can actually read: the script
+    # reaches a runtime through Docker on the machine it runs on (decision 10),
+    # so `--all` executed on a host reports every instance of every OTHER host
+    # as unreachable. Those rows are noise, and a scheduled job that collects
+    # them would drown the real ones.
+    target.add_argument("--host", help="every instance on this host, for a sweep that runs there")
     ap.add_argument("--json", type=Path, help="write the full report, diffs included")
     ap.add_argument("--show-diff", action="store_true", help="print the diff for each drifted instance")
     ap.add_argument("--fail-on-drift", action="store_true",
                     help="exit 3 when anything drifted; for a scheduled check that should go red")
     args = ap.parse_args()
 
-    chosen = [find(args.instance)] if args.instance else instances()
+    if args.instance:
+        chosen = [find(args.instance)]
+    elif args.host:
+        chosen = [i for i in instances() if i["host"] == args.host]
+        if not chosen:
+            raise SystemExit(f"no instance on host {args.host!r}. Known hosts: "
+                             + ", ".join(sorted({i["host"] for i in instances()})))
+    else:
+        chosen = instances()
 
     results = [inspect(i) for i in chosen]
 

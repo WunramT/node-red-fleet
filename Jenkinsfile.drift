@@ -1,0 +1,237 @@
+// Scheduled drift sweep: what is each instance running, and is it what Git says?
+//
+// This job never writes to an instance. It reads, renders and publishes —
+// decision 9 (drift-check is read-only) and decision 11 (the visibility layer
+// is a report, not a control plane). There is no deploy parameter here on
+// purpose: deploys are reviewed commits, and the Jenkinsfile beside this one is
+// where they happen.
+//
+// The sweep runs ON EACH HOST, one call per host (decision 10). A central run
+// cannot do it: drift-check reaches a runtime through Docker on the machine it
+// runs on, so `--all` from anywhere else reports every instance as unreachable.
+// That is why drift-check has --host.
+//
+// Requires the SSH Pipeline Steps and Pipeline Utility Steps plugins.
+
+import groovy.transform.Field
+
+@Field def REGISTRY = null
+@Field def VISITED = []
+@Field def RESULTS = []
+@Field def FAILED_HOSTS = [:]
+
+pipeline {
+    agent any
+
+    options {
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '60'))
+    }
+
+    triggers {
+        // Daily, early, with H so the estate is not swept by every job at once.
+        // Drift is information about yesterday's edits; it does not need minutes.
+        cron('H 6 * * *')
+    }
+
+    parameters {
+        booleanParam(name: 'PUBLISH_TO_WORKBENCH', defaultValue: true,
+            description: 'Also drop drift.json into the workbench instance that watches it (dpn-test).')
+        string(name: 'WATCHER_INSTANCE', defaultValue: 'dpn-test',
+            description: 'The instance whose /data receives drift.json. Its flow decides what to do with it.')
+    }
+
+    environment {
+        REMOTE_DIR = "/tmp/dap-drift-${BUILD_NUMBER}"
+    }
+
+    stages {
+        stage('Resolve') {
+            steps {
+                script {
+                    REGISTRY = readYaml file: 'registry.yml'
+                    writeJSON file: 'registry.json', json: REGISTRY, pretty: 2
+
+                    def byHost = REGISTRY.instances.findAll { it.app }.groupBy { it.host }
+                    echo "Sweeping ${byHost.values().sum { it.size() }} instances on ${byHost.size()} hosts"
+                    byHost.each { host, list -> echo "  ${host}: ${list.collect { it.name }.join(', ')}" }
+                }
+            }
+        }
+
+        stage('Sweep') {
+            steps {
+                script {
+                    def mkHost = { name, ip -> [name: name, host: ip, port: 22,
+                                                allowAnyHosts: true, credId: "${name}_pw"] }
+                    def HOSTS = [
+                        'cho-svr-lin01' : mkHost('cho-svr-lin01',  '10.11.1.101'),
+                        'pod-svr-lin01' : mkHost('pod-svr-lin01',  '10.20.1.160'),
+                        'jan-svr-lin01' : mkHost('jan-svr-lin01',  '10.30.1.150'),
+                        'srem-svr-lin01': mkHost('srem-svr-lin01', '10.40.1.161'),
+                        'wag-svr-lin01' : mkHost('wag-svr-lin01',  '10.60.1.198'),
+                        'foi-svr-lnx01' : mkHost('foi-svr-lnx01',  '192.168.64.60'),
+                        'gor-svr-lin01' : mkHost('gor-svr-lin01',  '10.87.1.150'),
+                        'slu-svr-lin02' : mkHost('slu-svr-lin02',  '10.90.1.20'),
+                        'wfm-svr-lin01' : mkHost('wfm-svr-lin01',  '10.65.1.91'),
+                        'dpn-svr-iot'   : mkHost('dpn-svr-iot',    '192.168.48.240'),
+                    ]
+
+                    REGISTRY.instances.findAll { it.app }.groupBy { it.host }.each { host, list ->
+                        // One unreachable host must not end the sweep. The page is
+                        // more useful with nine hosts and a named gap than with an
+                        // aborted build and no page at all.
+                        try {
+                            sweepHost(HOSTS[host], host, list)
+                        } catch (err) {
+                            echo "!! ${host}: ${err}"
+                            FAILED_HOSTS[host] = err.toString()
+                            list.each { inst ->
+                                RESULTS << [instance: inst.name, host: host, app: inst.app,
+                                            image_tag: inst.image_tag, state: 'unreachable',
+                                            detail: "host not swept: ${err}"]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Render') {
+            steps {
+                script {
+                    writeJSON file: 'drift.json', json: RESULTS, pretty: 2
+                    sh 'python3 scripts/render-drift.py drift.json -o public/index.html'
+
+                    def counts = RESULTS.countBy { it.state }
+                    echo "clean ${counts.clean ?: 0}, drifted ${counts.drifted ?: 0}, " +
+                         "unreachable ${counts.unreachable ?: 0}"
+
+                    // Amber, not red: drift is somebody's browser edit waiting to be
+                    // captured, which is information (decision 9). A host this job
+                    // could not reach at all is the thing worth a colour.
+                    if (FAILED_HOSTS) {
+                        currentBuild.result = 'UNSTABLE'
+                        currentBuild.description = "not swept: ${FAILED_HOSTS.keySet().join(', ')}"
+                    } else if (counts.drifted) {
+                        currentBuild.description = "${counts.drifted} drifted"
+                    }
+                }
+            }
+        }
+
+        stage('Publish') {
+            when { expression { params.PUBLISH_TO_WORKBENCH } }
+            steps {
+                script {
+                    def watcher = REGISTRY.instances.find { it.name == params.WATCHER_INSTANCE }
+                    if (!watcher) {
+                        error("No instance named '${params.WATCHER_INSTANCE}' in registry.yml")
+                    }
+                    def remote = VISITED.find { it.name == watcher.host }
+                    if (!remote) {
+                        error("${watcher.host} was not reached in this run, so there is nowhere to publish")
+                    }
+
+                    sshPut remote: remote, from: 'drift.json', into: "${REMOTE_DIR}/"
+                    // Into the container rather than onto the bind mount: /data
+                    // belongs to the runtime's uid and the SSH login is not it, so a
+                    // plain copy would need sudo. `docker cp` writes as root inside,
+                    // the mode comes across, and the flow reads it as any other file.
+                    sshCommand remote: remote, command: """
+                        set -e
+                        chmod 644 ${REMOTE_DIR}/drift.json
+                        docker exec -u 0 ${watcher.compose_service} mkdir -p /data/drift
+                        docker cp ${REMOTE_DIR}/drift.json ${watcher.compose_service}:/data/drift/drift.json
+                    """
+                    echo "drift.json is at /data/drift/drift.json in ${watcher.name}"
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'drift.json, public/index.html', allowEmptyArchive: true
+            script {
+                sh 'rm -f registry.json sweep.env || true'
+                VISITED.each { remote ->
+                    sshCommand remote: remote, failOnError: false,
+                               command: "rm -rf ${REMOTE_DIR}"
+                }
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+
+void sweepHost(Map hostConfig, String host, List list) {
+    if (!hostConfig) {
+        error("host '${host}' is not in the Jenkins host map")
+    }
+
+    // Every instance on this host in one binding, so the sweep is one SSH
+    // session per host rather than one per instance.
+    def bindings = [usernamePassword(credentialsId: hostConfig.credId,
+                                     usernameVariable: 'REMOTE_USR', passwordVariable: 'REMOTE_PSW')]
+    list.eachWithIndex { inst, i ->
+        bindings << usernamePassword(credentialsId: inst.auth_credential_id,
+                                     usernameVariable: "NR_USR_${i}", passwordVariable: "NR_PSW_${i}")
+    }
+
+    withCredentials(bindings) {
+        def remote = [
+            name: host, host: hostConfig.host, port: hostConfig.port,
+            allowAnyHosts: hostConfig.allowAnyHosts,
+            user: REMOTE_USR, password: REMOTE_PSW,
+        ]
+        if (!VISITED.any { it.host == remote.host }) { VISITED << remote }
+
+        // The same stem deploy.py reads, one pair per instance. The file is
+        // sourced and deleted in the same shell, so no password rests on the
+        // host between steps and none reaches the build log.
+        // Not named `env`: that is the global holding the bindings this loop
+        // reads, and shadowing it here would have made every credential resolve
+        // against a StringBuilder.
+        def envFile = new StringBuilder()
+        list.eachWithIndex { inst, i ->
+            def stem = inst.auth_credential_id.replaceAll(/[^A-Za-z0-9]/, '_').toUpperCase()
+            envFile << "export ${stem}_USR='" << env."NR_USR_${i}" << "'\n"
+            envFile << "export ${stem}_PSW='" << env."NR_PSW_${i}" << "'\n"
+        }
+        writeFile file: 'sweep.env', text: envFile.toString()
+
+        sshCommand remote: remote, command: "mkdir -p ${REMOTE_DIR}/scripts " +
+                   list.collect { "${REMOTE_DIR}/apps/${it.app}" }.join(' ')
+        sshPut remote: remote, from: 'scripts/drift-check.py', into: "${REMOTE_DIR}/scripts/"
+        sshPut remote: remote, from: 'scripts/nodered.py',     into: "${REMOTE_DIR}/scripts/"
+        sshPut remote: remote, from: 'scripts/normalize.py',   into: "${REMOTE_DIR}/scripts/"
+        sshPut remote: remote, from: 'registry.json',          into: "${REMOTE_DIR}/"
+        sshPut remote: remote, from: 'sweep.env',              into: "${REMOTE_DIR}/"
+        list.each { inst ->
+            sshPut remote: remote, from: "apps/${inst.app}/flows.json",
+                   into: "${REMOTE_DIR}/apps/${inst.app}/"
+        }
+
+        // --fail-on-drift is deliberately absent: drift is what this job exists
+        // to report, and a red build for it would teach everyone to ignore the
+        // colour. Exit 1 (something unreachable) is tolerated the same way — the
+        // row says so, and the page shows it.
+        sshCommand remote: remote, failOnError: false, command: """
+            set -e
+            cd ${REMOTE_DIR}
+            chmod 600 sweep.env
+            set +x
+            . ./sweep.env
+            rm -f sweep.env
+            python3 scripts/drift-check.py --host ${host} --json drift-${host}.json || true
+        """
+        sshGet remote: remote, from: "${REMOTE_DIR}/drift-${host}.json",
+               into: "drift-${host}.json", override: true
+
+        def rows = readJSON file: "drift-${host}.json"
+        RESULTS.addAll(rows)
+        echo "${host}: ${rows.size()} instances read"
+    }
+}

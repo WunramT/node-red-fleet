@@ -55,10 +55,13 @@ The estate is live; these are what the plan that got it there had not finished.
   still in the history of any clone made before this repository was recreated.
   Rotating is one round of service edits per secret — the tool's output says
   which instances each one touches.
-- **The drift page is designed and not built** (decision 11). `drift-check.py
-  --all --json` produces the data; what is missing is a scheduled job that runs
-  it per host and a renderer that turns the JSON into one static page. That is
-  the point at which the estate becomes readable without a CLI.
+- **The drift page is built and not published** (decision 11).
+  `Jenkinsfile.drift` sweeps every host daily and `render-drift.py` turns the
+  result into one static page; both land as build artifacts. What is left is a
+  place to put `public/index.html` where the team reaches it without opening
+  Jenkins — GitLab Pages, or the nginx that already runs on these hosts. The
+  job also needs `python3` on the Jenkins agent, which is the one thing about
+  it that is not standard-library-only by construction.
 - **The palette path has never run for real.** Flow deploys are proven daily;
   the second transport — image rebuild plus `DEPLOY_PALETTE=true` — has not been
   exercised end to end. Do it once on a workbench, outside core hours, because

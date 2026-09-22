@@ -124,6 +124,100 @@ Container-Neustart, kein Flow-Deploy.
 Kontrolle, ohne einen Wert zu zeigen:
 `docker exec <service> printenv | cut -d= -f1 | sort`.
 
+## Drift-Überwachung: der tägliche Lauf
+
+`Jenkinsfile.drift` ist ein eigener, zeitgesteuerter Job. Er schreibt auf keine
+Instanz — er liest, rendert und legt das Ergebnis ab.
+
+```
+cron('H 6 * * *')
+   └─ je Host eine SSH-Sitzung: drift-check.py --host <host> --json
+        └─ Fragmente einsammeln  →  drift.json
+             ├─ render-drift.py  →  public/index.html   (die Seite fürs Team)
+             ├─ Jenkins-Artefakt (beides, als Verlauf)
+             └─ docker cp        →  /data/drift/drift.json in dpn-test
+```
+
+**Warum je Host und nicht zentral:** `drift-check` erreicht eine Runtime über
+Docker auf der Maschine, auf der es läuft (Decision 10). Zentral aufgerufen
+meldet `--all` jede Instanz als `unreachable`. Dafür gibt es `--host`.
+
+**Warum der Lauf nicht rot wird, wenn etwas driftet:** Drift ist die
+Browser-Änderung von jemandem, die noch nicht in Git ist — Information, kein
+Fehler (Decision 9). Rot wird der Job, wenn ein **Host nicht erreichbar** war;
+dann steht in der Build-Beschreibung, welcher, und die Seite zeigt die Lücke,
+statt zu fehlen.
+
+### Wie das Ergebnis zu Node-RED kommt
+
+Drei Wege waren denkbar, und der Unterschied ist Latenz gegen Eingriff:
+
+| Weg | Dafür | Dagegen |
+|---|---|---|
+| **Datei nach `/data/drift/`** (gewählt) | kein Compose-Eingriff, kein Endpunkt, keine Zugangsdaten; die Datei überlebt einen Neustart, der Flow liest sie beim Start | der Flow pollt, also bis zu einem Pollintervall Verzögerung |
+| `http in` auf der Instanz, Jenkins pusht | sofort, kein Polling | ein Endpunkt mehr, der abgesichert sein will; nach einem Neustart weiß der Flow nichts, bis der nächste Lauf kommt |
+| MQTT/NATS mit `retain` | entkoppelt, überlebt ebenfalls | ein weiteres bewegliches Teil für einen Statusbericht |
+
+Bei einem Lauf pro Tag ist die Verzögerung eines Pollintervalls belanglos,
+deshalb die Datei. Sie geht per `docker cp` **in den Container**, nicht über den
+Bind-Mount: `/data` gehört der uid der Runtime, der SSH-Login ist eine andere,
+und `docker cp` schreibt als root von innen — kein `sudo`, keine
+Compose-Änderung, keine Rechte-Rätsel.
+
+### Der Flow, der darauf reagiert
+
+Auf `dpn-test`, gebaut wie jeder andere Tab — `nr.py edit dpn-test`,
+normalisieren, committen, deployen. Fünf Nodes reichen:
+
+1. **`inject`**, alle 5 Minuten, zusätzlich „einmal nach 0,1 s" — damit der Flow
+   nach einem Neustart sofort den letzten Stand kennt.
+2. **`file in`**, `/data/drift/drift.json`, Ausgabe „a single utf8 string".
+3. **`json`**, zu einem Array geparst.
+4. **`function`**, die den vorigen Stand vergleicht und nur dann weiterreicht,
+   wenn sich etwas geändert hat:
+
+   ```javascript
+   const now = {};
+   for (const row of msg.payload) {
+       // Der Vergleichsschlüssel ist Zustand plus Umfang: aus "clean" wird
+       // "drifted", und aus 4 geänderten Zeilen werden 40 — beides ist eine
+       // Änderung, eine unveränderte Drift ist keine.
+       now[row.instance] = row.state === "drifted"
+           ? `drifted:${row.changed_lines}`
+           : row.state;
+   }
+   const before = flow.get("driftState") || {};
+   flow.set("driftState", now);
+
+   // Beim allerersten Lauf ist alles "neu" — das ist kein Ereignis, sondern
+   // der Anfang der Messung.
+   if (!Object.keys(before).length) return null;
+
+   const changed = Object.keys(now)
+       .filter(k => now[k] !== before[k])
+       .map(k => `${k}: ${before[k] || "unbekannt"} → ${now[k]}`);
+
+   if (!changed.length) return null;
+   msg.payload = changed.join("\n");
+   msg.topic = `Node-RED Drift: ${changed.length} Änderung(en)`;
+   return msg;
+   ```
+
+5. **Die Benachrichtigung** — `e-mail` (im Image von `dpn-test` vorhanden), ein
+   `mqtt out` auf ein Topic, das ohnehin jemand liest, oder zum Ausprobieren
+   erst einmal ein `debug`-Node.
+
+Zum Testen ohne auf den nächsten Jenkins-Lauf zu warten: die Datei von Hand
+verändern (`docker exec -u 0 node-red-test sh -c 'sed -i s/clean/drifted/
+/data/drift/drift.json'`) und den `inject` drücken. Beim nächsten echten Lauf
+überschreibt Jenkins sie wieder.
+
+**Die Instanz, die überwacht, wird selbst mit überwacht.** `dpn-test` steht in
+derselben `drift.json`, und sobald dort ein Tab läuft, meldet der Sweep die
+Instanz als `drifted`, bis der Flow in Git steht. Das ist kein Sonderfall — es
+ist dieselbe Schleife wie für jeden anderen Tab, und der erste echte Durchlauf
+davon.
+
 ## Was bewusst nicht geht
 
 - **Kein `--force`.** Ein `409` ist Information, keine Hürde.
