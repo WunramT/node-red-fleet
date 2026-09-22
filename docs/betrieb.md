@@ -137,7 +137,8 @@ Instanz — er liest, rendert und legt das Ergebnis ab.
 cron('H 6 * * *')
    └─ je Host eine SSH-Sitzung: drift-check.py --host <host> --json
         └─ Fragmente einsammeln  →  drift.json
-             ├─ render-drift.py  →  public/index.html   (die Seite fürs Team)
+             ├─ render-drift.py  →  public/index.html
+             │     └─ auf den Host  →  nginx  →  http://<host>/drift/
              ├─ Jenkins-Artefakt (beides, als Verlauf)
              └─ docker cp        →  /data/drift/drift.json in dpn-test
 ```
@@ -174,6 +175,63 @@ deshalb die Datei. Sie geht per `docker cp` **in den Container**, nicht über de
 Bind-Mount: `/data` gehört der uid der Runtime, der SSH-Login ist eine andere,
 und `docker cp` schreibt als root von innen — kein `sudo`, keine
 Compose-Änderung, keine Rechte-Rätsel.
+
+### Die Seite veröffentlichen
+
+Die gerenderte Seite ist ein Build-Artefakt — erreichbar, aber nur mit
+Jenkins-Login, und das ist nicht „ohne CLI nachsehen können". Sie bekommt
+deshalb eine feste Adresse auf dem nginx, der auf diesen Hosts ohnehin läuft.
+
+**Ein Verzeichnis auf dem Host, hineingemountet:** der Job legt die Dateien auf
+den Host, nicht in den nginx-Container. Ein `docker cp` dorthin lebt in dessen
+Schreibschicht und ist beim nächsten Recreate weg.
+
+```yaml
+  # im Service des nginx, auf dem Host, der die Seite ausliefern soll
+  nginx:
+    volumes:
+      - ./drift:/usr/share/nginx/html/drift:ro
+```
+
+Danach `docker compose -f <datei> up -d nginx` — das recycelt **nur** den nginx.
+
+**Der nginx-Eintrag ist wahrscheinlich keiner.** Die Standardkonfiguration des
+Images liefert `location /` aus `/usr/share/nginx/html`, also ist
+`http://<host>/drift/` damit schon bedient. Einen eigenen Block braucht es erst
+für eine Sache, die hier aber zählt: die Seite wird täglich neu geschrieben, und
+ein Browser, der sie einen Tag cached, zeigt den Zustand von gestern. Dann in den
+`server`-Block der bestehenden `default.conf` — **nicht** als eigene Datei in
+`conf.d/`, ein `location` ohne umgebenden `server` lässt nginx nicht starten:
+
+```nginx
+    location /drift/ {
+        alias /usr/share/nginx/html/drift/;
+        index index.html;
+        autoindex off;
+
+        # Einmal täglich neu. Ohne das zeigt ein Browser die Seite von gestern
+        # und niemand merkt, dass der Sweep längst weitergelaufen ist.
+        add_header Cache-Control "no-cache, must-revalidate";
+    }
+```
+
+Ändert man die `default.conf`, muss auch sie gemountet sein, sonst ist sie nach
+dem nächsten Recreate wieder die des Images:
+
+```yaml
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+```
+
+Prüfen, bevor neu geladen wird — eine kaputte Konfiguration nimmt den ganzen
+nginx mit, und auf diesen Hosts hängen andere Dienste daran:
+
+```bash
+docker exec nginx nginx -t && docker exec nginx nginx -s reload
+```
+
+Im Job steuern das drei Parameter: `PUBLISH_PAGE`, `PAGE_HOST` und `PAGE_DIR`.
+Neben `index.html` landet `drift.json` im selben Verzeichnis — wer die Zahlen
+weiterverarbeiten will, muss dann kein HTML auseinandernehmen.
 
 ### Der Flow, der darauf reagiert
 

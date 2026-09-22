@@ -39,6 +39,12 @@ pipeline {
             description: 'Also drop drift.json into the workbench instance that watches it (dpn-test).')
         string(name: 'WATCHER_INSTANCE', defaultValue: 'dpn-test',
             description: 'The instance whose /data receives drift.json. Its flow decides what to do with it.')
+        booleanParam(name: 'PUBLISH_PAGE', defaultValue: true,
+            description: 'Also copy the rendered page to a directory an nginx serves.')
+        string(name: 'PAGE_HOST', defaultValue: 'dpn-svr-iot',
+            description: 'Host whose nginx serves the page. Must be in the host map below.')
+        string(name: 'PAGE_DIR', defaultValue: '/home/iot/Base_Container/drift',
+            description: 'Directory on that host, bind-mounted into its nginx as /usr/share/nginx/html/drift.')
     }
 
     environment {
@@ -120,7 +126,35 @@ pipeline {
             }
         }
 
-        stage('Publish') {
+        stage('Publish the page') {
+            when { expression { params.PUBLISH_PAGE } }
+            steps {
+                script {
+                    def remote = VISITED.find { it.name == params.PAGE_HOST }
+                    if (!remote) {
+                        // Not an error: the page is archived either way, and a
+                        // host that was not reached in this run is already the
+                        // more interesting news.
+                        echo "!! ${params.PAGE_HOST} was not reached in this run — page not published"
+                        currentBuild.result = 'UNSTABLE'
+                        return
+                    }
+                    // Onto the host, not into the nginx container: a `docker cp`
+                    // lives in that container's write layer and is gone the next
+                    // time it is recreated. The directory is bind-mounted, so the
+                    // page survives a pull, a restart and a compose up.
+                    sshCommand remote: remote, command: "mkdir -p ${params.PAGE_DIR}"
+                    sshPut remote: remote, from: 'public/index.html', into: "${params.PAGE_DIR}/"
+                    // The raw sweep beside the page: whoever wants to graph it or
+                    // diff two days does not have to scrape HTML for it.
+                    sshPut remote: remote, from: 'drift.json', into: "${params.PAGE_DIR}/"
+                    sshCommand remote: remote, command: "chmod 644 ${params.PAGE_DIR}/index.html ${params.PAGE_DIR}/drift.json"
+                    echo "page: http://${params.PAGE_HOST}/drift/"
+                }
+            }
+        }
+
+        stage('Publish to the watcher') {
             when { expression { params.PUBLISH_TO_WORKBENCH } }
             steps {
                 script {
