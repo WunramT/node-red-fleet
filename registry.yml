@@ -218,11 +218,10 @@ instances:
     image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/wfm-test:4.0.9-1  # node-red 4.0.9 to match prod, node-red-contrib-opcua
     variables: {}
 
-  # pod-prod is mid-migration off FlowFuse (docs/flowfuse-migration.md). The
-  # entry exists so CI builds its image and the pipeline can deploy it; the
-  # container itself comes up with every tab disabled and takes them over one
-  # group at a time. node-red 4.0.8 is what the device agent runs — the version
-  # move is a separate step, after the cutover.
+  # pod-prod came off FlowFuse in September 2026: the flow was copied out of the
+  # device agent, the plain container took its two tabs over one at a time, and
+  # the device was unenrolled last. node-red 4.0.8 is the version the agent ran
+  # — moving it to the estate's 4.0.9 is its own step, with bump-node-red.py.
   - name: pod-prod
     host: pod-svr-lin01
     compose_service: node-red-prod
@@ -249,14 +248,9 @@ instances:
     image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/pod-test:4.0.8-1  # node-red 4.0.8 and pod-prod's palette, so a promoted tab opens with its nodes
     variables: {}
 
-  # dpn-prod is mid-migration off FlowFuse, like pod-prod. Eleven tabs and 852
-  # nodes, so it is taken over group by group — cutover-plan.py says which tabs
-  # can move alone. node-red 4.0.9 is what the agent resolved from `latest`.
-  #
-  # apps/dpn-prod/flows.json is deliberately absent until the export lands, and
-  # validate-registry.py fails on that. An empty placeholder would validate and
-  # then deploy as "delete all 852 nodes", so the missing file is the safer
-  # state: CI refuses the merge and says which file it wants.
+  # dpn-prod came off FlowFuse like pod-prod, but as eleven tabs taken over one
+  # at a time rather than two — 852 nodes, and cutover-plan.py reported every tab
+  # as its own group. node-red 4.0.9 is what the agent had resolved from `latest`.
   - name: dpn-prod
     host: dpn-svr-iot
     compose_service: node-red-prod

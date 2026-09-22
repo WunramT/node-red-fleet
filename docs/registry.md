@@ -39,13 +39,13 @@ instances:
 | `image_tag` | yes | exact Harbor tag. A `latest`, `main` or otherwise floating tag fails validation |
 | `variables` | no | per-instance env vars, merged over `global_variables` |
 
-`app: null` is normal, not a gap. Most instances are one-offs; only instances that genuinely share logic point at the same `apps/` directory. The schema does not model app→{dev,prod} pairs, because the measured `wag-svr-lin01` pair is two unrelated applications.
+`app: null` is allowed and currently unused: it is for an instance the pipeline should not deploy to, and since `slu-*` were given an empty app there is no such instance left. The schema does not model app→{dev,prod} pairs, because the measured `wag-svr-lin01` pair is two unrelated applications — one app is one instance.
 
 That holds under decision 15 too: a `*-test` instance is a workbench with its own app, not a second view of prod's. What moves between the two is one tab at a time, through `scripts/promote.py`.
 
 ## Variable resolution
 
-`global_variables`, then `variables` on top. The merged map becomes the container's environment.
+`global_variables`, then `variables` on top. The merged map describes what an instance's environment should hold — **no tool writes it into a container**. What the container gets is what its service in the host's compose file names, by hand (`betrieb.md`, "Passwörter, die der Flow aus der Umgebung liest"). Secrets never go here in any case: this file is committed.
 
 It reaches the flow one way only: **Node-RED's own `${ENV}` substitution**, which resolves whole property values inside the running instance. A committed flow containing `${MQTT_BROKER_HOST}` therefore still opens in the editor.
 
@@ -57,8 +57,8 @@ It reaches the flow one way only: **Node-RED's own `${ENV}` substitution**, whic
 
 ## Scope
 
-13 entries today: 6 servers with a dev/prod pair, plus the single instance on `wfm-svr-lin01`. `collect-inventory.py` writes a pre-filled draft from the live hosts.
+18 entries: nine hosts with a `-prod`/`-test` pair each, and every one carries an app — so every one is something CI builds an image for and the pipeline can deploy to. `slu-prod` and `slu-test` are included with an empty flow while what they are for is decided (`open-questions.md`, question 4).
 
-Two of those hosts are missing from the Jenkins host map, which knows 8 — `wfm-svr-lin01` and `dpn-svr-iot` have to be added to it before the pipeline can reach them.
+The Jenkins host map knows all of them. `collect-inventory.py` writes a pre-filled draft from the live hosts; re-run it after a host changes rather than editing this file from memory.
 
-Instances still running under FlowFuse are **not** entries yet. They join the registry once they have been migrated to plain containers (decision 12); until then the draft carries them as a comment, so the file records that they exist without claiming the pipeline can deploy them.
+`pod-prod`, `pod-test`, `dpn-prod` and `dpn-test` were the two FlowFuse servers. They are ordinary entries since the cutover (decision 12) — the platform holds nothing any more, and the registry is again the only place that knows what runs where.

@@ -127,6 +127,34 @@ The compose file and service name differ per host; both are in `registry.yml`.
 
 **4. Verify.** Open the editor and confirm a stored credential still decrypts. On `wfm-prod`, confirm the login prompt appears and that `curl -s -o /dev/null -w '%{http_code}' http://<ip>:1880/flows` now returns `401` rather than `200`.
 
+## Standing up a new service
+
+Three things decide whether `deploy.py` can reach it at all, and all three are
+in the host's compose file:
+
+- **`container_name` must be the `compose_service` from `registry.yml`.** The
+  deploy resolves the instance with `docker inspect <compose_service>`, and
+  compose's generated name (`base_container-node-red-prod-1`) is not that.
+- **The network is declared external.** These hosts already have the network
+  their nginx sits on, so the file joins it rather than creating a second one:
+
+  ```yaml
+  networks:
+    app_network:
+      external: true
+  ```
+
+- **`dns` and `dns_search` come from whatever ran there before.** A flow that
+  addresses a machine by name resolves only with the search domains that
+  runtime had; `registry.yml` carries them per instance so they are not
+  guessed.
+
+And one that decides whether it keeps its credentials: **`flows_cred.json`
+belongs in `/data` before the first flow lands**, with the key in both files
+("Moving an instance to a new container"). Node-RED drops credentials belonging
+to no node the first time it saves, and until the flow is deployed there are no
+nodes.
+
 ## A new instance's /data must belong to the container user
 
 The bind-mounted directory has to be owned by the uid the container runs as,
@@ -253,7 +281,7 @@ That is where they answer, not a promise that the answer arrives. Measured
 host itself returned immediately. The container bridge sits at MTU 1500 over a
 smaller tunnel, so anything past one segment is dropped and nothing says so.
 It reads as a fleet of wedged runtimes and is not one: the VPN adapter is 1350
-and the container 1500 — `docs/inbetriebnahme.md`, 0.6. `.devcontainer/` now
+and the container 1500 — `betrieb.md`, "Vom Arbeitsplatz aus". `.devcontainer/` now
 lowers the interface at start, so a rebuilt dev container sweeps normally;
 `check`, `capture` and `status` need no engine at all, so they also just run
 outside it.

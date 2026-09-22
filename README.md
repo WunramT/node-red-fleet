@@ -1,7 +1,8 @@
 # dap-node-red
 
-Git holds the flows for 14 Node-RED instances, CI deploys them. Nothing is
-edited on a production instance by hand.
+Git holds the flows for 18 Node-RED instances, CI deploys them, and that is
+how every one of them runs today. Nothing is edited on a production instance by
+hand.
 
 Two transports. **Flow logic** goes through the Admin API and restarts nothing
 but the tabs that changed. **Palette modules** need a rebuilt image and a
@@ -133,9 +134,8 @@ container `nr.py` stops with that exact command instead of failing in compose.
 | `registry.yml` | What runs where. Every tool reads it; nothing hard-codes an instance. |
 | `apps/<app>/` | `flows.json` as deployed, `package.json` as the palette, its `Dockerfile`. |
 | `scripts/nodered.py` | The shared library: instance list, addresses, Admin API, image tags. |
-| `docs/inbetriebnahme.md` | Alle Server auf den Repo-Stand bringen — die Reihenfolge zum Livegang, inklusive FlowFuse. |
+| `docs/betrieb.md` | Was mit dem laufenden System möglich ist, auf Deutsch — Einstieg für den Alltag. |
 | `docs/runbook.md` | Operating it: backup gate, deploys, `409` recovery, moving an instance. |
 | `docs/architecture.md` | The system and the measured facts about the estate. |
 | `docs/decisions.md` | Why it is built this way. Read before proposing otherwise. |
-| `docs/go-live-plan.md` | What is left before the whole fleet runs through this. |
 | `docs/open-questions.md` | What is still unknown, and the command that answers it. |

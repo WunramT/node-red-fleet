@@ -73,7 +73,7 @@ The pull toward a real web application is understandable — the current state i
 
 Deploys stay in the pipeline, where they are reviewed and recorded. The page shows state.
 
-## 12. FlowFuse is a migration source, not a deploy target — Closed
+## 12. FlowFuse is a migration source, not a deploy target — Closed, and carried out
 
 The two FlowFuse-managed servers are exported once into `apps/`, brought up as plain containers, and then deployed like every other instance. FlowFuse gets no transport, no `registry.yml` entry, no pipeline stage.
 

@@ -1,6 +1,6 @@
 # Architecture — Node-RED multi-instance deployment
 
-Status: target architecture, not yet built. Rationale and closed decisions: [`decisions.md`](decisions.md). Unresolved gaps and the commands that close them: [`open-questions.md`](open-questions.md).
+Status: **built and live.** All 18 instances run their flow out of Git through the pipeline described here; the last two came off FlowFuse in September 2026. Rationale and closed decisions: [`decisions.md`](decisions.md). What is still open: [`open-questions.md`](open-questions.md). What to do with it day to day: [`../README.md`](../README.md) and [`runbook.md`](runbook.md).
 
 ## The problem
 
@@ -11,11 +11,11 @@ Measured, not assumed — `scripts/collect-inventory.py` visited every host:
 | | |
 |---|---|
 | 6 servers with a dev/prod pair | `cho`, `gor`, `jan`, `slu`, `srem`, `wag` — 12 instances |
-| 1 server cut over | `wfm-svr-lin01` now runs `wfm-prod` out of `node-red-prod` (`adminAuth` on, `/node-red-prod`) beside the workbench `node-red-test`, like the other nine. The old `node-red` is stopped and still in the compose file until it is retired (`go-live-plan.md`, phase 1) |
-| 2 servers under FlowFuse | `pod-svr-lin01`, `dpn-svr-iot` — migration targets, see below |
+| 1 server rebuilt to match | `wfm-svr-lin01` runs `wfm-prod` out of `node-red-prod` (`adminAuth` on, `/node-red-prod`) beside the workbench `node-red-test`, like the other nine — it was a single unqualified `node-red` before |
+| 2 servers formerly under FlowFuse | `pod-svr-lin01`, `dpn-svr-iot` — migrated to plain containers, see below |
 | 1 server with no Node-RED at all | `foi-svr-lnx01` — NATS, iot-bridges, dashboards |
 
-Two of those servers, `wfm-svr-lin01` and `dpn-svr-iot`, are absent from the Jenkins host map, which knows 8. The map is the input to the new pipeline, so it grows by two.
+The Jenkins host map knew 8 of these when the project started and knows all 10 now; `wfm-svr-lin01` and `dpn-svr-iot` were the two it was missing.
 
 Topology is **not a fleet**: no two instances share a flow signature — the collector compared the node type and name multiset of every flow, ignoring ids and layout, and found no match. Every instance is its own application. `wag-svr-lin01` makes the point concretely: `node-red-prod` has 15 nodes and no palette, `node-red-test` has 222 nodes and two palette modules. A template-first system would be wrong, and there are no shared `apps/` directories to factor out.
 
@@ -178,9 +178,9 @@ That also explains group 3 in the settings.js comparison: `wag`'s file carries `
 
 `slu-prod` and `slu-test` hold no flow at all — no `flows.json`, no `flows_cred.json`, `/data` untouched since July 2025. They are **running**, with `adminAuth` on and answering `401`; they are not stopped, they are empty. Starting them changes nothing, because there is nothing in them to start.
 
-They carry `app: null` in `registry.yml` and get no `apps/` directory until someone decides what they are for. When that happens they are the safest first true deploy in the estate: an empty instance has nothing to lose.
+They carry an app all the same: `apps/slu-prod/` and `apps/slu-test/` hold an empty `flows.json` and no palette, so CI builds their images and the pipeline can reach them the day someone has a flow. What they are *for* is the part still open (`open-questions.md`, question 4). Until then a deploy writes `[]` over `[]` and reports itself a no-op, and they remain the safest first true deploy in the estate: an empty instance has nothing to lose.
 
-That makes **12 instances with a flow of their own**, not 14 — the twelfth being `wfm-test`, whose flow is new rather than captured.
+That makes **16 instances with a flow of their own** out of 18 entries.
 
 ## Normalization
 
@@ -199,9 +199,11 @@ Idempotent, and order-independent for everything Node-RED may reshuffle on a dep
 
 Test it against all 11 real flows in `samples/`, hardest against `srem-prod` — 205 nodes, 40 node types, 134 KB. If a flow that size does not diff readably for a human reviewer, the whole Git-as-source-of-truth approach fails at this step, and that is cheap to discover in an hour.
 
-## FlowFuse instances
+## FlowFuse, and why it is gone
 
-Two servers run their Node-RED under FlowFuse. They are a **migration source**, not a deployment target: FlowFuse gets no transport, no `registry.yml` entry and no pipeline stage. Each instance is exported once, lands in `apps/` as a normalized `flows.json`, comes up as a plain container, and from then on is an instance like any other.
+Two servers ran their Node-RED under FlowFuse until September 2026. They were a **migration source**, never a deployment target: FlowFuse got no transport, no `registry.yml` entry and no pipeline stage. Each instance was exported once, landed in `apps/` as a normalized `flows.json`, came up as a plain container, and is now an instance like any other — `pod-prod`, `pod-test`, `dpn-prod`, `dpn-test`, four ordinary entries.
+
+The section below is kept because it explains a shape this estate still has: two hosts whose containers were built by hand rather than by this repository, and whose flows came out of a runtime instead of an inventory.
 
 That direction is the same decision the whole architecture rests on. FlowFuse is a control plane that owns the flows, which is the category decision 1 rejected — the reasoning does not change because the control plane is a good one.
 
@@ -239,7 +241,7 @@ The return direction is what keeps this from decaying. A pipeline that only push
 
 ## Visibility
 
-There is no way to see, today, what is actually running on 16 runtimes across 10 servers. That gap is real and worth closing — as a **report**, not a control plane.
+Every instance now runs its flow out of Git, and there is still no single place to *see* that — 18 runtimes across 10 servers, and the answer lives in a CLI. That gap is real and worth closing — as a **report**, not a control plane. It is the one piece of this architecture that is designed and not yet built (`open-questions.md`).
 
 `drift-check.py` sweeps every instance, normalizes what it gets, diffs against Git, and emits JSON. CI renders that JSON into a static HTML page and publishes it. It answers the questions that matter — which instances match Git, which drifted, which flow version and image tag each one runs, when it was last deployed — and it answers them from Git plus a read-only sweep.
 

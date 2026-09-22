@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Node-RED multi-instance deployment. Git holds the flows, CI deploys them. 16 runtimes across 10 servers: 14 plain instances and 2 under FlowFuse, which are migrated to plain containers as part of this project. No two instances share a flow — every one is its own application.
+Node-RED multi-instance deployment, **live**. Git holds the flows, CI deploys them, and every one of the 18 instances across 10 servers runs that way — including the two that came off FlowFuse in September 2026. No two instances share a flow: every one is its own application.
 
 Start with [`README.md`](README.md), which is the working cheatsheet. Then, for
 anything non-obvious:
@@ -9,8 +9,7 @@ anything non-obvious:
 - [`docs/decisions.md`](docs/decisions.md) holds closed decisions. Read it before proposing a different approach.
 - [`docs/open-questions.md`](docs/open-questions.md) names what is unknown and the command that answers it.
 - [`docs/registry.md`](docs/registry.md) is the `registry.yml` field reference.
-- [`docs/flowfuse-migration.md`](docs/flowfuse-migration.md) is the working document for the two device-agent instances, until they are cut over.
-- [`docs/inbetriebnahme.md`](docs/inbetriebnahme.md) is the go-live order for the whole estate, in German, FlowFuse included.
+- [`docs/betrieb.md`](docs/betrieb.md) is what can be done with the running system, in German — the day-to-day view, and the procedure for taking on a new instance.
 - [`docs/runbook.md`](docs/runbook.md) is how it is operated.
 
 ## Constraints
