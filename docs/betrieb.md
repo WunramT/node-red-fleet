@@ -126,6 +126,10 @@ Kontrolle, ohne einen Wert zu zeigen:
 
 ## Drift-Überwachung: der tägliche Lauf
 
+**In einem Satz:** ein Job, einmal täglich, eine `drift.json` über die ganze
+Estate, eine Seite daraus — und **ein** Flow auf **einer** Instanz, der diese
+eine Datei liest.
+
 `Jenkinsfile.drift` ist ein eigener, zeitgesteuerter Job. Er schreibt auf keine
 Instanz — er liest, rendert und legt das Ergebnis ab.
 
@@ -141,6 +145,13 @@ cron('H 6 * * *')
 **Warum je Host und nicht zentral:** `drift-check` erreicht eine Runtime über
 Docker auf der Maschine, auf der es läuft (Decision 10). Zentral aufgerufen
 meldet `--all` jede Instanz als `unreachable`. Dafür gibt es `--host`.
+
+Das ist eine Schleife **innerhalb** des Jobs, keine Bedienhandlung: zehn
+SSH-Sitzungen, zehn Fragmente, eine Datei. Von außen ist es ein Knopf und ein
+Ergebnis. Die Alternative — ein zentraler Lauf über die Proxy-Pfade, mit
+`NODE_RED_BASE_URL_<INSTANZ>` für alle 18 — wäre ein Aufruf statt zehn, brächte
+aber eine zweite Quelle für Adressen neben `registry.yml` mit, und genau die
+vermeidet Decision 10.
 
 **Warum der Lauf nicht rot wird, wenn etwas driftet:** Drift ist die
 Browser-Änderung von jemandem, die noch nicht in Git ist — Information, kein
@@ -166,8 +177,13 @@ Compose-Änderung, keine Rechte-Rätsel.
 
 ### Der Flow, der darauf reagiert
 
-Auf `dpn-test`, gebaut wie jeder andere Tab — `nr.py edit dpn-test`,
-normalisieren, committen, deployen. Fünf Nodes reichen:
+**Ein Flow für die ganze Estate**, nicht einer je Instanz: die `drift.json`
+enthält alle 18 Zeilen, der Flow vergleicht sie am Stück. Er läuft auf
+`dpn-test`, weil eine Workbench genau dafür da ist — jede andere Instanz täte es
+auch, es muss nur eine sein.
+
+Gebaut wie jeder andere Tab — `nr.py edit dpn-test`, normalisieren, committen,
+deployen. Fünf Nodes reichen:
 
 1. **`inject`**, alle 5 Minuten, zusätzlich „einmal nach 0,1 s" — damit der Flow
    nach einem Neustart sofort den letzten Stand kennt.
