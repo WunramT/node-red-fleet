@@ -98,13 +98,21 @@ instances:
 
   # --- slu-svr-lin02 --------------------------------------------------------
   # Both instances hold no flow at all: no flows.json, no flows_cred.json,
-  # /data untouched since Jul 2025. They are empty runtimes, so app is null
-  # until someone decides what they are for.
+  # /data untouched since Jul 2025. What they are for is still undecided
+  # (docs/open-questions.md, question 4) — but they carry an app, so CI builds
+  # their images and the pipeline can reach them the day a flow exists. Until
+  # then apps/slu-*/flows.json is `[]`, which is what the instances hold, so a
+  # deploy is a no-op rather than a change.
+  #
+  # One consequence worth knowing: an ALL run includes them. Building a flow in
+  # the browser and not capturing it would make the next deploy of `[]` a
+  # deletion — `nr.py check` before a deploy is what covers that, and an empty
+  # flow makes drift on these two unusually easy to read.
   - name: slu-prod
     host: slu-svr-lin02
     compose_service: node-red-prod
     compose_file: /home/administrator/Base_Container/docker-compose.yml
-    app: null
+    app: slu-prod
     admin_root: /node-red-prod
     auth_credential_id: nodered-slu-prod-auth
     credential_secret_id: nodered-slu-prod-credsecret
@@ -116,7 +124,7 @@ instances:
     host: slu-svr-lin02
     compose_service: node-red-test
     compose_file: /home/administrator/Base_Container/docker-compose.yml
-    app: null
+    app: slu-test
     admin_root: /node-red-test
     auth_credential_id: nodered-slu-test-auth
     credential_secret_id: nodered-slu-test-credsecret

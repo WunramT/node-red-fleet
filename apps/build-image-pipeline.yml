@@ -144,6 +144,32 @@ include:
 - component: $CI_SERVER_FQDN/infrastructure/ci-cd-catalog/buildah/buildah-build@~latest
   inputs:
     stage: Build
+    job_name: build:buildah:slu-prod
+    dockerfile: apps/slu-prod/Dockerfile
+    image_name: dap-node-red/slu-prod
+    image_tag: 4.0.9-1
+    enable_layers_cache: false
+- component: $CI_SERVER_FQDN/infrastructure/ci-cd-catalog/cosign/cosign-sign@~latest
+  inputs:
+    stage: Sign
+    job_name: sign:cosign:slu-prod
+    image_name: dap-node-red/slu-prod
+- component: $CI_SERVER_FQDN/infrastructure/ci-cd-catalog/buildah/buildah-build@~latest
+  inputs:
+    stage: Build
+    job_name: build:buildah:slu-test
+    dockerfile: apps/slu-test/Dockerfile
+    image_name: dap-node-red/slu-test
+    image_tag: 4.0.9-1
+    enable_layers_cache: false
+- component: $CI_SERVER_FQDN/infrastructure/ci-cd-catalog/cosign/cosign-sign@~latest
+  inputs:
+    stage: Sign
+    job_name: sign:cosign:slu-test
+    image_name: dap-node-red/slu-test
+- component: $CI_SERVER_FQDN/infrastructure/ci-cd-catalog/buildah/buildah-build@~latest
+  inputs:
+    stage: Build
     job_name: build:buildah:srem-prod
     dockerfile: apps/srem-prod/Dockerfile
     image_name: dap-node-red/srem-prod
@@ -390,8 +416,42 @@ sign:cosign:pod-test:
     changes:
     - apps/pod-test/package.json
     - apps/pod-test/Dockerfile
-build:buildah:srem-prod:
+build:buildah:slu-prod:
   resource_group: image-build-2
+  rules:
+  - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    changes:
+    - apps/slu-prod/package.json
+    - apps/slu-prod/Dockerfile
+sign:cosign:slu-prod:
+  variables:
+    IMAGE_TAG: 4.0.9-1
+  needs:
+  - job: build:buildah:slu-prod
+  rules:
+  - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    changes:
+    - apps/slu-prod/package.json
+    - apps/slu-prod/Dockerfile
+build:buildah:slu-test:
+  resource_group: image-build-3
+  rules:
+  - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    changes:
+    - apps/slu-test/package.json
+    - apps/slu-test/Dockerfile
+sign:cosign:slu-test:
+  variables:
+    IMAGE_TAG: 4.0.9-1
+  needs:
+  - job: build:buildah:slu-test
+  rules:
+  - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    changes:
+    - apps/slu-test/package.json
+    - apps/slu-test/Dockerfile
+build:buildah:srem-prod:
+  resource_group: image-build-1
   rules:
   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     changes:
@@ -408,7 +468,7 @@ sign:cosign:srem-prod:
     - apps/srem-prod/package.json
     - apps/srem-prod/Dockerfile
 build:buildah:srem-test:
-  resource_group: image-build-3
+  resource_group: image-build-2
   rules:
   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     changes:
@@ -425,7 +485,7 @@ sign:cosign:srem-test:
     - apps/srem-test/package.json
     - apps/srem-test/Dockerfile
 build:buildah:wag-prod:
-  resource_group: image-build-1
+  resource_group: image-build-3
   rules:
   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     changes:
@@ -442,7 +502,7 @@ sign:cosign:wag-prod:
     - apps/wag-prod/package.json
     - apps/wag-prod/Dockerfile
 build:buildah:wag-test:
-  resource_group: image-build-2
+  resource_group: image-build-1
   rules:
   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     changes:
@@ -459,7 +519,7 @@ sign:cosign:wag-test:
     - apps/wag-test/package.json
     - apps/wag-test/Dockerfile
 build:buildah:wfm-prod:
-  resource_group: image-build-3
+  resource_group: image-build-2
   rules:
   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     changes:
@@ -476,7 +536,7 @@ sign:cosign:wfm-prod:
     - apps/wfm-prod/package.json
     - apps/wfm-prod/Dockerfile
 build:buildah:wfm-test:
-  resource_group: image-build-1
+  resource_group: image-build-3
   rules:
   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     changes:

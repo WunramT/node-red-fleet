@@ -1,0 +1,6 @@
+{
+  "name": "node-red-slu-prod",
+  "description": "Palette for slu-prod",
+  "private": true,
+  "dependencies": {}
+}

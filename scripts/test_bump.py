@@ -51,8 +51,30 @@ try:
     r = run("--to", TO_VERSION, "--instance", "no-such-instance")
     check("an unknown instance is refused", r.returncode != 0 and "Known:" in r.stderr)
 
-    r = run("--to", TO_VERSION, "--instance", "slu-prod")
+    # An instance with no app is not a target. Naming one here was a trap: the
+    # registry's only two — slu-prod and slu-test — carry an app now, so the
+    # script bumped slu-prod instead of refusing, the check went red, and the
+    # run left that Dockerfile on the test's version because this suite saves
+    # only the files it expects to be written. So the condition is made, not
+    # hunted for, out of the registry this suite already saves and restores.
+    noapp = next((i["name"] for i in nodered.instances() if not i.get("app")), None)
+    if noapp is None:
+        noapp = OTHER
+        lines = REG.read_text(encoding="utf-8").splitlines(keepends=True)
+        inside = False
+        for idx, line in enumerate(lines):
+            if line.strip() == f"- name: {noapp}":
+                inside = True
+            elif inside and line.lstrip().startswith("- name:"):
+                break
+            elif inside and line.lstrip().startswith("app:"):
+                lines[idx] = "    app: null\n"
+                break
+        REG.write_text("".join(lines), encoding="utf-8")
+
+    r = run("--to", TO_VERSION, "--instance", noapp)
     check("an instance without an app is not a target", r.returncode != 0, r.stderr[-200:])
+    REG.write_bytes(saved[REG])
 
     r = run("--to", TO_VERSION, "--instance", APP, "--dry-run")
     check("--dry-run reports the move",

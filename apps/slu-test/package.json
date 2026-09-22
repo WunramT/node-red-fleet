@@ -1,0 +1,6 @@
+{
+  "name": "node-red-slu-test",
+  "description": "Palette for slu-test",
+  "private": true,
+  "dependencies": {}
+}
