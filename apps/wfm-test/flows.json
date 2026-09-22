@@ -1,0 +1,15 @@
+[
+  {
+    "id": "d010032bb6fbc4e0",
+    "type": "OpcUa-Endpoint",
+    "name": "",
+    "endpoint": "opc.tcp://10.65.33.2:4842",
+    "login": false,
+    "none": true,
+    "secmode": "None",
+    "secpol": "None",
+    "usercert": false,
+    "usercertificate": "",
+    "userprivatekey": ""
+  }
+]

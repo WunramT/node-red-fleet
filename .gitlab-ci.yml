@@ -1,0 +1,123 @@
+# dap-node-red — build and validation pipeline
+#
+# GitLab CI does everything that needs no site access: validation, image build,
+# signing. Deployment to the site servers lives in the Jenkinsfile, because
+# Jenkins holds the per-host SSH credentials. See docs/architecture.md.
+
+variables:
+  CI_REGISTRY: $HARBOR_REGISTRY
+  CI_REGISTRY_USER: $HARBOR_USER
+  CI_REGISTRY_PASSWORD: $HARBOR_PASSWORD
+
+stages:
+  - Scan
+  - Validate
+  - Build
+  - Sign
+
+include:
+  # Semgrep Scan
+  - component: $CI_SERVER_FQDN/infrastructure/ci-cd-catalog/semgrep/semgrep-scan@~latest
+    inputs:
+      stage: Scan
+      job_name: scan:semgrep
+      ruleset: p/python p/gitleaks p/security-audit p/secrets p/dockerfile p/command-injection p/ci
+      allow_failure: true
+  # Trivy Scan
+  - component: $CI_SERVER_FQDN/infrastructure/ci-cd-catalog/trivy/trivy-scan@~latest
+    inputs:
+      stage: Scan
+      job_name: scan:trivy
+      allow_failure: true
+  # Hadolint Scan
+  - component: $CI_SERVER_FQDN/infrastructure/ci-cd-catalog/hadolint/hadolint-scan@~latest
+    inputs:
+      stage: Scan
+      job_name: scan:hadolint
+      dockerfile: '**/Dockerfile*'
+      allow_failure: true
+  # One build and one sign job per app. Generated from registry.yml so that the
+  # tag CI builds and the tag the deploy pins cannot diverge.
+  - local: 'apps/build-image-pipeline.yml'
+
+scan:semgrep:
+  rules:
+    - when: always
+
+scan:trivy:
+  rules:
+    - when: always
+
+scan:hadolint:
+  rules:
+    - when: always
+
+validate:registry:
+  stage: Validate
+  # Not -slim: the palette-tag check below diffs against the base commit, and
+  # slim carries no git. Without it the check skips and the guard is not there.
+  image: python:3.13
+  variables:
+    # The base commit has to be in the clone for that diff to work.
+    GIT_DEPTH: 0
+  before_script:
+    - pip install --no-cache-dir -r scripts/requirements.txt
+  script:
+    # No --draft: every image tag and credential id is filled in, so a
+    # placeholder reappearing is a mistake and fails the pipeline.
+    - python3 scripts/validate-registry.py --emit-json
+    # A palette change with an unchanged image_tag makes the build below push
+    # the tag the instance already runs, with different content inside it. The
+    # base commit is not always knowable — a first push, a shallow clone — and
+    # then this says so rather than passing quietly.
+    - |
+      base="${CI_MERGE_REQUEST_DIFF_BASE_SHA:-$CI_COMMIT_BEFORE_SHA}"
+      case "$base" in
+        ""|0000000000000000000000000000000000000000)
+          echo "no base commit to compare against — palette-tag check skipped" ;;
+        *)
+          python3 scripts/validate-registry.py --changed-since "$base" ;;
+      esac
+    # The generated pipeline carries registry.yml's image tags. If it is stale,
+    # CI would build one tag while the deploy pins another.
+    - python3 scripts/gen-image-pipeline.py --check
+  artifacts:
+    # Jenkins ships this to the target host with deploy.py — see decision 10.
+    paths: [registry.json]
+    expire_in: 30 days
+  rules:
+    - changes:
+        - registry.yml
+        - schemas/**/*
+        - apps/**/*
+
+validate:normalize:
+  stage: Validate
+  # The suites include one that diffs with git, which -slim does not carry.
+  # None of them needs a container engine or npm: what would use one is stubbed,
+  # because a suite that only runs on a workstation is a suite CI cannot keep
+  # honest.
+  image: python:3.13
+  before_script:
+    # test_deploy.py reads the registry, which needs PyYAML unless registry.json
+    # was generated first. Installing here keeps the job independent of whether
+    # validate:registry ran.
+    - pip install --no-cache-dir -r scripts/requirements.txt
+  script:
+    # Every suite, so adding one does not mean remembering to list it here.
+    # `|| exit 1` because a loop exits with the status of its LAST command: a
+    # suite failing anywhere but at the end would otherwise pass the job.
+    - 'for suite in scripts/test_*.py; do python3 "$suite" || exit 1; done'
+    # No apps/ yet — the glob matches nothing and the job passes until there is
+    # something to check. Once apps/ exists this fails on any un-normalized flow.
+    - 'shopt -s nullglob; files=(apps/*/flows.json); [ ${#files[@]} -eq 0 ] || python3 scripts/normalize.py --check "${files[@]}"'
+  rules:
+    - changes:
+        - apps/**/*
+        - registry.yml
+        - scripts/*.py
+
+# Still to come (see docs/open-questions.md):
+#
+#   validate:external   — no function node declares its own npm module,
+#                         which is what keeps the baked image a real guarantee

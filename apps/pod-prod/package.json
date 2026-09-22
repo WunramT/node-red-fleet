@@ -1,0 +1,15 @@
+{
+  "description": "A FlowFuse Project",
+  "private": true,
+  "version": "0.0.0-alZPwRGKvV",
+  "dependencies": {
+    "@flowfuse/nr-assistant": ">=0.1.0",
+    "@flowfuse/nr-project-nodes": ">0.5.0",
+    "node-red": "4.0.8",
+    "node-red-contrib-buffer-parser": "~3.2.2",
+    "node-red-contrib-modbus": "~5.42.0",
+    "node-red-contrib-mssql-plus": "~0.12.2",
+    "node-red-contrib-postgresql": "~0.14.2",
+    "node-red-contrib-queue-gate": "~1.5.5"
+  }
+}

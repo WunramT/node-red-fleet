@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+
+# Environments
+.env
+.env.local
+
+# SSH credentials for scripts/collect-inventory.py, and everything it produces.
+# The committed script is a template with empty credentials; work in a *.local.py
+# copy. Reports are regenerable — promote what is worth keeping into INVENTORY.md.
+scripts/*.local.py
+hosts.local.json
+# Base URLs and Admin API logins for scripts/nr.py.
+nr.local.json
+inventory/
+registry.draft.yml
+# Generated from registry.yml by validate-registry.py --emit-json, for hosts
+# without PyYAML. Committing it would be the same data in two places.
+registry.json
+
+# Node-RED runtime state — never committed.
+# flows_cred.json and .config.runtime.json hold encrypted credentials and the
+# key that decrypts them; see docs/runbook.md for how they are backed up.
+flows_cred.json
+.config.runtime.json
+.config.*.json
+*.backup
+.node-red-config/
+
+# Local editor container working state
+apps/*/node_modules/
+apps/*/lib/
+apps/*/.sessions.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+
+# Staged flow for the local editor — a working copy, never committed.
+.editor-session/

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "local>devops/platform-tools/renovate/renovate-presets", "group:allNonMajor"
+  ],
+  "labels": ["dependencies"],
+  "assignees": ["@J.Moehlenpage", "@TW"],
+  "assigneesSampleSize": 1,
+  "commitMessagePrefix": "chore(deps):",
+  "packageRules": [
+    {
+      "description": "Palette modules per app — one PR per app, reviewed against that app's flows",
+      "matchManagers": ["npm"],
+      "matchFileNames": ["apps/**"],
+      "groupName": "palette-{{packageFileDir}}",
+      "commitMessageTopic": "palette modules"
+    },
+    {
+      "description": "Node-RED base image — a major bump changes flow-format compatibility",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["nodered/node-red", "**/node-red-**"],
+      "separateMajorMinor": true,
+      "commitMessageTopic": "Node-RED base image"
+    },
+    {
+      "description": "Deployment script dependencies",
+      "matchManagers": ["pip_requirements"],
+      "matchFileNames": ["scripts/**"],
+      "groupName": "script-dependencies",
+      "commitMessageTopic": "script dependencies"
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "commitMessageSuffix": "[security]"
+  }
+}

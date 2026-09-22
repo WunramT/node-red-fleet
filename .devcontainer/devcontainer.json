@@ -1,0 +1,93 @@
+{
+  "name": "dap-node-red",
+  "image": "mcr.microsoft.com/devcontainers/python:3.14-bookworm",
+
+  "features": {
+    // The local Node-RED editor runs as a container, started from inside this
+    // one. Outside-of-docker shares the host daemon, so the bind mount in
+    // compose/editor.yml resolves against the host filesystem — with
+    // docker-in-docker it would resolve inside the dev container and mount an
+    // empty directory over the app.
+    //
+    // Know what this grants: the engine's socket is full control of that
+    // engine, and there is no "may only start node-red containers" scope to
+    // ask for. Anything running in here — a dependency, a script, an agent —
+    // can start a privileged container and read the engine's whole world. The
+    // boundary is the workstation's own (rootless) engine, not the estate: no
+    // SSH key to a site host lives here, and no Jenkins credential ever does
+    // (decision 7).
+    //
+    // Only `nr.py edit` needs it. status, check, capture, deploy, promote,
+    // normalize and validate are pure Python against the Admin API — delete
+    // this line and they all still work, and `edit` runs from the workstation
+    // instead.
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+
+  // Prove the container before handing it over: install, validate the registry,
+  // run the suites. registry.json is deliberately not generated here — PyYAML
+  // exists in this container, and that file is the transport copy for hosts
+  // without it. A stale one in a working tree once shadowed the registry.
+  "postCreateCommand": ".devcontainer/setup.sh",
+  "waitFor": "postCreateCommand",
+
+  // Runs on every attach, so a new terminal starts by saying what to type.
+  "postAttachCommand": "python3 scripts/guide.py --list",
+
+  // No forwardPorts for 1880. The editor is a SIBLING container on the host's
+  // daemon, not a process inside this one, so nothing listens on 1880 in here
+  // and forwarding it would put a VS Code listener on the browser's
+  // localhost:1880 that tunnels to nothing. That is a grey page rather than a
+  // refused connection, which is worse. The engine's own port publishing is
+  // what carries the editor out, and nr.py prints the address it used.
+
+  // Measured 2026-09-21: this container's bridge comes up at MTU 1500 and the
+  // company VPN underneath runs at 1350 ("Ethernet 2" in `netsh interface ipv4
+  // show subinterfaces`). The ICMP that would report the difference does not
+  // reach in here, so every response past one TCP segment is dropped in
+  // silence: the token call succeeds, GET /flows times out, and only on the
+  // instances whose flow is larger than about 1.4 KB. That reads as a fleet of
+  // wedged runtimes and is not one — docs/inbetriebnahme.md, 0.6.
+  //
+  // So the interface is lowered at start, which needs NET_ADMIN. The capability
+  // is over this container's own network stack, not the host's, and it is far
+  // narrower than the engine socket above. 1350 matches the VPN; a smaller
+  // number than the path needs is harmless, a larger one is this bug.
+  //
+  // Setting the engine's own MTU instead is the better fix where that is
+  // allowed — Docker Desktop: {"mtu": 1350} in daemon.json; podman: a network
+  // created with --opt mtu=1350. It fixes every container rather than this one,
+  // and then both lines below can go.
+  "runArgs": ["--cap-add=NET_ADMIN"],
+  "postStartCommand": "sudo ip link set dev eth0 mtu 1350 2>/dev/null || echo 'MTU unchanged — large Admin API responses may time out in here. docs/inbetriebnahme.md, 0.6'",
+
+  "containerEnv": {
+    // compose/editor.yml mounts ../apps/$APP relative to itself. Inside this
+    // container that path is the workspace; the docker daemon on the host needs
+    // the host path, which this supplies.
+    "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}",
+    // The socket here is the host's Docker, so the editor uses docker even on a
+    // workstation whose own convention is podman.
+    "CONTAINER_ENGINE": "docker"
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "redhat.vscode-yaml",
+        "eamodio.gitlens"
+      ],
+      "settings": {
+        "yaml.schemas": {
+          "./schemas/registry.schema.json": "registry.yml"
+        },
+        "files.associations": { "Jenkinsfile": "groovy" },
+        "python.defaultInterpreterPath": "/usr/local/bin/python"
+      }
+    }
+  },
+
+  "remoteUser": "vscode"
+}

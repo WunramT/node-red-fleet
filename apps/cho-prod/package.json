@@ -1,0 +1,6 @@
+{
+  "name": "node-red-cho-prod",
+  "description": "Palette for cho-prod",
+  "private": true,
+  "dependencies": {}
+}

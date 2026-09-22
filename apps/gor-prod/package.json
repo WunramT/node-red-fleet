@@ -1,0 +1,14 @@
+{
+  "name": "node-red-gor-prod",
+  "description": "Palette for gor-prod",
+  "private": true,
+  "dependencies": {
+    "@martip/node-red-xlsx": "~1.0.2",
+    "node-red-contrib-mssql-plus": "~0.12.2",
+    "node-red-contrib-opcua": "~0.2.339",
+    "node-red-contrib-postgresql": "~0.14.2",
+    "node-red-contrib-ui-upload": "~0.8.1",
+    "node-red-dashboard": "~3.6.5",
+    "node-red-node-ui-table": "~0.4.4"
+  }
+}

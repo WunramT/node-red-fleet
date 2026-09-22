@@ -1,0 +1,6 @@
+{
+  "name": "node-red-wag-prod",
+  "description": "Palette for wag-prod",
+  "private": true,
+  "dependencies": {}
+}

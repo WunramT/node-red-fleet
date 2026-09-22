@@ -1,0 +1,328 @@
+[
+    {
+        "id": "f6ef6bd6f1cd4b57",
+        "type": "tab",
+        "label": "SDCS Frimo PureFloor Trolley Tasks ",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ea067e59362413a0",
+        "type": "group",
+        "z": "f6ef6bd6f1cd4b57",
+        "name": "location status change detect",
+        "style": {
+            "fill": "#d1d1d1",
+            "fill-opacity": "0.53",
+            "label": true
+        },
+        "nodes": [
+            "b128a8bc78bb7d2a",
+            "2c1b24856b501812",
+            "fc988b79f05216da",
+            "6bb58843352e1079",
+            "fc8eda820730a2ea",
+            "814084c0ad69abaf",
+            "03b4b6bcc523e2a5",
+            "a01a45df2f25c8fa",
+            "ef97e5f335148a0f",
+            "4202bff6c46a5a25",
+            "7b39aaf65b172a7d"
+        ],
+        "x": 14,
+        "y": 199,
+        "w": 1312,
+        "h": 782
+    },
+    {
+        "id": "65a648f5af6e4647",
+        "type": "tls-config",
+        "name": "dpn-svr-iot_tls",
+        "cert": "",
+        "key": "",
+        "p12": "",
+        "p12name": "",
+        "ca": "",
+        "certname": "client.crt",
+        "keyname": "client.key",
+        "caname": "ca.crt",
+        "servername": "dpn-svr-iot",
+        "verifyservercert": false,
+        "alpnprotocol": "",
+        "certEnv": "",
+        "keyEnv": "",
+        "caEnv": ""
+    },
+    {
+        "id": "922fa28be1dcb7a7",
+        "type": "mqtt-broker",
+        "name": "mqtt://dpn-svr-iot",
+        "broker": "192.168.48.240",
+        "port": "8883",
+        "tls": "65a648f5af6e4647",
+        "clientid": "wag_node_red_prod",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "5",
+        "keepalive": "60",
+        "cleansession": false,
+        "autoUnsubscribe": false,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": "3600"
+    },
+    {
+        "id": "b128a8bc78bb7d2a",
+        "type": "mqtt in",
+        "z": "f6ef6bd6f1cd4b57",
+        "g": "ea067e59362413a0",
+        "name": "trolley_data",
+        "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/trolley_data",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "922fa28be1dcb7a7",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 240,
+        "wires": [
+            [
+                "fc988b79f05216da"
+            ]
+        ]
+    },
+    {
+        "id": "2c1b24856b501812",
+        "type": "function",
+        "z": "f6ef6bd6f1cd4b57",
+        "g": "ea067e59362413a0",
+        "name": "02 assign working area status",
+        "func": "// 02 assign working area status\n//\n// Input:\n// msg.payload = normalized trolley rows\n//\n// Output:\n// msg.payload = trolley rows with location_status\n//\n// This node does not filter rows.\n// It only assigns:\n// - in_workingarea\n// - not_in_workingarea\n\nconst WORKING_AREA_MIN = 10000;\nconst WORKING_AREA_MAX = 27000;\n\nfunction isInWorkingArea(position) {\n    const pos = Number(position);\n\n    return Number.isFinite(pos)\n        && pos >= WORKING_AREA_MIN\n        && pos <= WORKING_AREA_MAX;\n}\n\nmsg.payload = (msg.payload || []).map(row => {\n    const inArea = isInWorkingArea(row.actual_position);\n\n    return {\n        ...row,\n        location_status: inArea ? \"in_workingarea\" : \"not_in_workingarea\"\n    };\n});\n\nconst inCount = msg.payload.filter(row => row.location_status === \"in_workingarea\").length;\nconst outCount = msg.payload.filter(row => row.location_status === \"not_in_workingarea\").length;\n\nnode.status({\n    fill: inCount > 0 ? \"green\" : \"yellow\",\n    shape: \"dot\",\n    text: `working area: ${inCount} in / ${outCount} out`\n});\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 380,
+        "wires": [
+            [
+                "6bb58843352e1079"
+            ]
+        ]
+    },
+    {
+        "id": "fc988b79f05216da",
+        "type": "function",
+        "z": "f6ef6bd6f1cd4b57",
+        "g": "ea067e59362413a0",
+        "name": "01 normalize trolley array",
+        "func": "// 01 normalize trolley array\n//\n// Input:\n// msg.payload.ts\n// msg.payload.value = raw trolley array from OPC UA / iotbridge\n//\n// Output:\n// msg.payload = normalized trolley rows\n//\n// Important:\n// In the current raw payload:\n// - value[0] is a dummy / empty trolley row\n// - value[1] is Trolley-01\n// - value[2] is Trolley-02\n// - ...\n// - value[32] is Trolley-32\n\nconst sourceTs =\n    typeof msg.payload?.ts === \"string\" && msg.payload.ts.trim() !== \"\"\n        ? msg.payload.ts\n        : new Date().toISOString();\n\nconst rawArray = Array.isArray(msg.payload?.Trolley_Data)\n    ? msg.payload.Trolley_Data\n    : Array.isArray(msg.payload?.value)\n        ? msg.payload.value\n        : [];\n\nfunction isNonEmptyString(value) {\n    return typeof value === \"string\" && value.trim() !== \"\";\n}\n\nfunction normalizeText(value) {\n    return isNonEmptyString(value) ? value.trim() : \"\";\n}\n\nfunction toNumberOrNull(value) {\n    const n = Number(value);\n    return Number.isFinite(n) ? n : null;\n}\n\nfunction getActualPosition(row) {\n    return toNumberOrNull(row.ActualPosition);\n}\n\nfunction getToolName(row, slotIndex) {\n    const tool = Array.isArray(row.Tool) ? row.Tool[slotIndex] : null;\n\n    if (!tool) {\n        return \"\";\n    }\n\n    return normalizeText(\n        tool?.Status_Tool?.Name_Tool ||\n        tool?.RecipeData?.ToolNmbr ||\n        \"\"\n    );\n}\n\nfunction getToolApplied(row) {\n    return Boolean(row.ToolApplied);\n}\n\nfunction getTrolleyNo(index, arrayLength) {\n    // Current payload has 33 rows:\n    // index 0 = dummy\n    // index 1 = Trolley-01\n    // index 32 = Trolley-32\n    if (arrayLength === 33) {\n        return index;\n    }\n\n    // Fallback if vendor payload changes to exactly 32 rows:\n    // index 0 = Trolley-01\n    if (arrayLength === 32) {\n        return index + 1;\n    }\n\n    // Safe fallback for unexpected shape.\n    return index > 0 ? index : null;\n}\n\nmsg.payload = rawArray\n    .map((row, index) => {\n        const trolleyNo = getTrolleyNo(index, rawArray.length);\n\n        return {\n            trolley_no: trolleyNo,\n            actual_position: getActualPosition(row),\n            tool_0_name: getToolName(row, 0),\n            tool_1_name: getToolName(row, 1),\n            tool_applied: getToolApplied(row),\n            ts: sourceTs,\n            raw_index: index\n        };\n    })\n    .filter(row => {\n        return Number.isInteger(row.trolley_no)\n            && row.trolley_no >= 1\n            && row.trolley_no <= 32;\n    });\n\nnode.status({\n    fill: msg.payload.length === 32 ? \"green\" : \"yellow\",\n    shape: \"dot\",\n    text: `normalized ${msg.payload.length}/32 trolleys`\n});\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 240,
+        "wires": [
+            [
+                "2c1b24856b501812"
+            ]
+        ]
+    },
+    {
+        "id": "6bb58843352e1079",
+        "type": "function",
+        "z": "f6ef6bd6f1cd4b57",
+        "g": "ea067e59362413a0",
+        "name": "03 detect location status changes",
+        "func": "// 03 detect location status changes\n//\n// Input:\n// msg.payload = trolley rows with location_status\n//\n// Output:\n// msg.payload = only rows where location_status changed\n//\n// Why this exists:\n// The backend uses state_events as lifecycle events.\n// Node-RED must not send the same location state on every snapshot.\n// It should only send an event when a trolley enters or leaves the working area.\n\nconst rows = Array.isArray(msg.payload) ? msg.payload : [];\n\n// Node context keeps last known location status per trolley.\n// Example:\n// {\n//   \"1\": \"not_in_workingarea\",\n//   \"2\": \"in_workingarea\"\n// }\nconst previousStatusByTrolley = context.get(\"previousStatusByTrolley\") || {};\n\nconst changes = [];\n\nfor (const row of rows) {\n    const trolleyNo = row.trolley_no;\n    const currentStatus = row.location_status;\n\n    if (!Number.isInteger(trolleyNo)) {\n        continue;\n    }\n\n    if (currentStatus !== \"in_workingarea\" && currentStatus !== \"not_in_workingarea\") {\n        continue;\n    }\n\n    const previousStatus = previousStatusByTrolley[trolleyNo];\n\n    // First observation:\n    // Store status but do not send an event.\n    // This avoids creating 32 events immediately after deploy/restart.\n    if (previousStatus === undefined) {\n        previousStatusByTrolley[trolleyNo] = currentStatus;\n        continue;\n    }\n\n    // No change:\n    // Do nothing.\n    if (previousStatus === currentStatus) {\n        continue;\n    }\n\n    // Real edge detected:\n    // Send one state event.\n    changes.push({\n        ...row,\n        previous_location_status: previousStatus,\n        new_location_status: currentStatus\n    });\n\n    previousStatusByTrolley[trolleyNo] = currentStatus;\n}\n\ncontext.set(\"previousStatusByTrolley\", previousStatusByTrolley);\n\nconst changedNos = changes.map(row => row.trolley_no).join(\", \");\n\nnode.status({\n    fill: changes.length > 0 ? \"blue\" : \"grey\",\n    shape: \"dot\",\n    text: changes.length > 0\n        ? `location changes: ${changes.length} [${changedNos}]`\n        : \"location changes: 0\"\n});\n\nmsg.payload = changes;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 580,
+        "wires": [
+            [
+                "fc8eda820730a2ea",
+                "7b39aaf65b172a7d"
+            ]
+        ]
+    },
+    {
+        "id": "fc8eda820730a2ea",
+        "type": "split",
+        "z": "f6ef6bd6f1cd4b57",
+        "g": "ea067e59362413a0",
+        "name": "04 split events",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "property": "payload",
+        "x": 620,
+        "y": 740,
+        "wires": [
+            [
+                "814084c0ad69abaf"
+            ]
+        ]
+    },
+    {
+        "id": "814084c0ad69abaf",
+        "type": "function",
+        "z": "f6ef6bd6f1cd4b57",
+        "g": "ea067e59362413a0",
+        "name": "05 build state-event request",
+        "func": "// 05 build state-event request\n//\n// Input:\n// msg.payload = one changed trolley row\n//\n// Output:\n// msg.payload = body for POST /api/state-events\n//\n// This node only creates automatic location state events:\n// - in_workingarea\n// - not_in_workingarea\n//\n// It does not create smalec or odpowiedzniki events.\n// Those are created by the operator in the frontend.\n\nconst CONFIG = {\n    workplace_id: \"9f1831d4-ff17-4964-8982-2c1da4c54819\",\n    device_id: \"22232928-c455-473e-8812-0c2750f08992\",\n\n    states: {\n        in_workingarea: \"ec468aa2-07a2-4ce6-9b5b-116082bbd1fd\",\n        not_in_workingarea: \"afda94cb-ccb8-4c8e-aea0-b20ea429d46e\"\n    },\n\n    trolleys: {\n        1: \"5704f79e-f303-4f42-8219-56d02d4312cf\",\n        2: \"c7d3b22f-d7e2-4f63-b8d7-3f3d2a143082\",\n        3: \"f16f758e-9d12-4112-b0c3-1c26b3b28094\",\n        4: \"b8fe0066-44ac-4831-a92c-3535be8b19d6\",\n        5: \"2a1e9058-e773-439e-9e16-1d83cfafbdbd\",\n        6: \"ae25fc55-aa81-45d3-9afe-b6ac4bb34820\",\n        7: \"85799229-d5b3-4504-8126-69913cd0f64e\",\n        8: \"22fa51ac-4178-450b-a81f-182ee320578a\",\n        9: \"ed05b815-57cb-4c28-a772-a8d2f212ea60\",\n        10: \"22d53bb6-8525-48e7-bab7-433e95dec14e\",\n        11: \"f24ea5e2-46e0-4b15-ab47-b6fb6204a96b\",\n        12: \"24e3efb0-61da-4c56-b091-6d240b248416\",\n        13: \"e38d25b1-7a34-4a9f-9a91-d5ccaeb59ff1\",\n        14: \"daf63035-84e5-4418-a819-2e507bb5e5bf\",\n        15: \"aa4cfc75-141f-4390-9cfe-fd1ee8fbf49b\",\n        16: \"b8caddde-5122-4782-9193-82c064ebc1b2\",\n        17: \"b9b1fe3f-2c13-4053-b647-9e44f102ec7f\",\n        18: \"79f855e9-233a-49ea-bcc0-d5311bd18d63\",\n        19: \"4d869370-7e79-4054-82dd-be5c182ada6f\",\n        20: \"27589355-2c2d-4326-8895-40eb5803ff54\",\n        21: \"0c721488-1fed-4cb4-84f2-707bceb30c0e\",\n        22: \"70f39a45-11ba-4012-8c4f-85b1eaf0be1d\",\n        23: \"130708d5-b2d5-4b6e-aed1-4a7f3e0f4116\",\n        24: \"e16363f9-f0af-44d2-84ca-9ad2ba6fbcaa\",\n        25: \"0bd0e595-ff1f-4f76-a8f0-e66d9d86583b\",\n        26: \"d9db4e26-2e48-4b0d-9c0a-e4c2b4281232\",\n        27: \"b69d6813-b95b-483e-8cb7-659d8a8a2d2e\",\n        28: \"22b719bc-2490-4186-b723-e47d9b1348e1\",\n        29: \"52e5146f-b5fb-40f1-922b-9f7290acaa28\",\n        30: \"61bfd014-b607-40b0-8fe1-68dfa9e5bff9\",\n        31: \"0c993244-aa8e-4c13-a26f-44d141f608b2\",\n        32: \"61470532-ae7c-407c-a784-a1ad71815065\",\n    }\n};\n\nconst row = msg.payload;\n\nconst trolleyNo = Number(row.trolley_no);\nconst status = row.new_location_status || row.location_status;\n\nconst elementId = CONFIG.trolleys[trolleyNo];\nconst stateId = CONFIG.states[status];\n\nif (!elementId) {\n    node.error(`Missing element_id mapping for trolley ${trolleyNo}`, msg);\n    return null;\n}\n\nif (!stateId) {\n    node.error(`Missing state_id mapping for status ${status}`, msg);\n    return null;\n}\n\nmsg.payload_org = {\n    workplace_id: CONFIG.workplace_id,\n    element_id: elementId,\n    state_id: stateId,\n    occurred_at: row.ts || new Date().toISOString(),\n    note: `source=opcua; trolley_no=${trolleyNo}; tool_0_name=${row.tool_0_name || \"\"}; tool_1_name=${row.tool_1_name || \"\"}`,\n    device_id: CONFIG.device_id,\n    created_by: \"nodered\"\n};\n\nnode.status({\n    fill: \"blue\",\n    shape: \"dot\",\n    text: `POST ${status}: Trolley-${String(trolleyNo).padStart(2, \"0\")}`\n});\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 840,
+        "wires": [
+            [
+                "a01a45df2f25c8fa"
+            ]
+        ]
+    },
+    {
+        "id": "03b4b6bcc523e2a5",
+        "type": "http request",
+        "z": "f6ef6bd6f1cd4b57",
+        "g": "ea067e59362413a0",
+        "name": "Change State",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "shopfloor-data-capture-system_backend_prod:8000/api/state-events",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1220,
+        "y": 940,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a01a45df2f25c8fa",
+        "type": "function",
+        "z": "f6ef6bd6f1cd4b57",
+        "g": "ea067e59362413a0",
+        "name": "Token check",
+        "func": "let token = flow.get(\"auth_token\");\nlet tokenExpiry = flow.get(\"auth_token_expiry\") || 0;\nif (token && Date.now() < tokenExpiry) {\n    msg.headers = {\n        \"Authorization\": \"Bearer \" + token\n    };\n    return [null, msg];\n} \n\nmsg.headers = {\n    \"Content-Type\": \"application/json\"\n};\n\nmsg.payload = {\n    \"email\": \"node-red@polipol.de\",\n    \"password\": \"s]KyMFrnbGVg$l6y\"\n};\n\nreturn [msg, null];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 940,
+        "wires": [
+            [
+                "ef97e5f335148a0f"
+            ],
+            [
+                "03b4b6bcc523e2a5"
+            ]
+        ]
+    },
+    {
+        "id": "ef97e5f335148a0f",
+        "type": "http request",
+        "z": "f6ef6bd6f1cd4b57",
+        "g": "ea067e59362413a0",
+        "name": "Login",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "shopfloor-data-capture-system_backend_prod:8000/api/auth/login",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1070,
+        "y": 820,
+        "wires": [
+            [
+                "4202bff6c46a5a25"
+            ]
+        ]
+    },
+    {
+        "id": "4202bff6c46a5a25",
+        "type": "function",
+        "z": "f6ef6bd6f1cd4b57",
+        "g": "ea067e59362413a0",
+        "name": "Cache  Token",
+        "func": "let token = msg.payload.token;\n\n// Token im Flow-Context cachen (60 min)\nflow.set(\"auth_token\", token);\nflow.set(\"auth_token_expiry\", Date.now() + 60 * 60 * 1000);\n\nmsg.headers = {\n    \"Authorization\": \"Bearer \" + token\n};\nmsg.payload = msg.payload_org;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1150,
+        "y": 700,
+        "wires": [
+            [
+                "03b4b6bcc523e2a5"
+            ]
+        ]
+    },
+    {
+        "id": "7b39aaf65b172a7d",
+        "type": "debug",
+        "z": "f6ef6bd6f1cd4b57",
+        "g": "ea067e59362413a0",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 750,
+        "y": 520,
+        "wires": []
+    }
+]

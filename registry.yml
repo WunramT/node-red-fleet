@@ -1,0 +1,274 @@
+# Instance inventory. Field reference: docs/registry.md
+#
+# Every admin_root below was probed, not parsed — it is the path the running
+# instance answers 401 on. Node-RED versions are the versions actually running.
+#
+# image_tag pins each instance to the Node-RED version it already runs, so the
+# pin itself changes nothing but the drift. The -N suffix is the palette build:
+# bump it when apps/<app>/package.json changes. Converging the estate on one
+# Node-RED version is a separate upgrade — see docs/architecture.md.
+#
+# Still marked CHANGEME:
+#   - *_credential_id       waits on the Jenkins credentials being created
+#
+# credential_secret_id refers to a credential holding the instance's EXISTING
+# generated key, read from .config.runtime.json during the backup gate. Pinning
+# to a new value re-encrypts and breaks every stored credential — see
+# docs/runbook.md before creating any of them.
+
+global_variables: {}
+
+instances:
+  # --- cho-svr-lin01 --------------------------------------------------------
+  # Was logging at level "trace" while every other instance logged at "info";
+  # normalized back to "info" with the credentialSecret pin (decision 13).
+  - name: cho-prod
+    host: cho-svr-lin01
+    compose_service: node-red-prod
+    compose_file: /home/administrator/code/node-red/docker-compose.yml
+    app: cho-prod
+    admin_root: /node-red-prod
+    auth_credential_id: nodered-cho-prod-auth
+    credential_secret_id: nodered-cho-prod-credsecret
+    dns_search: [rah.polipol.intra]
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/cho-prod:4.0.5-1  # running node-red 4.0.5, 68 nodes, no palette
+    variables: {}
+
+  - name: cho-test
+    host: cho-svr-lin01
+    compose_service: node-red-test
+    compose_file: /home/administrator/code/node-red/docker-compose.yml
+    app: cho-test
+    admin_root: /node-red-test
+    auth_credential_id: nodered-cho-test-auth
+    credential_secret_id: nodered-cho-test-credsecret
+    dns_search: [rah.polipol.intra]
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/cho-test:4.0.5-1  # running node-red 4.0.5, 6 nodes, no palette
+    variables: {}
+
+  # --- gor-svr-lin01 --------------------------------------------------------
+  - name: gor-prod
+    host: gor-svr-lin01
+    compose_service: node-red-prod
+    compose_file: /home/itadmin/energy/docker-compose.yml
+    app: gor-prod
+    admin_root: ""
+    auth_credential_id: nodered-gor-prod-auth
+    credential_secret_id: nodered-gor-prod-credsecret
+    dns_search: []
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/gor-prod:4.0.5-1  # running node-red 4.0.5, 94 nodes, 7 palette modules
+    variables: {}
+
+  - name: gor-test
+    host: gor-svr-lin01
+    compose_service: node-red-test
+    compose_file: /home/itadmin/energy/docker-compose.yml
+    app: gor-test
+    admin_root: ""
+    auth_credential_id: nodered-gor-test-auth
+    credential_secret_id: nodered-gor-test-credsecret
+    dns_search: []
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/gor-test:4.0.5-1  # running node-red 4.0.5, 132 nodes, 2 palette modules
+    variables: {}
+
+  # --- jan-svr-lin01 --------------------------------------------------------
+  - name: jan-prod
+    host: jan-svr-lin01
+    compose_service: node-red-prod
+    compose_file: /home/administrator/code/node-red/docker-compose.yml
+    app: jan-prod
+    admin_root: ""
+    auth_credential_id: nodered-jan-prod-auth
+    credential_secret_id: nodered-jan-prod-credsecret
+    dns_search: [rah.polipol.intra]
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/jan-prod:4.0.9-1  # running node-red 4.0.9, 42 nodes, no palette
+    variables: {}
+
+  - name: jan-test
+    host: jan-svr-lin01
+    compose_service: node-red-test
+    compose_file: /home/administrator/code/node-red/docker-compose.yml
+    app: jan-test
+    admin_root: ""
+    auth_credential_id: nodered-jan-test-auth
+    credential_secret_id: nodered-jan-test-credsecret
+    dns_search: [rah.polipol.intra]
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/jan-test:4.0.9-1  # running node-red 4.0.9, 146 nodes, 2 palette modules
+    variables: {}
+
+  # --- slu-svr-lin02 --------------------------------------------------------
+  # Both instances hold no flow at all: no flows.json, no flows_cred.json,
+  # /data untouched since Jul 2025. They are empty runtimes, so app is null
+  # until someone decides what they are for.
+  - name: slu-prod
+    host: slu-svr-lin02
+    compose_service: node-red-prod
+    compose_file: /home/administrator/Base_Container/docker-compose.yml
+    app: null
+    admin_root: /node-red-prod
+    auth_credential_id: nodered-slu-prod-auth
+    credential_secret_id: nodered-slu-prod-credsecret
+    dns_search: [rah.polipol.intra]
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/slu-prod:4.0.9-1  # running node-red 4.0.9, empty
+    variables: {}
+
+  - name: slu-test
+    host: slu-svr-lin02
+    compose_service: node-red-test
+    compose_file: /home/administrator/Base_Container/docker-compose.yml
+    app: null
+    admin_root: /node-red-test
+    auth_credential_id: nodered-slu-test-auth
+    credential_secret_id: nodered-slu-test-credsecret
+    dns_search: [rah.polipol.intra]
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/slu-test:4.0.9-1  # running node-red 4.0.9, empty
+    variables: {}
+
+  # --- srem-svr-lin01 -------------------------------------------------------
+  - name: srem-prod
+    host: srem-svr-lin01
+    compose_service: node-red-prod
+    compose_file: /home/administrator/Base_Container/docker-compose.yml
+    app: srem-prod
+    admin_root: /node-red-prod
+    auth_credential_id: nodered-srem-prod-auth
+    credential_secret_id: nodered-srem-prod-credsecret
+    dns_search: [rah.polipol.intra]
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/srem-prod:4.0.9-1  # running node-red 4.0.9, 205 nodes / 40 types — largest
+    variables: {}
+
+  - name: srem-test
+    host: srem-svr-lin01.srem.polipol.intra
+    compose_service: node-red-test
+    compose_file: /home/administrator/Base_Container/docker-compose.yml
+    app: srem-test
+    admin_root: /node-red-test
+    auth_credential_id: nodered-srem-test-auth
+    credential_secret_id: nodered-srem-test-credsecret
+    dns_search: [rah.polipol.intra]
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/srem-test:5.0.6-1  # running node-red 5.0.6, 79 nodes, 7 palette modules
+    variables: {}
+
+  # --- wag-svr-lin01 --------------------------------------------------------
+  - name: wag-prod
+    host: wag-svr-lin01
+    compose_service: node-red-prod
+    compose_file: /home/administrator/base_container/docker-compose.yml
+    app: wag-prod
+    admin_root: /node-red-prod
+    auth_credential_id: nodered-wag-prod-auth
+    credential_secret_id: nodered-wag-prod-credsecret
+    dns_search: [rah.polipol.intra]
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/wag-prod:5.0.1-1  # running node-red 5.0.1, 15 nodes, no palette
+    variables: {}
+
+  - name: wag-test
+    host: wag-svr-lin01
+    compose_service: node-red-test
+    compose_file: /home/administrator/base_container/docker-compose.yml
+    app: wag-test
+    admin_root: /node-red-test
+    auth_credential_id: nodered-wag-test-auth
+    credential_secret_id: nodered-wag-test-credsecret
+    dns_search: [rah.polipol.intra]
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/wag-test:5.0.1-1  # running node-red 5.0.1, 222 nodes, 2 palette modules
+    variables: {}
+
+  # --- wfm-svr-lin01 --------------------------------------------------------
+  # The host ran a single unqualified instance called node-red. It is now the
+  # prod half of a pair, so it is named like every other prod instance in the
+  # estate, and node-red-test joins it as the sandbox the pipeline is proven
+  # against before a prod deploy.
+  #
+  # adminAuth was off on prod — the probe returned 200, not 401 — on a host
+  # that publishes 1880. Being switched on with the credentialSecret pin
+  # (decision 13); until then deploy.py has nothing to authenticate against.
+  - name: wfm-prod
+    host: wfm-svr-lin01
+    compose_service: node-red-prod
+    compose_file: /home/administrator/Base_Container/docker-compose.yml
+    app: wfm-prod
+    admin_root: "/node-red-prod"
+    auth_credential_id: nodered-wfm-prod-auth
+    credential_secret_id: nodered-wfm-prod-credsecret
+    dns_search: [rah.polipol.intra]
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/wfm-prod:4.0.9-1  # running node-red 4.0.9, 19 nodes, node-red-contrib-opcua
+    variables: {}
+
+  # New instance, so nothing here is measured yet: the Node-RED version and the
+  # palette match prod on purpose, so a flow moves between the two without a
+  # palette surprise. Its flow is a deploy proof that touches no other system.
+  - name: wfm-test
+    host: wfm-svr-lin01
+    compose_service: node-red-test
+    compose_file: /home/administrator/Base_Container/docker-compose.yml
+    app: wfm-test
+    admin_root: "/node-red-test"
+    auth_credential_id: nodered-wfm-test-auth
+    credential_secret_id: nodered-wfm-test-credsecret
+    dns_search: [rah.polipol.intra]
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/wfm-test:4.0.9-1  # node-red 4.0.9 to match prod, node-red-contrib-opcua
+    variables: {}
+
+  # pod-prod is mid-migration off FlowFuse (docs/flowfuse-migration.md). The
+  # entry exists so CI builds its image and the pipeline can deploy it; the
+  # container itself comes up with every tab disabled and takes them over one
+  # group at a time. node-red 4.0.8 is what the device agent runs — the version
+  # move is a separate step, after the cutover.
+  - name: pod-prod
+    host: pod-svr-lin01
+    compose_service: node-red-prod
+    compose_file: /home/administrator/Base_Container/docker-compose.yml
+    app: pod-prod
+    admin_root: "/node-red-prod"
+    auth_credential_id: nodered-pod-prod-auth
+    credential_secret_id: nodered-pod-prod-credsecret
+    dns_search: [rah.polipol.intra]
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/pod-prod:4.0.8-1  # node-red 4.0.8 as the agent runs it, modbus + mssql-plus + postgresql + buffer-parser
+    variables: {}
+
+  # The workbench for pod-prod: empty until a tab is promoted onto it, and
+  # created with the pair so the image exists when it is first needed.
+  - name: pod-test
+    host: pod-svr-lin01
+    compose_service: node-red-test
+    compose_file: /home/administrator/Base_Container/docker-compose.yml
+    app: pod-test
+    admin_root: "/node-red-test"
+    auth_credential_id: nodered-pod-test-auth
+    credential_secret_id: nodered-pod-test-credsecret
+    dns_search: [rah.polipol.intra]
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/pod-test:4.0.8-1  # node-red 4.0.8 and pod-prod's palette, so a promoted tab opens with its nodes
+    variables: {}
+
+  # dpn-prod is mid-migration off FlowFuse, like pod-prod. Eleven tabs and 852
+  # nodes, so it is taken over group by group — cutover-plan.py says which tabs
+  # can move alone. node-red 4.0.9 is what the agent resolved from `latest`.
+  #
+  # apps/dpn-prod/flows.json is deliberately absent until the export lands, and
+  # validate-registry.py fails on that. An empty placeholder would validate and
+  # then deploy as "delete all 852 nodes", so the missing file is the safer
+  # state: CI refuses the merge and says which file it wants.
+  - name: dpn-prod
+    host: dpn-svr-iot
+    compose_service: node-red-prod
+    compose_file: /home/iot/Base_Container/docker-compose.yml
+    app: dpn-prod
+    admin_root: "/node-red-prod"
+    auth_credential_id: nodered-dpn-prod-auth
+    credential_secret_id: nodered-dpn-prod-credsecret
+    dns_search: [rah.polipol.intra]
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/dpn-prod:4.0.9-1  # node-red 4.0.9 as the agent resolved it, dashboard + postgresql + mssql-plus + queue-gate + google-sheets + email, axios and ajv for the function nodes
+    variables: {}
+
+  - name: dpn-test
+    host: dpn-svr-iot
+    compose_service: node-red-test
+    compose_file: /home/iot/Base_Container/docker-compose.yml
+    app: dpn-test
+    admin_root: "/node-red-test"
+    auth_credential_id: nodered-dpn-test-auth
+    credential_secret_id: nodered-dpn-test-credsecret
+    dns_search: [rah.polipol.intra]
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/dpn-test:4.0.9-1  # node-red 4.0.9 and dpn-prod's palette, so a promoted tab opens with its nodes
+    variables: {}

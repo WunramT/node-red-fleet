@@ -1,0 +1,8 @@
+{
+  "name": "node-red-wfm-prod",
+  "description": "Palette for wfm-prod",
+  "private": true,
+  "dependencies": {
+    "node-red-contrib-opcua": "~0.2.339"
+  }
+}

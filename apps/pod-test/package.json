@@ -1,0 +1,11 @@
+{
+  "name": "node-red-pod-test",
+  "description": "Palette for pod-test",
+  "private": true,
+  "dependencies": {
+    "node-red-contrib-buffer-parser": "~3.2.2",
+    "node-red-contrib-modbus": "~5.42.0",
+    "node-red-contrib-mssql-plus": "~0.12.2",
+    "node-red-contrib-postgresql": "~0.14.2"
+  }
+}

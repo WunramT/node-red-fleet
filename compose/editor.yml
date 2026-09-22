@@ -1,0 +1,79 @@
+# A local Node-RED editor for one app, with every existing tab switched off.
+#
+#   python3 scripts/nr.py edit wag-prod
+#   # then open http://localhost:1880
+#
+# ---------------------------------------------------------------------------
+# Why the tabs arrive disabled
+# ---------------------------------------------------------------------------
+# A real flow contains live nodes. Open one in a container that can reach the
+# brokers, press Deploy, and a second runtime starts consuming the same MQTT
+# topic and writing the same rows. Safe mode does not save you: it ends at the
+# first Deploy, and Deploy is how the editor writes your work into the tree.
+#
+# Most nodes in this estate carry no credentials, so "it cannot authenticate"
+# protects nothing here — and several address their target by literal IP, so
+# name resolution protects nothing either.
+#
+# So nr.py stages the flow into a session directory with every tab disabled and
+# mounts that, never apps/<app>/ itself. You enable the one tab you are working
+# on, or add a new one, and only that runs. On exit nr.py copies the flow back
+# and restores each existing tab's disabled state from Git, so the local
+# switching never reaches a commit and never reaches an instance.
+#
+# What is left: enabling a tab means it runs for real, against real systems.
+# That is the point — it is the deliberate act, not the accident. A config node
+# may also open a connection while its nodes are disabled; that is a connect
+# without traffic. And an exec node runs inside this container.
+#
+# For a flow you do not know, take the network away entirely:
+#
+#   python3 scripts/nr.py edit srem-test --isolated
+#
+# That puts the editor on a network with no gateway — nothing outside the
+# container is reachable, by name or by address, Deploy or no Deploy. Verify it
+# in your own engine, because some compose providers ignore the flag:
+#
+#   <engine> compose -f compose/editor.yml exec editor node -e \
+#     "require('net').connect(443,'1.1.1.1').on('error',()=>console.log('blocked')).setTimeout(3000,()=>console.log('blocked'))"
+#
+# ---------------------------------------------------------------------------
+
+services:
+  editor:
+    # EDITOR_IMAGE is that app's own image, so its palette nodes open as
+    # themselves; otherwise the plain runtime at the version the instance runs.
+    image: ${EDITOR_IMAGE:-nodered/node-red:${NODE_RED_VERSION:-5.0.1}}
+    # Only pull when the engine does not already have it. The image lives on
+    # the engine, not in whatever client asked for it, so one pull from
+    # anywhere serves every later session and no login is needed again.
+    pull_policy: missing
+    container_name: node-red-editor
+    ports:
+      # EDITOR_BIND is the address the port is published on, and 127.0.0.1 is
+      # only right when the daemon runs on the machine you browse from. With
+      # podman on Windows or macOS, or from inside a dev container, the daemon
+      # is in a VM and its loopback is not yours: the port lands somewhere you
+      # cannot reach. nr.py sets 0.0.0.0 in those cases, where the VM forwards
+      # it to your localhost.
+      - "${EDITOR_BIND:-127.0.0.1}:1880:1880"
+    volumes:
+      # EDITOR_DATA is the staged session directory nr.py prepares. REPO_ROOT is
+      # empty outside a dev container, so this stays the relative path next to
+      # this file; inside one the docker daemon runs on the host and cannot see
+      # /workspaces/..., so nr.py sets REPO_ROOT to the host path instead.
+      - ${REPO_ROOT:-..}/${EDITOR_DATA:?set EDITOR_DATA, or use scripts/nr.py edit}:/data
+    environment:
+      # Load the flow, do not run it — covers the window before the first Deploy.
+      NODE_RED_ENABLE_SAFE_MODE: "true"
+    networks:
+      - ${EDITOR_NETWORK:-bridged}
+    restart: "no"
+
+networks:
+  # Normal networking, so the tab you enable can reach a database or a broker.
+  bridged: {}
+  # No gateway, so no egress at all. The published port still works: the host
+  # routes to the bridge, the container has no route back out.
+  isolated:
+    internal: true

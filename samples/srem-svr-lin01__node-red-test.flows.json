@@ -1,0 +1,1709 @@
+[
+    {
+        "id": "a907a4015c229dfd",
+        "type": "tab",
+        "label": "TEST",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "71b64f9e3094bcd5",
+        "type": "tab",
+        "label": "Dashboard",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "76b3786a13d77125",
+        "type": "subflow",
+        "name": "Insert Queue V4",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 80,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "32d8e2edfcc6a2f2"
+                    }
+                ]
+            }
+        ],
+        "out": [],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99",
+        "status": {
+            "x": 720,
+            "y": 460,
+            "wires": [
+                {
+                    "id": "0c080fdb1fbac39c",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "4ae254d8ea8228be",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "client.crt",
+        "keyname": "client.key",
+        "caname": "ca.crt",
+        "servername": "dpn-svr-iot",
+        "verifyservercert": false,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "460ab71c9ff05ec1",
+        "type": "mqtt-broker",
+        "name": "dpn-svr-iot",
+        "broker": "dpn-svr-iot.rah.polipol.intra",
+        "port": "8883",
+        "tls": "4ae254d8ea8228be",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "5",
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "2ce26d70114858d6",
+        "type": "postgreSQLConfig",
+        "name": "",
+        "host": "127.0.0.1",
+        "hostFieldType": "str",
+        "port": 5432,
+        "portFieldType": "num",
+        "database": "postgres",
+        "databaseFieldType": "str",
+        "ssl": "true",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": 10,
+        "maxFieldType": "num",
+        "idle": 1000,
+        "idleFieldType": "num",
+        "connectionTimeout": 10000,
+        "connectionTimeoutFieldType": "num",
+        "user": "test",
+        "userFieldType": "str",
+        "password": "pg_pass",
+        "passwordFieldType": "env"
+    },
+    {
+        "id": "be2799b30abb3faf",
+        "type": "postgreSQLConfig",
+        "name": "srem-svr-lin01/backend_test",
+        "host": "srem-svr-lin01.srem.polipol.intra",
+        "hostFieldType": "str",
+        "port": 5432,
+        "portFieldType": "num",
+        "database": "backend_test",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": 10,
+        "maxFieldType": "num",
+        "idle": 1000,
+        "idleFieldType": "num",
+        "connectionTimeout": 10000,
+        "connectionTimeoutFieldType": "num",
+        "user": "backend_user",
+        "userFieldType": "str",
+        "password": "VL1rup1i8Z5F8qPeHkOC",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "811eff4031375d11",
+        "type": "ui_tab",
+        "name": "LEATHER Upload",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "cd18d89f6cabd02a",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD.MM.YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "812e210d562c9608",
+        "type": "ui_group",
+        "name": "Leather Upload",
+        "tab": "811eff4031375d11",
+        "order": 1,
+        "disp": true,
+        "width": "20",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "dashboard-tab",
+        "type": "ui_tab",
+        "name": "Backups",
+        "icon": "storage",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "dashboard-group",
+        "type": "ui_group",
+        "name": "Backup",
+        "tab": "dashboard-tab",
+        "order": 1,
+        "disp": true,
+        "width": 15,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "f43294141dfb4f45",
+        "type": "postgreSQLConfig",
+        "z": "76b3786a13d77125",
+        "name": "DPN_SVR_postgres",
+        "host": "192.168.48.209",
+        "hostFieldType": "str",
+        "port": "6432",
+        "portFieldType": "num",
+        "database": "iot",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": 10,
+        "maxFieldType": "num",
+        "idle": 1000,
+        "idleFieldType": "num",
+        "connectionTimeout": 10000,
+        "connectionTimeoutFieldType": "num",
+        "user": "iot_user_sub",
+        "userFieldType": "str",
+        "password": "pwevalhyxb",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "f19d13b8a2878029",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "client.crt",
+        "keyname": "client.key",
+        "caname": "ca.crt",
+        "servername": "dpn-svr-iot",
+        "verifyservercert": true,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "4e714f14d7af13f4",
+        "type": "mqtt-broker",
+        "name": "dpn-svr-iot",
+        "broker": "192.168.48.240",
+        "port": "8883",
+        "tls": "f19d13b8a2878029",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "5",
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": "86400"
+    },
+    {
+        "id": "fe9839ef8da4c078",
+        "type": "link out",
+        "z": "76b3786a13d77125",
+        "name": "",
+        "links": [
+            "cce986b7f5e614d1"
+        ],
+        "x": 1085,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "cce986b7f5e614d1",
+        "type": "link in",
+        "z": "76b3786a13d77125",
+        "name": "",
+        "links": [
+            "fe9839ef8da4c078"
+        ],
+        "x": 125,
+        "y": 280,
+        "wires": [
+            [
+                "32d8e2edfcc6a2f2",
+                "858ee01069666424"
+            ]
+        ]
+    },
+    {
+        "id": "de6e9bd1104ea4ad",
+        "type": "function",
+        "z": "76b3786a13d77125",
+        "name": "drop message & reactivate trigger",
+        "func": "// Delete the oldest message on success\n// Send a delay message to the trigger which will change the delay settings and restart the trigger\nnode.send([\n    {topic: \"control\", payload: \"drop\"},  // Output 1\n    {delay: 1000} // Output 2\n]);",
+        "outputs": 2,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "// Der Code hier wird ausgeführt,\n// wenn der Node gestartet wird\n\n// Set a initial state to see if a message has reached this node.\nconst errorFlag = flow.get(\"errorFlag\") || false;",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 100,
+        "wires": [
+            [
+                "fe9839ef8da4c078"
+            ],
+            [
+                "c585d6f27fd51bdd"
+            ]
+        ]
+    },
+    {
+        "id": "c0a699da6d0e1dc1",
+        "type": "catch",
+        "z": "76b3786a13d77125",
+        "name": "SQL Error",
+        "scope": [
+            "6705c95239a26a46"
+        ],
+        "uncaught": false,
+        "x": 280,
+        "y": 200,
+        "wires": [
+            [
+                "89f05afa55943516",
+                "a563cea57d73f796"
+            ]
+        ]
+    },
+    {
+        "id": "89f05afa55943516",
+        "type": "function",
+        "z": "76b3786a13d77125",
+        "name": "set errorFlag & change delay",
+        "func": "const errorFlag = flow.get(\"errorFlag\") || false;\nif (!errorFlag) {\n    flow.set(\"errorFlag\", true)\n};\nmsg.delay = 10000;  // 10 seconds between retry\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 200,
+        "wires": [
+            [
+                "c585d6f27fd51bdd"
+            ]
+        ]
+    },
+    {
+        "id": "0c080fdb1fbac39c",
+        "type": "function",
+        "z": "76b3786a13d77125",
+        "name": "status message",
+        "func": "return msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0ca4a63e853d0c9f",
+        "type": "status",
+        "z": "76b3786a13d77125",
+        "name": "status",
+        "scope": [
+            "a563cea57d73f796",
+            "858ee01069666424"
+        ],
+        "x": 270,
+        "y": 460,
+        "wires": [
+            [
+                "0c080fdb1fbac39c"
+            ]
+        ]
+    },
+    {
+        "id": "c585d6f27fd51bdd",
+        "type": "trigger",
+        "z": "76b3786a13d77125",
+        "name": "Trigger",
+        "op1": "1",
+        "op2": "0",
+        "op1type": "str",
+        "op2type": "num",
+        "duration": "-10",
+        "extend": false,
+        "overrideDelay": true,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 820,
+        "y": 200,
+        "wires": [
+            [
+                "4d40c96f9af9d485"
+            ]
+        ]
+    },
+    {
+        "id": "4d40c96f9af9d485",
+        "type": "function",
+        "z": "76b3786a13d77125",
+        "name": "peek",
+        "func": "// get errorFlag\nconst errorFlag = flow.get('errorFlag') || false;\n\n// if errorFlag is True, do nothing and set errorFlag to false\nif (errorFlag) {\n    flow.set('errorFlag', false)\n    return null\n} else {\n    msg.topic = 'control'\n    msg.payload = 'peek'\n    return msg\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 200,
+        "wires": [
+            [
+                "fe9839ef8da4c078"
+            ]
+        ]
+    },
+    {
+        "id": "a563cea57d73f796",
+        "type": "function",
+        "z": "76b3786a13d77125",
+        "name": "SQL Error Status Message",
+        "func": "// Combine the error message and the queueText\n\nconst errorMessage = msg.error.message;\nconst queueText = flow.get(\"queueText\") || \"Queue: 0\";\nconst combinedMessage = `${queueText} - ${errorMessage}`\nnode.status({ fill: \"red\", shape: \"ring\", text: combinedMessage});",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "521690d20c4de49f",
+        "type": "status",
+        "z": "76b3786a13d77125",
+        "name": "status",
+        "scope": [
+            "32d8e2edfcc6a2f2"
+        ],
+        "x": 270,
+        "y": 520,
+        "wires": [
+            [
+                "566311abd0d4a3be"
+            ]
+        ]
+    },
+    {
+        "id": "566311abd0d4a3be",
+        "type": "function",
+        "z": "76b3786a13d77125",
+        "name": "Set queueText",
+        "func": "// Set the queue text to use it in another node status\nflow.set(\"queueText\", msg.status.text)",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "903bfea62df56fcd",
+        "type": "inject",
+        "z": "76b3786a13d77125",
+        "name": "init trigger",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 460,
+        "y": 260,
+        "wires": [
+            [
+                "c585d6f27fd51bdd"
+            ]
+        ]
+    },
+    {
+        "id": "858ee01069666424",
+        "type": "function",
+        "z": "76b3786a13d77125",
+        "name": "Queue Success status",
+        "func": "// Set the Flow status to the status message of the q-gate\nconst queueText = flow.get(\"queueText\") || \"Queue: 0\";\nnode.status({ fill: \"yellow\", shape: \"ring\", text: queueText});",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e5ac8fac2308fd36",
+        "type": "function",
+        "z": "76b3786a13d77125",
+        "name": "reset trigger",
+        "func": "// Reset the trigger and set the delay to high value to avoid\n// peeking the same message from the queue again,\n// if the database is not responding within a few seconds\n\nmsg.reset = true;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 140,
+        "wires": [
+            [
+                "c585d6f27fd51bdd"
+            ]
+        ]
+    },
+    {
+        "id": "05654549c6edc225",
+        "type": "comment",
+        "z": "76b3786a13d77125",
+        "name": "Subflow description",
+        "info": "# Insert Queue\n\nProcess of this subflow:\n 1. queue messages\n 2. insert message by message into postgresql node\n 3. drop the message from the queue, when it was processed succesfull\n 4. peek a new message from the queue\n 5. repeat\n\nEach input will be queued inside the q-gate node. (FIFO)\nDuring start of the subflow a Trigger will be activated. This trigger will send a \"control: peek\" message at a given interval.\nThis is necessary because when the queue is empty we need to periodically check if a new message is available.\nWhen a message is dequeued the trigger will be deactivated (msg.reset: true) until the message is processed by the postgresql node.\n",
+        "x": 150,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "ab8a2539d5f8c5f1",
+        "type": "comment",
+        "z": "76b3786a13d77125",
+        "name": "",
+        "info": "",
+        "x": 800,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "6705c95239a26a46",
+        "type": "postgresql",
+        "z": "76b3786a13d77125",
+        "name": "insert",
+        "query": "",
+        "postgreSQLConfig": "f43294141dfb4f45",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 450,
+        "y": 40,
+        "wires": [
+            [
+                "de6e9bd1104ea4ad"
+            ]
+        ]
+    },
+    {
+        "id": "32d8e2edfcc6a2f2",
+        "type": "q-gate",
+        "z": "76b3786a13d77125",
+        "name": "q-gate",
+        "controlTopic": "control",
+        "defaultState": "queueing",
+        "openCmd": "open",
+        "closeCmd": "close",
+        "toggleCmd": "toggle",
+        "queueCmd": "queue",
+        "defaultCmd": "default",
+        "triggerCmd": "trigger",
+        "flushCmd": "flush",
+        "resetCmd": "reset",
+        "peekCmd": "peek",
+        "dropCmd": "drop",
+        "statusCmd": "status",
+        "maxQueueLength": "3000",
+        "keepNewest": false,
+        "qToggle": false,
+        "persist": true,
+        "storeName": "memory",
+        "x": 240,
+        "y": 100,
+        "wires": [
+            [
+                "6705c95239a26a46",
+                "e5ac8fac2308fd36"
+            ]
+        ]
+    },
+    {
+        "id": "e0712a7c7840585f",
+        "type": "function",
+        "z": "71b64f9e3094bcd5",
+        "name": "Trigger Processing",
+        "func": "// Get stored file\nconst fileData = flow.get('leather_uploadedFile');\nconst fileName = flow.get('leather_fileName');\n\nif (!fileData) {\n    msg.payload = '❌ Brak pliku do przetworzenia';\n    msg.topic = 'error';\n    return [null, msg];\n}\n\nmsg.payload = fileData;\nmsg.filename = fileName;\nmsg.topic = 'process_file';\n\nconst statusMsg = {\n    payload: '🔄 Przetwarzanie rozpoczęte...',\n    topic: 'processing'\n};\n\nreturn [msg, statusMsg];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 120,
+        "wires": [
+            [
+                "b8354009d51ff89a"
+            ],
+            [
+                "dbb71b37e9a3afb7",
+                "23c0aa0fcf32c626"
+            ]
+        ]
+    },
+    {
+        "id": "8e80904d07d04b3f",
+        "type": "function",
+        "z": "71b64f9e3094bcd5",
+        "name": "File Validation",
+        "func": "// Save file in flow context\nif (msg.payload && msg.payload.length > 0) {\n    flow.set('leather_uploadedFile', msg.payload);\n    flow.set('leather_fileName', msg.file.name || 'uploaded.xlsx');\n    \n    // Validate file type\n    const fileName = msg.file.name || '';\n    const validExtensions = ['.xlsx', '.xls', '.XLSX'];\n    const isValid = validExtensions.some(ext => fileName.toLowerCase().endsWith(ext));\n    \n    if (isValid) {\n        msg.payload = `✅ Plik \"${fileName}\" został załadowany`;\n        msg.topic = 'file_ready';\n        return [msg, null];\n    } else {\n        msg.payload = `❌ Nieprawidłowy typ pliku. Dozwolone są tylko pliki .xlsx i .xls.`;\n        msg.topic = 'file_error';\n        return [null, msg];\n    }\n} else {\n    msg.payload = 'Nie wybrano pliku';\n    msg.topic = 'no_file';\n    return [null, msg];\n}",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 180,
+        "wires": [
+            [
+                "dbb71b37e9a3afb7",
+                "23c0aa0fcf32c626"
+            ],
+            [
+                "dbb71b37e9a3afb7",
+                "23c0aa0fcf32c626"
+            ]
+        ]
+    },
+    {
+        "id": "c745a330f49e2073",
+        "type": "function",
+        "z": "71b64f9e3094bcd5",
+        "name": "parse excel, build sql",
+        "func": "/*\nConstant values:\n- All `Deliveries.type = \"incoming\"`\n- All `Tours.id = tour_number + \"_4000\"`\n\n---\n\n*/\n\nconst pages = msg.payload;\nconst rows = []\nconst schema = \"leather_receipt\";  // schema name\n\n// --- Collect affected pk-values ---\nconst tourIds = new Set();\nconst vbelnIds = new Set();\nconst deliveryIds = new Set();\nconst aufnrIds = new Set();\n\n\nlet queries = [];  // For SQL Queries\nlet tableData = [];  // For UI\n\n// --- Helpful functions ---\n\nfunction formatDateForTour(isoDateString) {\n    try {\n        const date = new Date(isoDateString);\n        const day = String(date.getDate()).padStart(2, '0');\n        const month = String(date.getMonth() + 1).padStart(2, '0');\n        const year = date.getFullYear();\n        return `${day}.${month}.${year}`;  // Format: DD.MM.YYYY\n    } catch (err) {\n        return null;\n    }\n}\n\nfunction toSqlDate(isoString) {\n    try {\n        return new Date(isoString).toISOString().split('T')[0];  // 'YYYY-MM-DD'\n    } catch (e) {\n        return null;\n    }\n}\n\nfunction hasError(val) {\n    if (typeof val !== 'string') return false;\n    return val.includes('#ERROR') || val.includes('#N/A');\n}\n\n/**\n * Validates and normalizes tour_number from Excel.\n * \n * @param {any} tourNumber - The raw tour_number value from Excel\n * @param {number} rowIndex - Row index for error reporting (1-based)\n * @returns {Object} - { success: boolean, value: number|null, error: string|null }\n * \n * Validation rules:\n * - If number or numeric string → parse and return as number\n * - If contains \"SHOP\" or \"shop\" → return 999999\n * - Otherwise → return error\n */\nfunction validateTourNumber(tourNumber, rowIndex) {\n    // Already a valid number\n    if (typeof tourNumber === 'number') {\n        return { success: true, value: tourNumber, error: null };\n    }\n    \n    // Handle string values\n    if (typeof tourNumber === 'string') {\n        // Try to parse as number\n        const parsed = parseInt(tourNumber, 10);\n        if (!isNaN(parsed)) {\n            return { success: true, value: parsed, error: null };\n        }\n        \n        // Check for \"SHOP\" keyword (case-insensitive)\n        if (tourNumber.toLowerCase().includes('shop')) {\n            return { success: true, value: 999999, error: null };\n        }\n    }\n    \n    // Invalid tour number - return error\n    return {\n        success: false,\n        value: null,\n        error: `❌ Error: Invalid tour_number in row ${rowIndex} (Tour: ${tourNumber})`\n    };\n}\n\n// The following for loop iterates over all pages and its rows.\n// It starts at page 0 (page 1) and row 1 (row 2 in excel)\nfor (let i = 0; i < pages.length; i++){\n    for (let a = 1; a < pages[i].length; a++)\n        rows.push(pages[i][a]);\n}\n\n// Iterate over the new created array with all rows\nfor (let i = 0; i < rows.length; i++) {\n    const row = rows[i];\n\n    const delivery_id = row[1];\n    const delivery_pos = row[2];\n    const vbeln_id = row[3];\n    const aufnr_name = row[5];\n    const tour_number = row[7];\n    const tour_date_raw = row[8];\n    const aufnr_id = row[10];\n\n    const requiredValues = [delivery_id, delivery_pos, vbeln_id, aufnr_name, tour_number, tour_date_raw, aufnr_id];\n\n    // Helper: treat null, undefined, empty string as empty\n    const isEmpty = v => v === null || v === undefined || (typeof v === 'string' && v.trim() === '');\n\n    // 1. Skip if ALL positions are empty\n    if (requiredValues.every(isEmpty)) {\n        continue; // go to next row\n    }\n\n    // 2. Error if SOME but not all are empty or faulty\n    if (requiredValues.some(isEmpty) || requiredValues.some(v => hasError(v))) {\n        node.warn(`Error: Incomplete or invalid data in Excel row ${i + 1}`);\n        return [\n            null,\n            { payload: [] },  // Reset the JOIN Node\n            { topic: 'error', payload: `❌ Error: Missing or invalid data in row ${i + 1} (Dostawa: ${delivery_id})` }\n        ];\n    }\n\n    // 3. Validate and normalize tour_number\n    const tourValidation = validateTourNumber(tour_number, i + 1);\n    if (!tourValidation.success) {\n        node.warn(tourValidation.error);\n        return [\n            null,\n            { payload: [] },  // Reset the JOIN Node\n            { topic: 'error', payload: tourValidation.error }\n        ];\n    }\n    const validated_tour_number = tourValidation.value;\n\n    // 4. Process as normal below\n    const tour_date_formatted = formatDateForTour(tour_date_raw);\n    const tour_date = toSqlDate(tour_date_raw);\n\n    // 1. Insert Tour\n    const tour_id = `${validated_tour_number}_${tour_date_formatted}_4000`;\n    if (!tourIds.has(tour_id)) {\n        queries.push(\n            `INSERT INTO ${schema}.tour (id, tour_number, mbdat, state) VALUES ('${tour_id}', ${validated_tour_number}, '${tour_date}', 'open') ON CONFLICT (id) DO UPDATE SET tour_number = EXCLUDED.tour_number, mbdat = EXCLUDED.mbdat, state = EXCLUDED.state;`\n        );\n        tourIds.add(tour_id);\n    }\n\n    // 2. Insert Vbeln\n    if (!vbelnIds.has(vbeln_id)) {\n        queries.push(\n            `INSERT INTO ${schema}.vbeln (id, name, tour_id, state) VALUES (${vbeln_id}, 'vbeln_${vbeln_id}', '${tour_id}', 'open') ` +\n            `ON CONFLICT (id) DO UPDATE SET name=EXCLUDED.name, tour_id=EXCLUDED.tour_id, state=EXCLUDED.state;`\n        );\n        vbelnIds.add(vbeln_id);\n    }\n\n    // 3. Insert Deliveries\n    if (!deliveryIds.has(delivery_id)) {\n        queries.push(\n            `INSERT INTO ${schema}.deliveries (id, state, type) VALUES (${delivery_id}, 'loaded', 'incoming') ` +\n            `ON CONFLICT (id) DO UPDATE SET state=EXCLUDED.state, type=EXCLUDED.type;`\n        );\n        deliveryIds.add(delivery_id);\n    }\n\n    // 4. Insert Aufnr\n    queries.push(\n        `INSERT INTO ${schema}.aufnr (id, name, delivery_id, delivery_pos, vbeln_id, state, created_at, updated_at) ` +\n        `VALUES (${aufnr_id}, '${aufnr_name}', ${delivery_id}, ${delivery_pos}, ${vbeln_id}, 'loaded', NOW(), NOW()) ` +\n        `ON CONFLICT (id) DO UPDATE SET ` +\n        `name=EXCLUDED.name, ` +\n        `delivery_id=EXCLUDED.delivery_id, ` +\n        `delivery_pos=EXCLUDED.delivery_pos, ` +\n        `vbeln_id=EXCLUDED.vbeln_id, ` +\n        `state=EXCLUDED.state, ` +\n        `updated_at=NOW();`\n    );\n    aufnrIds.add(aufnr_id);\n\n    // Add table data for UI\n    tableData.push({\n        delivery_id: delivery_id,\n        delivery_pos: delivery_pos,\n        ta: vbeln_id,\n        tour: validated_tour_number,\n        tour_date: tour_date,\n        production_order: aufnr_id,\n        production_order_name: aufnr_name\n    });\n}\n\nmsg.query = queries.join(\"\\n\")\n\n// Multi-output return\nif (queries.length > 0) {\n    node.send(\n        [\n            { query: queries.join(\"\\n\") },\n            null,\n            null\n        ]\n    );\n};\n\n// Send all the table data after successfull processing\nfor (let i = 0; i < tableData.length; i++) {\n    node.send(\n        [\n            null,\n            { payload: tableData[i] },\n            null\n        ]\n    );\n}\nnode.send(\n    [\n        null,\n        null,\n        { complete: true },\n    ]\n);\n\n// Reset the flow variables\nflow.set('leather_uploadedFile', null);\nflow.set('leather_fileName', null);",
+        "outputs": 3,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 120,
+        "wires": [
+            [
+                "a984f584156716b1"
+            ],
+            [
+                "7e2718da3b705098"
+            ],
+            [
+                "2f75e0c9085b07f0"
+            ]
+        ]
+    },
+    {
+        "id": "7e2718da3b705098",
+        "type": "join",
+        "z": "71b64f9e3094bcd5",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "1",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 1060,
+        "y": 180,
+        "wires": [
+            [
+                "6c4703e00784dfe6"
+            ]
+        ]
+    },
+    {
+        "id": "67aa50177af44416",
+        "type": "catch",
+        "z": "71b64f9e3094bcd5",
+        "name": "",
+        "scope": [
+            "23cd0d8139768c1f"
+        ],
+        "uncaught": false,
+        "x": 580,
+        "y": 320,
+        "wires": [
+            [
+                "6fe11f249a3298d5",
+                "d0bc4bb347fc8fcd"
+            ]
+        ]
+    },
+    {
+        "id": "6fe11f249a3298d5",
+        "type": "function",
+        "z": "71b64f9e3094bcd5",
+        "name": "Set state to error",
+        "func": "msg.payload = `❌ Błąd podczas instrukcji SQL. Sprawdź dane lub skontaktuj się z administratorem..`\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 320,
+        "wires": [
+            [
+                "35440f059ec8c733"
+            ]
+        ]
+    },
+    {
+        "id": "ef60056659b010ee",
+        "type": "switch",
+        "z": "71b64f9e3094bcd5",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "connect",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 510,
+        "y": 260,
+        "wires": [
+            [
+                "ecb45c7c12d566a5"
+            ]
+        ]
+    },
+    {
+        "id": "ecb45c7c12d566a5",
+        "type": "function",
+        "z": "71b64f9e3094bcd5",
+        "name": "Clear Status",
+        "func": "msg.payload = \"\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 260,
+        "wires": [
+            [
+                "6c4703e00784dfe6",
+                "35440f059ec8c733"
+            ]
+        ]
+    },
+    {
+        "id": "23cd0d8139768c1f",
+        "type": "postgresql",
+        "z": "71b64f9e3094bcd5",
+        "name": "Insert Leather Import",
+        "query": "SELECT * FROM ;",
+        "postgreSQLConfig": "be2799b30abb3faf",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 1440,
+        "y": 100,
+        "wires": [
+            [
+                "8cbe7733e65aeca4"
+            ]
+        ]
+    },
+    {
+        "id": "d0bc4bb347fc8fcd",
+        "type": "debug",
+        "z": "71b64f9e3094bcd5",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "0d2e6ccdf5b3bf42",
+        "type": "function",
+        "z": "71b64f9e3094bcd5",
+        "name": "Set state to Success",
+        "func": "msg.payload = `✅ Import SQL powiódł się`\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1600,
+        "y": 160,
+        "wires": [
+            [
+                "a8984c4087942b95"
+            ]
+        ]
+    },
+    {
+        "id": "a8984c4087942b95",
+        "type": "link out",
+        "z": "71b64f9e3094bcd5",
+        "name": "link out 1",
+        "mode": "link",
+        "links": [
+            "c485af0e4d33428f",
+            "d447d1dd9cae6407"
+        ],
+        "x": 1745,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "c485af0e4d33428f",
+        "type": "link in",
+        "z": "71b64f9e3094bcd5",
+        "name": "link in 1",
+        "links": [
+            "a8984c4087942b95",
+            "eec9302d901f8661",
+            "1180f5b5aca18619"
+        ],
+        "x": 545,
+        "y": 220,
+        "wires": [
+            [
+                "dbb71b37e9a3afb7"
+            ]
+        ]
+    },
+    {
+        "id": "f0aa83592f6c22f4",
+        "type": "function",
+        "z": "71b64f9e3094bcd5",
+        "name": "POST to backend",
+        "func": "// Prepare HTTP POST request\nmsg.method = \"POST\";\nmsg.url = \"http://srem-svr-lin01.srem.polipol.intra/test/api/leather_receipt/excel_import\";\nmsg.headers = {\n    \"Content-Type\": \"application/json\"\n};\nmsg.payload = {\n    state: \"success\"\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1590,
+        "y": 200,
+        "wires": [
+            [
+                "4fbcf8c0a15b9af7"
+            ]
+        ]
+    },
+    {
+        "id": "4fbcf8c0a15b9af7",
+        "type": "http request",
+        "z": "71b64f9e3094bcd5",
+        "name": "",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1590,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b8354009d51ff89a",
+        "type": "xlsx",
+        "z": "71b64f9e3094bcd5",
+        "name": "Parse Excel",
+        "sheets": "all",
+        "multi": "array",
+        "parse": "rows",
+        "map": "",
+        "x": 590,
+        "y": 100,
+        "wires": [
+            [
+                "c745a330f49e2073"
+            ]
+        ]
+    },
+    {
+        "id": "52a3c2437c6ae06d",
+        "type": "ui_upload",
+        "z": "71b64f9e3094bcd5",
+        "group": "812e210d562c9608",
+        "title": "Prześlij plik Excel",
+        "accept": ".xlsx,.xls",
+        "name": "LEATHER Excel Upload",
+        "order": 1,
+        "width": 20,
+        "height": 2,
+        "chunk": "1024",
+        "transfer": "binary",
+        "x": 150,
+        "y": 180,
+        "wires": [
+            [
+                "8e80904d07d04b3f"
+            ]
+        ]
+    },
+    {
+        "id": "9eb869315ce73e84",
+        "type": "ui_button",
+        "z": "71b64f9e3094bcd5",
+        "name": "Process Leather",
+        "group": "812e210d562c9608",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "📤 Przetwórz i wyślij (Daten verarbeiten)",
+        "tooltip": "Przetwórz dane i wyślij do SQL",
+        "color": "primary",
+        "bgcolor": "",
+        "className": "",
+        "icon": "upload",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 120,
+        "y": 120,
+        "wires": [
+            [
+                "e0712a7c7840585f"
+            ]
+        ]
+    },
+    {
+        "id": "35440f059ec8c733",
+        "type": "ui_text",
+        "z": "71b64f9e3094bcd5",
+        "group": "812e210d562c9608",
+        "order": 3,
+        "width": 20,
+        "height": 1,
+        "name": "",
+        "label": "Status:",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1020,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "dbb71b37e9a3afb7",
+        "type": "ui_toast",
+        "z": "71b64f9e3094bcd5",
+        "position": "top right",
+        "displayTime": "1",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Status Message",
+        "x": 660,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "6c4703e00784dfe6",
+        "type": "ui_table",
+        "z": "71b64f9e3094bcd5",
+        "group": "812e210d562c9608",
+        "name": "Leather Table",
+        "order": 4,
+        "width": 20,
+        "height": 8,
+        "columns": [
+            {
+                "field": "delivery_id",
+                "title": "Dostawa",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "delivery_pos",
+                "title": "pos",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "ta",
+                "title": "TA",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "tour",
+                "title": "Tour",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "tour_date",
+                "title": "Data",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "production_order",
+                "title": "Zlecenie Produkcyjne",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "production_order_name",
+                "title": "KRT",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            }
+        ],
+        "outputs": 0,
+        "cts": false,
+        "x": 1210,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "238deb7f8e7d0a65",
+        "type": "http request",
+        "z": "71b64f9e3094bcd5",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1210,
+        "y": 40,
+        "wires": [
+            [
+                "d33ec3eadfdf8c7f"
+            ]
+        ]
+    },
+    {
+        "id": "7ab69907dd1cd38f",
+        "type": "function",
+        "z": "71b64f9e3094bcd5",
+        "name": "POST /backup",
+        "func": "msg.method = \"POST\"\nmsg.url = \"http://srem-svr-lin01.srem.polipol.intra/test/api/leather_receipt/backup\"\n\nreturn [\n    msg,\n    { payload: \"🔄 Backup - Trwa wykonywanie kopii zapasowej...\"}\n]",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1020,
+        "y": 60,
+        "wires": [
+            [
+                "238deb7f8e7d0a65"
+            ],
+            [
+                "eec9302d901f8661"
+            ]
+        ]
+    },
+    {
+        "id": "eec9302d901f8661",
+        "type": "link out",
+        "z": "71b64f9e3094bcd5",
+        "name": "link out 2",
+        "mode": "link",
+        "links": [
+            "c485af0e4d33428f",
+            "d447d1dd9cae6407"
+        ],
+        "x": 1145,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "56818dad514197ce",
+        "type": "function",
+        "z": "71b64f9e3094bcd5",
+        "name": "checkBackup",
+        "func": "let statusMessage = \"\"\nif (msg.statusCode == 200) {\n    statusMessage = \"✅ Kopia zapasowa została wykonana pomyślnie.\"\n}\nelse {\n    statusMessage = \"❌ Wystąpił błąd podczas wykonywania kopii zapasowej.\"\n}\nreturn [\n    msg,\n    { payload: statusMessage }\n]",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1230,
+        "y": 100,
+        "wires": [
+            [
+                "23cd0d8139768c1f"
+            ],
+            [
+                "eec9302d901f8661"
+            ]
+        ]
+    },
+    {
+        "id": "8cbe7733e65aeca4",
+        "type": "delay",
+        "z": "71b64f9e3094bcd5",
+        "name": "2s",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1410,
+        "y": 160,
+        "wires": [
+            [
+                "0d2e6ccdf5b3bf42",
+                "f0aa83592f6c22f4"
+            ]
+        ]
+    },
+    {
+        "id": "1180f5b5aca18619",
+        "type": "link out",
+        "z": "71b64f9e3094bcd5",
+        "name": "link out 4",
+        "mode": "link",
+        "links": [
+            "c485af0e4d33428f",
+            "d447d1dd9cae6407"
+        ],
+        "x": 925,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "a984f584156716b1",
+        "type": "delay",
+        "z": "71b64f9e3094bcd5",
+        "name": "2s",
+        "pauseType": "delay",
+        "timeout": "2",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 830,
+        "y": 60,
+        "wires": [
+            [
+                "7ab69907dd1cd38f"
+            ]
+        ]
+    },
+    {
+        "id": "d33ec3eadfdf8c7f",
+        "type": "delay",
+        "z": "71b64f9e3094bcd5",
+        "name": "2s",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1370,
+        "y": 40,
+        "wires": [
+            [
+                "56818dad514197ce"
+            ]
+        ]
+    },
+    {
+        "id": "d447d1dd9cae6407",
+        "type": "link in",
+        "z": "71b64f9e3094bcd5",
+        "name": "link in 2",
+        "links": [
+            "a8984c4087942b95",
+            "eec9302d901f8661",
+            "1180f5b5aca18619",
+            "23c0aa0fcf32c626"
+        ],
+        "x": 835,
+        "y": 220,
+        "wires": [
+            [
+                "35440f059ec8c733"
+            ]
+        ]
+    },
+    {
+        "id": "23c0aa0fcf32c626",
+        "type": "link out",
+        "z": "71b64f9e3094bcd5",
+        "name": "link out 3",
+        "mode": "link",
+        "links": [
+            "d447d1dd9cae6407"
+        ],
+        "x": 485,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "2f75e0c9085b07f0",
+        "type": "delay",
+        "z": "71b64f9e3094bcd5",
+        "name": "1s",
+        "pauseType": "delay",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 830,
+        "y": 180,
+        "wires": [
+            [
+                "1180f5b5aca18619"
+            ]
+        ]
+    },
+    {
+        "id": "392e8b4001fe90d9",
+        "type": "ui_ui_control",
+        "z": "71b64f9e3094bcd5",
+        "name": "",
+        "events": "all",
+        "x": 340,
+        "y": 260,
+        "wires": [
+            [
+                "ef60056659b010ee"
+            ]
+        ]
+    },
+    {
+        "id": "21c929eb1cea3251",
+        "type": "http request",
+        "z": "71b64f9e3094bcd5",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 470,
+        "y": 500,
+        "wires": [
+            [
+                "7e8b42ad3539125a",
+                "c0633521fbf6936f"
+            ]
+        ]
+    },
+    {
+        "id": "91a0cb21cae01933",
+        "type": "function",
+        "z": "71b64f9e3094bcd5",
+        "name": "GET /backup",
+        "func": "msg.method = \"GET\"\nmsg.url = \"http://srem-svr-lin01.srem.polipol.intra/test/api/leather_receipt/backup\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 500,
+        "wires": [
+            [
+                "21c929eb1cea3251"
+            ]
+        ]
+    },
+    {
+        "id": "7e8b42ad3539125a",
+        "type": "debug",
+        "z": "71b64f9e3094bcd5",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "17db1267bd85714b",
+        "type": "http request",
+        "z": "71b64f9e3094bcd5",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 540,
+        "y": 600,
+        "wires": [
+            [
+                "0e935b86c5141cf6",
+                "1dd841652000fb65"
+            ]
+        ]
+    },
+    {
+        "id": "5c47bb23635e1e25",
+        "type": "function",
+        "z": "71b64f9e3094bcd5",
+        "name": "POST /restore_backup",
+        "func": "const backupName = flow.get('backupName');\nmsg.method = \"POST\"\nmsg.url = \"http://srem-svr-lin01.srem.polipol.intra/test/api/leather_receipt/restore_backup\"\nmsg.payload = {\n    dump_file: backupName\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 600,
+        "wires": [
+            [
+                "17db1267bd85714b"
+            ]
+        ]
+    },
+    {
+        "id": "0e935b86c5141cf6",
+        "type": "debug",
+        "z": "71b64f9e3094bcd5",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "c7ec2fa06a8abb0d",
+        "type": "ui_button",
+        "z": "71b64f9e3094bcd5",
+        "name": "Process Leather",
+        "group": "dashboard-group",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "📥Przywróć kopię zapasową",
+        "tooltip": "",
+        "color": "primary",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 120,
+        "y": 600,
+        "wires": [
+            [
+                "5c47bb23635e1e25"
+            ]
+        ]
+    },
+    {
+        "id": "4f58b9110428081f",
+        "type": "ui_text",
+        "z": "71b64f9e3094bcd5",
+        "group": "dashboard-group",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Backup Name:",
+        "format": "{{msg.payload.data[0]}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 900,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "d8d525c26e0589fa",
+        "type": "ui_ui_control",
+        "z": "71b64f9e3094bcd5",
+        "name": "",
+        "events": "change",
+        "x": 100,
+        "y": 500,
+        "wires": [
+            [
+                "91a0cb21cae01933"
+            ]
+        ]
+    },
+    {
+        "id": "c0633521fbf6936f",
+        "type": "function",
+        "z": "71b64f9e3094bcd5",
+        "name": "set Backup Name",
+        "func": "const backupName = flow.set('backupName', msg.payload.data[0]);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 500,
+        "wires": [
+            [
+                "4f58b9110428081f"
+            ]
+        ]
+    },
+    {
+        "id": "1dd841652000fb65",
+        "type": "function",
+        "z": "71b64f9e3094bcd5",
+        "name": "Status",
+        "func": "let statusMessage = \"\";\nif (msg.statusCode == 200) {\n    statusMessage = \"✅ Kopia zapasowa została przywrócona pomyślnie.\";\n}\nelse {\n    statusMessage = \"❌ Wystąpił błąd podczas przywracania kopii zapasowej.\";\n}\nmsg.payload = statusMessage\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 660,
+        "wires": [
+            [
+                "c142d7828a998c99"
+            ]
+        ]
+    },
+    {
+        "id": "c142d7828a998c99",
+        "type": "ui_toast",
+        "z": "71b64f9e3094bcd5",
+        "position": "top right",
+        "displayTime": "5",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Status Message",
+        "x": 880,
+        "y": 660,
+        "wires": []
+    }
+]

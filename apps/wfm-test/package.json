@@ -1,0 +1,8 @@
+{
+  "name": "node-red-wfm-test",
+  "description": "Palette for wfm-test",
+  "private": true,
+  "dependencies": {
+    "node-red-contrib-opcua": "~0.2.339"
+  }
+}

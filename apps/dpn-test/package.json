@@ -1,0 +1,15 @@
+{
+  "name": "node-red-dpn-test",
+  "description": "Palette for dpn-test",
+  "private": true,
+  "dependencies": {
+    "@flowfuse/node-red-dashboard": "~1.15.0",
+    "ajv": "^8.17.1",
+    "axios": "^1.7.7",
+    "node-red-contrib-google-sheets": "~1.1.2",
+    "node-red-contrib-mssql-plus": "~0.12.2",
+    "node-red-contrib-postgresql": "~0.14.2",
+    "node-red-contrib-queue-gate": "~1.5.5",
+    "node-red-node-email": "~3.0.1"
+  }
+}

@@ -1,0 +1,3567 @@
+[
+  {
+    "id": "f81c5074aac23484",
+    "type": "tab",
+    "label": "Zund Europol",
+    "info": "",
+    "disabled": false,
+    "env": []
+  },
+  {
+    "id": "8c5a7d43355a9b0c",
+    "type": "tab",
+    "label": "Druckluft",
+    "info": "",
+    "disabled": false,
+    "env": []
+  },
+  {
+    "id": "06079cee160c0903",
+    "type": "group",
+    "z": "f81c5074aac23484",
+    "name": "Cutter TCP Connection",
+    "h": 1082,
+    "nodes": [
+      "b8ab8c9f4e46eb15",
+      "8c4f9927ef4eafc8",
+      "ef7c92061caf5c59",
+      "8fd1a5027e8d0844",
+      "ed76fb9506ff2366",
+      "f6b61a5d8079b1a6",
+      "eb876f333a7651b3",
+      "391cb9806fc77ba2",
+      "77b0db3a4cd20e6f",
+      "f46814cac9562938",
+      "3693386f82761dcf",
+      "776c49996b579792",
+      "3274b2516d208f84",
+      "a4290f08147490db",
+      "d6444ddcea67ae5d",
+      "98ba63ed7ce8f555",
+      "1f17f5833f5c2fa1",
+      "eb12849e31342065",
+      "dbef9c5df89fd251",
+      "36098bf30509a4f5",
+      "3877ec35d0f16b7e"
+    ],
+    "style": {
+      "label": true
+    },
+    "w": 212,
+    "x": 34,
+    "y": 79
+  },
+  {
+    "id": "06b72acf608ae0c6",
+    "type": "switch",
+    "z": "f81c5074aac23484",
+    "name": "Filter Mnemonic",
+    "checkall": "true",
+    "outputs": 6,
+    "property": "parsedCommand.mnemonic",
+    "propertyType": "msg",
+    "repair": false,
+    "rules": [
+      {
+        "t": "eq",
+        "v": "JB",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "SY",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "ST",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "FS",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "CF",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "ER",
+        "vt": "str"
+      }
+    ],
+    "x": 660,
+    "y": 620,
+    "wires": [
+      [
+        "590b72fac6f762db"
+      ],
+      [
+        "590b72fac6f762db"
+      ],
+      [
+        "590b72fac6f762db"
+      ],
+      [
+        "590b72fac6f762db"
+      ],
+      [
+        "590b72fac6f762db"
+      ],
+      [
+        "590b72fac6f762db"
+      ]
+    ]
+  },
+  {
+    "id": "1014490f08e8733d",
+    "type": "link out",
+    "z": "f81c5074aac23484",
+    "name": "link out 4",
+    "links": [
+      "9476f585f7bc2b16"
+    ],
+    "mode": "link",
+    "x": 555,
+    "y": 1120,
+    "wires": []
+  },
+  {
+    "id": "16f89a441a3a8c05",
+    "type": "rbe",
+    "z": "f81c5074aac23484",
+    "name": "",
+    "func": "deadbandEq",
+    "gap": "1",
+    "inout": "out",
+    "property": "timestamp_ms",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 1600,
+    "y": 720,
+    "wires": [
+      [
+        "b927f78e74b23b7e"
+      ]
+    ]
+  },
+  {
+    "id": "19d255f0ab56529e",
+    "type": "inject",
+    "z": "f81c5074aac23484",
+    "name": "interval 3s",
+    "crontab": "",
+    "once": true,
+    "onceDelay": "10",
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "2",
+    "topic": "",
+    "x": 450,
+    "y": 800,
+    "wires": [
+      [
+        "468e446061efaab5"
+      ]
+    ]
+  },
+  {
+    "id": "1b8f8f517a0a665d",
+    "type": "inject",
+    "z": "f81c5074aac23484",
+    "g": "34131eeb2a769b22",
+    "name": "D300L320116-a",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "props": [
+      {
+        "p": "deviceId",
+        "v": "D300L320116-a",
+        "vt": "str"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 760,
+    "y": 100,
+    "wires": [
+      [
+        "9823ad024af905c1"
+      ]
+    ]
+  },
+  {
+    "id": "1be820fcb8234591",
+    "type": "inject",
+    "z": "f81c5074aac23484",
+    "name": "startup",
+    "crontab": "",
+    "once": true,
+    "onceDelay": "0",
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 100,
+    "y": 40,
+    "wires": [
+      [
+        "95f9276102072f97"
+      ]
+    ]
+  },
+  {
+    "id": "1cb059dba0291a58",
+    "type": "inject",
+    "z": "f81c5074aac23484",
+    "g": "34131eeb2a769b22",
+    "name": "D300L320116",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "props": [
+      {
+        "p": "deviceId",
+        "v": "D300L320116",
+        "vt": "str"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 750,
+    "y": 140,
+    "wires": [
+      [
+        "9823ad024af905c1"
+      ]
+    ]
+  },
+  {
+    "id": "1f17f5833f5c2fa1",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320167-a",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut07.pod.polipol.intra",
+    "newline": ";",
+    "port": "50002",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320167-a",
+    "trim": false,
+    "x": 140,
+    "y": 720,
+    "wires": [
+      [
+        "26e8ab1316fdddaa"
+      ]
+    ]
+  },
+  {
+    "id": "26e8ab1316fdddaa",
+    "type": "link out",
+    "z": "f81c5074aac23484",
+    "name": "link out 3",
+    "links": [
+      "9476f585f7bc2b16"
+    ],
+    "mode": "link",
+    "x": 305,
+    "y": 840,
+    "wires": []
+  },
+  {
+    "id": "2fecc012f4626945",
+    "type": "inject",
+    "z": "f81c5074aac23484",
+    "g": "34131eeb2a769b22",
+    "name": "D300L320116-b",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "props": [
+      {
+        "p": "deviceId",
+        "v": "D300L320116-b",
+        "vt": "str"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 760,
+    "y": 60,
+    "wires": [
+      [
+        "9823ad024af905c1"
+      ]
+    ]
+  },
+  {
+    "id": "3274b2516d208f84",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320171-a",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut03.pod.polipol.intra",
+    "newline": ";",
+    "port": "50002",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320171-a",
+    "trim": false,
+    "x": 140,
+    "y": 320,
+    "wires": [
+      [
+        "ca1d35dd39af1998"
+      ]
+    ]
+  },
+  {
+    "id": "34131eeb2a769b22",
+    "type": "group",
+    "z": "f81c5074aac23484",
+    "name": "Debug Flow Context",
+    "h": 162,
+    "nodes": [
+      "1b8f8f517a0a665d",
+      "9823ad024af905c1",
+      "bf6aa7c4fa1da63d",
+      "1cb059dba0291a58",
+      "2fecc012f4626945"
+    ],
+    "style": {
+      "label": true
+    },
+    "w": 572,
+    "x": 634,
+    "y": 19
+  },
+  {
+    "id": "36098bf30509a4f5",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320205-a",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut10.pod.polipol.intra",
+    "newline": ";",
+    "port": "50002",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320205-a",
+    "trim": false,
+    "x": 140,
+    "y": 1020,
+    "wires": [
+      [
+        "26e8ab1316fdddaa"
+      ]
+    ]
+  },
+  {
+    "id": "3693386f82761dcf",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320116-a",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut01.pod.polipol.intra",
+    "newline": ";",
+    "port": "50002",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320116-a",
+    "trim": false,
+    "x": 140,
+    "y": 120,
+    "wires": [
+      [
+        "ca1d35dd39af1998"
+      ]
+    ]
+  },
+  {
+    "id": "3877ec35d0f16b7e",
+    "type": "status",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "TCP Status",
+    "scope": "group",
+    "x": 130,
+    "y": 1120,
+    "wires": [
+      [
+        "a5a1a2a66d42904b"
+      ]
+    ]
+  },
+  {
+    "id": "391cb9806fc77ba2",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320163-b",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut08.pod.polipol.intra",
+    "newline": ";",
+    "port": "50003",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320163-b",
+    "trim": false,
+    "x": 140,
+    "y": 860,
+    "wires": [
+      [
+        "26e8ab1316fdddaa"
+      ]
+    ]
+  },
+  {
+    "id": "42c436b7bffddcf3",
+    "type": "function",
+    "z": "f81c5074aac23484",
+    "name": "CMD to MQTT",
+    "finalize": "",
+    "func": "/*\nSends the command and its parameters to a mqtt topic based on machine id and beam\n*/\n\nlet machine = msg.topic\nconst cutter_id = machine.slice(0, -2)  // extract base cutter id without beam (-a / -b)\nconst beam = machine.slice(-1);  // extract beam\n\nlet baseTopic = `polipol/2000/szw/krt/${cutter_id}/beam-${beam}/commands/`;\n\nlet mnemonic = msg.parsedCommand.mnemonic\nlet parameters = msg.parsedCommand.parameters;\n// Format the Date object to ISO string\nmsg.timestamp = new Date(msg.timestamp).toISOString();\n\n// Construct the payload with the desired structure\nmsg.payload = {\n    \"device_id\": cutter_id,\n    \"beam\": beam,\n    \"timestamp\": msg.timestamp,\n    \"command\": mnemonic,\n    \"parameters\": parameters\n};\n\n// Set the topic for the message\nmsg.topic = baseTopic + mnemonic;\n\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 680,
+    "y": 480,
+    "wires": [
+      [
+        "eed41f4af930a1ff"
+      ]
+    ]
+  },
+  {
+    "id": "468e446061efaab5",
+    "type": "function",
+    "z": "f81c5074aac23484",
+    "name": "intervalTrigger",
+    "finalize": "",
+    "func": "// Function node to continuously check the beams' timestamp_ts attributes\nconst machines = flow.get(\"machines\");  // Get all machines from flow context\n\nmachines.forEach(machine => {\n    const machineContext = flow.get(machine);  // Get the machine's flow context\n\n    // Check each beam in the machine\n    ['a', 'b'].forEach(beam => {\n        const beamContext = machineContext[beam];  // Get the beam's context\n\n        // Only proceed if the baseState of the beam is \"working\"\n        if (beamContext.baseState === \"working\" || beamContext.baseState === \"handling\") {\n            const currentTimestamp = Date.now();  // Get current timestamp in milliseconds\n            const timestampDifference = currentTimestamp - beamContext.timestamp_ts;\n\n            // If the timestamp is older than 2 seconds, send a message\n            if (timestampDifference > 2000) {\n                // Create a message with trigger set to true\n                const msg = {\n                    trigger: true,\n                    deviceId: machine + '-' + beam,\n                    timestamp_ms: currentTimestamp,\n                    timestamp: new Date(currentTimestamp).toISOString()\n                };\n\n                node.send(msg);  // Send the message\n            }\n        }\n    });\n});\n",
+    "initialize": "// Der Code hier wird ausgeführt,\n// wenn der Node gestartet wird\n// Initialize the latestStates object in global context if not already set\n// SY = System State\n// ST = System Tool\n// FS = Feed State\n// CF = Cradle Feeder State\n// ER = Error Messages\nflow.set(\"latestStates\", {})\n// Initialize the latestStates object in the node context\nconst monitoredCommands = [\"SY\", \"ST\", \"FS\", \"CF\", \"ER\", \"JB\"];\nconst machines = [\"zund-cut01\", \"zund-cut02\", \"zund-cut03\", \"zund-cut04\", \"zund-cut05\",\n    \"zund-cut06\", \"zund-cut07\", \"zund-cut08\", \"zund-cut09\", \"zund-cut10\"];\n\nlet latestStates = flow.get(\"latestStates\") || {};\nlet timestamp_ms = Date.now()\n\n// Prepopulate the structure for all machines and monitored commands\nmachines.forEach(machine => {\n    if (!latestStates[machine]) {\n        latestStates[machine] = {};\n        monitoredCommands.forEach(command => {\n            latestStates[machine][command] = { timestamp: timestamp_ms, parameters: [] };\n            latestStates[machine][\"timestamp_ms\"] = timestamp_ms;\n        });\n    }\n});\nflow.set(\"latestStates\", latestStates);",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 640,
+    "y": 800,
+    "wires": [
+      [
+        "590b72fac6f762db",
+        "84c42e6b9bcec64a"
+      ]
+    ]
+  },
+  {
+    "id": "4f38dc838b030fe1",
+    "type": "rbe",
+    "z": "f81c5074aac23484",
+    "name": "change filter",
+    "func": "rbei",
+    "gap": "",
+    "inout": "out",
+    "property": "payload.error_code",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 1430,
+    "y": 720,
+    "wires": [
+      [
+        "16f89a441a3a8c05"
+      ]
+    ]
+  },
+  {
+    "id": "50ffb5f3acf23d21",
+    "type": "debug",
+    "z": "f81c5074aac23484",
+    "name": "debug 6",
+    "active": true,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 460,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "5132a58eaf2685f4",
+    "type": "function",
+    "z": "f81c5074aac23484",
+    "name": "transform Cmd",
+    "finalize": "",
+    "func": "/*\nThis node transforms the incoming Socket message.\n*/\n\nlet timestamp = Date.now();  // get timestamp\nmsg.timestamp = new Date(timestamp).toISOString();  // add timestamp as string\nmsg.timestamp_ms = timestamp;  // add timestamp as ms\nmsg.trigger = false;  // necessary to determine if it is a real command msg from cutter (see intervalTrigger)\n\nmsg.deviceId = msg.topic;  // set deviceId\n\n/*\n* Parse the command and all its parameters\n*/\n\nlet cmd = msg.payload.replace(/[\\r\\n]/g, \"\");  // remove line breaks\ncmd = cmd.trim()  // Trim the command to remove any leading/trailing spaces\n\nlet parsedCommand = {};  // array for parsed commands\n\n// regular expression to extract the mnemonic and parameters\nlet match = cmd.match(/^([A-Z]{2})\\s+(.*)$/); // Match 2 uppercase letters followed by one or more whitespaces\nif (match) {\n    let mnemonic = match[1]; // First group is the mnemonic\n    let parameters = match[2] ? match[2].split(\",\").map(p => p.trim()) : []; // Split parameters by ',' and trim\n\n    parsedCommand = { mnemonic, parameters };  // Add to parsed commands array\n} else {\n    node.warn(`Unrecognized command format: \"${cmd}\"`);  // Log unrecognized format for debugging purposes\n}\n\nmsg.parsedCommand = parsedCommand;  // Assign parsed commands to the message payload\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 440,
+    "y": 620,
+    "wires": [
+      [
+        "42c436b7bffddcf3",
+        "06b72acf608ae0c6"
+      ]
+    ]
+  },
+  {
+    "id": "590b72fac6f762db",
+    "type": "function",
+    "z": "f81c5074aac23484",
+    "name": "CMD Store",
+    "finalize": "",
+    "func": "// beamContextName is the deviceId (cutter + beam)\nconst beamContextName = msg.deviceId;\n// Get flow context variable\nlet beamContext = flow.get(beamContextName);\nmsg.beam = msg.deviceId.slice(-1); // set msg.beam\n\n// Check if it is not an trigger msg that was generated by the intervalTrigger Node\n// Else compute the machine command msg\nif (msg.trigger == false) {\n    // Update cmd store\n    if (msg.parsedCommand.mnemonic === \"JB\" && msg.parsedCommand.parameters[1] == \"1\") {\n        // add timestamp in milliseconds to JBHistory and filter elements older than 2 seconds\n        beamContext.JBHistory.push(msg.timestamp_ms);\n    }\n    // If Beam = a and command = SY check if SY changed from SY = 3 or changed to SY = 3\n    // If so, send a further message to second output.\n    else if (msg.parsedCommand.mnemonic === \"SY\" && msg.beam === \"a\") {\n        const previousSY = beamContext.SY[0];\n        const currentSY = msg.parsedCommand.parameters[0];\n        if ((previousSY !== \"3\" && currentSY === \"3\") || (previousSY === \"3\" && currentSY !== \"3\")) {\n            msg.SY = currentSY;\n            msg.ER = beamContext.ER;\n            node.send([null, msg])\n        }\n    }\n    // Store parameters in beamContext\n    beamContext[msg.parsedCommand.mnemonic] = msg.parsedCommand.parameters;\n}\n\n// Filter JB History and add timestamp_ts\nbeamContext.JBHistory = beamContext.JBHistory.filter(eventTime => eventTime >= Date.now() - 2000);\nbeamContext.timestamp_ts = Date.now();\n\nmsg.cmdStore = beamContext;\n\nflow.set(beamContextName, beamContext);  // Set the updated beamContext\n\nreturn [msg, null];",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 2,
+    "timeout": 0,
+    "x": 870,
+    "y": 620,
+    "wires": [
+      [
+        "60fa9a3d83fd07b0"
+      ],
+      [
+        "d877cab05a7fcfd6"
+      ]
+    ]
+  },
+  {
+    "id": "60fa9a3d83fd07b0",
+    "type": "function",
+    "z": "f81c5074aac23484",
+    "name": "Beam State",
+    "finalize": "",
+    "func": "/*\nNoch offen:\nZusätzliche klassifizierung der Idle Time durch das Prüfen des CF Commands (Cradle Feed)\nHier kann eingesehen werden, ob eine Rolle auf dem Cutter verfügbar ist.\nGgf zu nutzen, wenn der Beam / Cutter im Pausenmodus ist.\nSollte vorsichtig betrachtet werden, da ggf. trotz fehlender Rolle produziert werden kann.\nDoku zu CF:\nThis command reflects changes of the state from the cradle feeder 100/200.\nSyntax: CF RollOffReady, FeederOk;\nRollOffReady:\n0: Feeder not prepared with roll for synchronous roll off.\n1: Feeder prepared with roll for synchronous roll off.\nFeederOk:\n0: Feeder has a problem or is switched off.\n1: No problem on feeder.\n*/\n\nlet SY = parseInt(msg.cmdStore.SY[0], 10);\nlet ST = parseInt(msg.cmdStore.ST[0], 10);\nlet FS = parseInt(msg.cmdStore.FS[0], 10);\nlet JBcount = msg.cmdStore.JBHistory.length;  // length of JBHistory\n\nconst cutter_id = msg.deviceId.slice(0, -2)  // extract base cutter id without beam (-a / -b)\nconst beam = msg.beam;\nconst oppositeBeam = beam === \"a\" ? \"b\" : \"a\";  // get oppositeBeam\nlet latestStates = flow.get(cutter_id);  // get latestStates flow context\n\nlet baseState = latestStates[beam].baseState;\nlet detailedState = latestStates[beam].detailedState;\n\n\n/*\nDetermine the beam state based on the commands.\nIf the beam was in handling feed before, a further heuristic is necessary:\nAfter the feed is finished the beam (A) performs a movement to a position where he will\ncontinue some work. The problem is, that the beam is sending Job Echos (JB) for these movement.\nThat would result in small \"cutting\" states, because normally the cutting ST is selected during that time.\nA kind of \"frozen time\" should be applied to suppress this.\nThis frozen time will be of base state \"handling\" and detailed state \"feed finished\"\n*/\n\nfunction checkFrozenTime(changeTimestamp, frozenTime, currentTimestamp) {\n    const duration = currentTimestamp - changeTimestamp;\n    return duration < frozenTime;  // true = within frozen time / false = outside frozen time\n};\n\nif ([0, 1].includes(SY)) {\n    /*\n    Handle SY in [0, 1]. 0 and 1 means that the machine could possibly produce.\n    The state the machine is currently in does matter, because of the frozen time for finshed handling.\n    */\n    if (JBcount > 0 && FS === 1) {\n        let frozen = false;\n        // Nur Beam A kann sich im Feed befinden → daher diese Logik nur bei Beam A anwenden\n        if (beam === \"a\") {\n            if (detailedState === \"feed\" || detailedState === \"feed continued\") {\n                baseState = \"handling\";\n                detailedState = \"feed finished\";\n                frozen = true;\n            } else if (detailedState === \"feed finished\") {\n                frozen = checkFrozenTime(latestStates[beam].changeTimestamp, 5000, msg.timestamp_ms);\n            }\n        }\n        // Falls das Kommando von Beam B kommt, prüfe, ob Beam A noch im Feed ist\n        else if (beam === \"b\") {\n            const beamAState = latestStates[\"a\"].detailedState;\n            // Falls Beam A noch in einem feed state ist, soll Beam B nicht in den Arbeitszustand wechseln\n            if (beamAState === \"feed\" || beamAState === \"feed continued\" || beamAState === \"feed finished\") {\n                baseState = \"idle\";\n                detailedState = \"unknown\";\n                frozen = true;\n            }\n        }\n        if (frozen === false) {\n            baseState = \"working\";\n            switch (ST) {\n                case 11:\n                    detailedState = \"cutting\";\n                    break;\n                case 21:\n                    detailedState = \"punch\";\n                    break;\n                case 22:\n                    detailedState = \"notch\";\n                    break;\n                case 91:\n                    baseState = \"handling\";\n                    detailedState = \"laser\";\n                    break;\n                default:\n                    detailedState = \"unknown\"; // Optional default case\n            }\n        }\n    } else if (FS !== 1) {\n        switch(FS) {\n            case 0:\n                baseState = \"handling\"\n                detailedState = \"feed\"\n                break;\n            case 10:\n            case 11:\n                baseState = \"handling\"\n                detailedState = \"feed continued\"\n                break;\n            case 20:\n                baseState = \"idle\"\n                detailedState = \"feed suspended (external)\"\n                break;\n            case 30:\n            case 31:\n            case 32:\n            case 33:\n                baseState = \"idle\"\n                detailedState = \"feed stopped\"\n                break;\n        }\n    } else if (FS === 1) {\n        let frozen = false;\n        if (detailedState === \"feed\") {\n            baseState = \"handling\"\n            detailedState = \"feed finished\"\n            frozen = true;\n        } else if (detailedState === \"feed finished\") {\n            frozen = checkFrozenTime(latestStates[beam].changeTimestamp, 5000, msg.timestamp_ms)\n        }\n        if (frozen === false){\n            baseState = \"idle\";\n            detailedState = \"unknown\";\n        }\n    }\n} else if ([2, 4, 5].includes(SY)) {\n    baseState = \"idle\";\n    detailedState = \"unknown\";\n    switch (FS) {\n        case 20:\n            baseState = \"idle\"\n            detailedState = \"feed suspended (external)\"\n            break;\n        case 30:\n        case 31:\n        case 32:\n        case 33:\n            baseState = \"idle\"\n            detailedState = \"feed stopped\"\n            break;\n    }\n} else if ([9, 10].includes(SY)) {\n    baseState = \"offline\";\n    detailedState = \"offline\";\n} else if (SY === 3) {\n    baseState = \"error\";\n    detailedState = \"error\";\n}\n\nmsg.payload = {\n    \"device_id\": cutter_id,\n    \"beam\": beam,\n    \"timestamp\": msg.timestamp,\n    \"base_state\": baseState,\n    \"detailed_state\": detailedState\n};\n\nmsg.topic = `polipol/2000/szw/krt/${cutter_id}/beam-${beam}/state`;\n\n// Check if baseState or detailedState has changed\nconst baseChanged = latestStates[beam].baseState !== baseState;\nconst detailedChanged = latestStates[beam].detailedState !== detailedState;\n// If either changed, update the changeTimestamp\nif (baseChanged || detailedChanged) {\n    latestStates[beam].changeTimestamp = msg.timestamp_ms;\n}\n\n// Update latest States for the beam\nlatestStates[beam].baseState = baseState;\nlatestStates[beam].detailedState = detailedState;\nlatestStates[beam].latestJB = msg.cmdStore.JBHistory.length > 0 ? msg.cmdStore.JBHistory[JBcount - 1].timestamp : 0;\nlatestStates[beam].timestamp_ms = msg.timestamp_ms;\n\n// Set the latestStates flow variable\nflow.set(cutter_id, latestStates)\n\n// Reset deviceId to cutter_id\nmsg.deviceId = cutter_id;\n\nreturn msg;\n",
+    "initialize": "\n",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 1050,
+    "y": 620,
+    "wires": [
+      [
+        "77330c4387f29107",
+        "b6c61dad9e806055"
+      ]
+    ]
+  },
+  {
+    "id": "752a8b309e677627",
+    "type": "link in",
+    "z": "f81c5074aac23484",
+    "name": "link in 3",
+    "links": [
+      "b927f78e74b23b7e"
+    ],
+    "x": 745,
+    "y": 420,
+    "wires": [
+      [
+        "eed41f4af930a1ff"
+      ]
+    ]
+  },
+  {
+    "id": "77330c4387f29107",
+    "type": "function",
+    "z": "f81c5074aac23484",
+    "name": "Cutter State",
+    "finalize": "",
+    "func": "// get latestStates flow variable\nlet latestStates = flow.get(msg.deviceId);\nlet beamA = latestStates['a'];\nlet beamB = latestStates['b'];\nlet cutter = latestStates['cutter'];\n\n// Determine state of whole cutter\nif (beamA.baseState === \"error\" || beamB.baseState === \"error\") {\n    cutter.baseState = \"error\";\n    cutter.detailedState = \"error\";\n} else if (beamA.baseState === \"working\" && beamB.baseState === \"working\") {\n    // If both beams are working, the beam with the latest JB timestamp decides the detailed state\n    cutter.baseState = \"working\";\n    // Determine which beam has the newer job timestamp\n    let latestBeam = beamA.latestJB >= beamB.latestJB ? beamA : beamB;\n    cutter.detailedState = latestBeam.detailedState;\n} else if (beamA.baseState === \"handling\") {\n    // If beam A is in handling, whole cutter is in handling\n    cutter.baseState = \"handling\";\n    cutter.detailedState = beamA.detailedState;\n} else if (beamA.baseState === \"working\" || beamB.baseState === \"working\") {\n    // If one of the beams is working, set the cutter's state to \"working\"\n    cutter.baseState = \"working\";\n    // Set cutter's detailed state to the detailed state of the beam that's working\n    if (beamA.baseState === \"working\") {\n        cutter.detailedState = beamA.detailedState;\n    } else {\n        cutter.detailedState = beamB.detailedState;\n    }\n} else if (beamA.baseState === \"idle\" || beamB.baseState === \"idle\") {\n    cutter.baseState = \"idle\";\n    // Check if either beam has a non-\"unknown\" detailed state\n    if (beamA.baseState === \"idle\" && beamA.detailedState !== \"unknown\") {\n        cutter.detailedState = beamA.detailedState;\n    } else if (beamB.baseState === \"idle\" && beamB.detailedState !== \"unknown\") {\n        cutter.detailedState = beamB.detailedState;\n    } else {\n        cutter.detailedState = \"unknown\";  // If both are \"unknown\", set the cutter's state as \"unknown\"\n    }\n} else if (beamA.baseState === \"offline\" && beamB.baseState === \"offline\") {\n    cutter.baseState = \"offline\";\n    cutter.detailedState = \"offline\";\n}\n\n// Store latestStates Variable back to context\nlatestStates['cutter'] = cutter;\nflow.set(msg.deviceId, latestStates)\n\n// Get Timestamp for computation time measurement\nmsg.timestampLatest = Date.now()\n\nmsg.payload = {\n    \"device_id\": msg.deviceId,\n    \"timestamp\": msg.timestamp,\n    \"base_state\": cutter.baseState,\n    \"detailed_state\": cutter.detailedState,\n    \"computation_time_ms\": (msg.timestampLatest - msg.timestamp_ms)\n};\n\nmsg.topic = `polipol/2000/szw/krt/${msg.deviceId}/state`;\n\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 1250,
+    "y": 660,
+    "wires": [
+      [
+        "b6c61dad9e806055"
+      ]
+    ]
+  },
+  {
+    "id": "776c49996b579792",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320147-a",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut02.pod.polipol.intra",
+    "newline": ";",
+    "port": "50002",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320147-a",
+    "trim": false,
+    "x": 140,
+    "y": 220,
+    "wires": [
+      [
+        "ca1d35dd39af1998"
+      ]
+    ]
+  },
+  {
+    "id": "77b0db3a4cd20e6f",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320203-b",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut09.pod.polipol.intra",
+    "newline": ";",
+    "port": "50003",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320203-b",
+    "trim": false,
+    "x": 140,
+    "y": 960,
+    "wires": [
+      [
+        "26e8ab1316fdddaa"
+      ]
+    ]
+  },
+  {
+    "id": "84c42e6b9bcec64a",
+    "type": "debug",
+    "z": "f81c5074aac23484",
+    "name": "debug 8",
+    "active": false,
+    "complete": "true",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "targetType": "full",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 840,
+    "y": 800,
+    "wires": []
+  },
+  {
+    "id": "8c4f9927ef4eafc8",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320147-b",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut02.pod.polipol.intra",
+    "newline": ";",
+    "port": "50003",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320147-b",
+    "trim": false,
+    "x": 140,
+    "y": 260,
+    "wires": [
+      [
+        "ca1d35dd39af1998"
+      ]
+    ]
+  },
+  {
+    "id": "8fd1a5027e8d0844",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320170-b",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut04.pod.polipol.intra",
+    "newline": ";",
+    "port": "50003",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320170-b",
+    "trim": false,
+    "x": 140,
+    "y": 460,
+    "wires": [
+      [
+        "ca1d35dd39af1998"
+      ]
+    ]
+  },
+  {
+    "id": "9476f585f7bc2b16",
+    "type": "link in",
+    "z": "f81c5074aac23484",
+    "name": "link in 2",
+    "links": [
+      "ca1d35dd39af1998",
+      "26e8ab1316fdddaa",
+      "1014490f08e8733d"
+    ],
+    "x": 305,
+    "y": 620,
+    "wires": [
+      [
+        "5132a58eaf2685f4"
+      ]
+    ]
+  },
+  {
+    "id": "95f9276102072f97",
+    "type": "function",
+    "z": "f81c5074aac23484",
+    "name": "Setup flow context",
+    "finalize": "",
+    "func": "// Variable for all machine ids\nconst machines = [\n    \"D300L320116\",\n    \"D300L320147\",\n    \"D300L320171\",\n    \"D300L320170\",\n    \"D300L320165\",\n    \"D300L320164\",\n    \"D300L320167\",\n    \"D300L320163\",\n    \"D300L320203\",\n    \"D300L320205\"\n    ]\nconst monitoredCommands = [\"SY\", \"ST\", \"FS\", \"CF\", \"ER\", \"JB\"];\nconst beams = [\"a\", \"b\"]\n\nflow.set(\"machines\", machines);  // Can be used in other nodes\nflow.set(\"beams\", beams);  // Can be used in other nodes\n\nconst machineBeams = machines.map(machine => `${machine}${beams}`)\nmsg.machineBeams = machineBeams;\n\nmachines.forEach(machine => {\n    // machine flow variable\n    let flowContext = {\n        \"a\": {\n            \"detailedState\": \"\",\n            \"baseState\": \"\",\n            \"timestamp_ts\": 0,  // is used to trigger an beam state update at an minimum of each 2 seconds\n            \"latestJB\": 0\n        },\n        \"b\": {\n            \"detailedState\": \"\",\n            \"baseState\": \"\",\n            \"timestamp_ts\": 0,\n            \"latestJB\": 0\n        },\n        \"cutter\": {\n            \"detailedState\": \"\",\n            \"baseState\": \"\",\n            \"timestamp_ts\": 0,\n            \"latestJB\": 0\n        }\n    };\n    flow.set(machine, flowContext)\n\n    // machine beam flow variable\n    beams.forEach(beam => {\n        const contextName = `${machine}-${beam}`;\n        let beamFlowContext = {};\n\n        // Initialize all monitored commands with empty arrays\n        monitoredCommands.forEach(cmd => {\n            beamFlowContext[cmd] = [0];\n        });\n        beamFlowContext[\"SY\"] = [0];\n        beamFlowContext[\"ST\"] = [11];\n        beamFlowContext[\"FS\"] = [1];\n        beamFlowContext[\"CF\"] = [1, 1];\n        beamFlowContext[\"ER\"] = [];\n        beamFlowContext[\"changeTimestamp\"] = Date.now()\n        beamFlowContext[\"JBHistory\"] = [0];\n\n        msg.payload = beamFlowContext;\n        node.send(msg);\n        flow.set(contextName, beamFlowContext)\n    });\n});\n\nnode.status({fill:\"green\", shape:\"dot\", text:\"Flow context initialized\"});",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 270,
+    "y": 40,
+    "wires": [
+      [
+        "50ffb5f3acf23d21"
+      ]
+    ]
+  },
+  {
+    "id": "9823ad024af905c1",
+    "type": "function",
+    "z": "f81c5074aac23484",
+    "g": "34131eeb2a769b22",
+    "name": "check context",
+    "finalize": "",
+    "func": "msg.payload = flow.get(msg.deviceId)\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 940,
+    "y": 100,
+    "wires": [
+      [
+        "bf6aa7c4fa1da63d"
+      ]
+    ]
+  },
+  {
+    "id": "98ba63ed7ce8f555",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320164-a",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut06.pod.polipol.intra",
+    "newline": ";",
+    "port": "50002",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320164-a",
+    "trim": false,
+    "x": 140,
+    "y": 620,
+    "wires": [
+      [
+        "26e8ab1316fdddaa"
+      ]
+    ]
+  },
+  {
+    "id": "a4290f08147490db",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320170-a",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut04.pod.polipol.intra",
+    "newline": ";",
+    "port": "50002",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320170-a",
+    "trim": false,
+    "x": 140,
+    "y": 420,
+    "wires": [
+      [
+        "ca1d35dd39af1998"
+      ]
+    ]
+  },
+  {
+    "id": "a5a1a2a66d42904b",
+    "type": "function",
+    "z": "f81c5074aac23484",
+    "name": "Send SY 10 on disconnect",
+    "finalize": "",
+    "func": "/*\nExample payload of the status messages from TCP connections:\n\n{\n    \"status\": {\n        \"fill\": \"red\",\n        \"shape\": \"ring\",\n        \"text\": \"common.status.disconnected\",\n        \"_session\": {\n            \"type\": \"tcp\",\n            \"id\": \"2f3e3f30b31e820b\" \n        },\n        \"source\": {\n            \"id\": \"8e42b6a85757df1c\",\n            \"type\": \"tcp in\",\n            \"name\": \"zund-cut04\"\n        }\n    },\n    \"_msgid\": \"e1f08d1a4f110733\"\n}\n*/\nif (msg.status.text === \"common.status.disconnected\") {\n    msg.topic = msg.status.source.name  // set topic to node name (machine id)\n    msg.payload = \"SY 10\";  // Send a msg with payload set to SY 10 which is a custom system state\n} else {\n    return null;\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 400,
+    "y": 1120,
+    "wires": [
+      [
+        "1014490f08e8733d"
+      ]
+    ]
+  },
+  {
+    "id": "b6c61dad9e806055",
+    "type": "rbe",
+    "z": "f81c5074aac23484",
+    "name": "change filter",
+    "func": "rbei",
+    "gap": "",
+    "inout": "out",
+    "property": "payload.detailed_state",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 1430,
+    "y": 620,
+    "wires": [
+      [
+        "d518467dcf764c68"
+      ]
+    ]
+  },
+  {
+    "id": "b8ab8c9f4e46eb15",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320116-b",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut01.pod.polipol.intra",
+    "newline": ";",
+    "port": "50003",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320116-b",
+    "trim": false,
+    "x": 140,
+    "y": 160,
+    "wires": [
+      [
+        "ca1d35dd39af1998"
+      ]
+    ]
+  },
+  {
+    "id": "b927f78e74b23b7e",
+    "type": "link out",
+    "z": "f81c5074aac23484",
+    "name": "link out 6",
+    "links": [
+      "752a8b309e677627"
+    ],
+    "mode": "link",
+    "x": 1715,
+    "y": 620,
+    "wires": []
+  },
+  {
+    "id": "bf6aa7c4fa1da63d",
+    "type": "debug",
+    "z": "f81c5074aac23484",
+    "g": "34131eeb2a769b22",
+    "name": "debug 7",
+    "active": true,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 1100,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "ca1d35dd39af1998",
+    "type": "link out",
+    "z": "f81c5074aac23484",
+    "name": "link out 2",
+    "links": [
+      "9476f585f7bc2b16"
+    ],
+    "mode": "link",
+    "x": 315,
+    "y": 340,
+    "wires": []
+  },
+  {
+    "id": "d518467dcf764c68",
+    "type": "rbe",
+    "z": "f81c5074aac23484",
+    "name": "",
+    "func": "deadbandEq",
+    "gap": "1",
+    "inout": "out",
+    "property": "timestamp_ms",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 1600,
+    "y": 620,
+    "wires": [
+      [
+        "b927f78e74b23b7e"
+      ]
+    ]
+  },
+  {
+    "id": "d6444ddcea67ae5d",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320165-a",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut05.pod.polipol.intra",
+    "newline": ";",
+    "port": "50002",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320165-a",
+    "trim": false,
+    "x": 140,
+    "y": 520,
+    "wires": [
+      [
+        "ca1d35dd39af1998"
+      ]
+    ]
+  },
+  {
+    "id": "d877cab05a7fcfd6",
+    "type": "function",
+    "z": "f81c5074aac23484",
+    "name": "ERROR Messages",
+    "finalize": "",
+    "func": "/*\nThis node creates messages to indicate the current error state of a cutter.\nOnly SY messages that changed from or changed to an error state are incoming. (See CMD Store node)\nIf SY = 3 a new message with error code, parameters, metadata will be published to the MQTT Broker.\nIf SY =! 3 a message with erro code = 0 will be published to the MQTT Broker.\n\nhe last number in the hexadecimal code of ErrorNumber defines the error \ncategory. There are four categories:\n1: User information (not an Error, cutter will not stop or go offline)\n2: Warning (There may be a problem, but the cutter will not stop or go offline)\n3: Failure (Cutter switches to stopped mode. The user can solve the problem \nand go online afterwards)\n4: Fatal Error (Cutter switches to stopped mode, the user must shutdown \ncutter)\n*/\nconst cutter_id = msg.deviceId.slice(0, -2)  // extract base cutter id without beam (-a / -b)\nlet SY = parseInt(msg.SY, 10);\n\nif (SY === 3) {\n    let error_code = msg.ER[0];\n    let category = parseInt(error_code.slice(-1), 10);  // Parse the category (last digit of error code)\n    let index1 = msg.ER?.[1] ?? null;\n    let index2 = msg.ER?.[2] ?? null;\n\n    msg.payload = {\n        \"device_id\": cutter_id,\n        \"timestamp\": msg.timestamp,\n        \"error_code\": error_code,\n        \"category\": category,\n        \"index1\": index1,\n        \"index2\": index2\n    }\n}\nelse {\n    msg.payload = {\n        \"device_id\": cutter_id,\n        \"timestamp\": msg.timestamp,\n        \"error_code\": \"no error\",\n        \"category\": 0,\n        \"index1\": null,\n        \"index2\": null\n    }\n}\n\nmsg.topic = `polipol/2000/szw/krt/${cutter_id}/error`;\n\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 1070,
+    "y": 720,
+    "wires": [
+      [
+        "4f38dc838b030fe1"
+      ]
+    ]
+  },
+  {
+    "id": "dbef9c5df89fd251",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320203-a",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut09.pod.polipol.intra",
+    "newline": ";",
+    "port": "50002",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320203-a",
+    "trim": false,
+    "x": 140,
+    "y": 920,
+    "wires": [
+      [
+        "26e8ab1316fdddaa"
+      ]
+    ]
+  },
+  {
+    "id": "eb12849e31342065",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320163-a",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut08.pod.polipol.intra",
+    "newline": ";",
+    "port": "50002",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320163-a",
+    "trim": false,
+    "x": 140,
+    "y": 820,
+    "wires": [
+      [
+        "26e8ab1316fdddaa"
+      ]
+    ]
+  },
+  {
+    "id": "eb876f333a7651b3",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320167-b",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut07.pod.polipol.intra",
+    "newline": ";",
+    "port": "50003",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320167-b",
+    "trim": false,
+    "x": 140,
+    "y": 760,
+    "wires": [
+      [
+        "26e8ab1316fdddaa"
+      ]
+    ]
+  },
+  {
+    "id": "ed76fb9506ff2366",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320165-b",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut05.pod.polipol.intra",
+    "newline": ";",
+    "port": "50003",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320165-b",
+    "trim": false,
+    "x": 140,
+    "y": 560,
+    "wires": [
+      [
+        "ca1d35dd39af1998"
+      ]
+    ]
+  },
+  {
+    "id": "eed41f4af930a1ff",
+    "type": "mqtt out",
+    "z": "f81c5074aac23484",
+    "name": "MQTT DPN-SVR-IOT",
+    "broker": "90590307eb1c3107",
+    "contentType": "",
+    "correl": "",
+    "expiry": "",
+    "qos": "",
+    "respTopic": "",
+    "retain": "",
+    "topic": "",
+    "userProps": "",
+    "x": 960,
+    "y": 480,
+    "wires": []
+  },
+  {
+    "id": "ef7c92061caf5c59",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320171-b",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut03.pod.polipol.intra",
+    "newline": ";",
+    "port": "50003",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320171-b",
+    "trim": false,
+    "x": 140,
+    "y": 360,
+    "wires": [
+      [
+        "ca1d35dd39af1998"
+      ]
+    ]
+  },
+  {
+    "id": "f46814cac9562938",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320205-b",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut10.pod.polipol.intra",
+    "newline": ";",
+    "port": "50003",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320205-b",
+    "trim": false,
+    "x": 140,
+    "y": 1060,
+    "wires": [
+      [
+        "26e8ab1316fdddaa"
+      ]
+    ]
+  },
+  {
+    "id": "f6b61a5d8079b1a6",
+    "type": "tcp in",
+    "z": "f81c5074aac23484",
+    "g": "06079cee160c0903",
+    "name": "D300L320164-b",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "zund-cut06.pod.polipol.intra",
+    "newline": ";",
+    "port": "50003",
+    "server": "client",
+    "tls": "",
+    "topic": "D300L320164-b",
+    "trim": false,
+    "x": 140,
+    "y": 660,
+    "wires": [
+      [
+        "26e8ab1316fdddaa"
+      ]
+    ]
+  },
+  {
+    "id": "031a37ede1cff045",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 640,
+    "y": 820,
+    "wires": [
+      [
+        "924c263334828807"
+      ]
+    ]
+  },
+  {
+    "id": "0789676110d22749",
+    "type": "mqtt out",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "broker": "91d2f51704c5c2c2",
+    "contentType": "",
+    "correl": "",
+    "expiry": "",
+    "qos": "1",
+    "respTopic": "",
+    "retain": "true",
+    "topic": "",
+    "userProps": "",
+    "x": 970,
+    "y": 1020,
+    "wires": []
+  },
+  {
+    "id": "117842ff813c129a",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 700,
+    "y": 700,
+    "wires": [
+      [
+        "ebc805b80af4a6bb"
+      ]
+    ]
+  },
+  {
+    "id": "1347e3e7e3aca9b8",
+    "type": "mqtt out",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "broker": "91d2f51704c5c2c2",
+    "contentType": "",
+    "correl": "",
+    "expiry": "",
+    "qos": "1",
+    "respTopic": "",
+    "retain": "true",
+    "topic": "",
+    "userProps": "",
+    "x": 970,
+    "y": 1100,
+    "wires": []
+  },
+  {
+    "id": "1c13c61a6f5e1b7b",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 208.66665649414062,
+    "y": 410.33331298828125,
+    "wires": [
+      [
+        "37caf0733f5b3e2e"
+      ]
+    ]
+  },
+  {
+    "id": "1d0171be8432766f",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 200,
+    "y": 520,
+    "wires": [
+      [
+        "d2d4e4253230e4e7"
+      ]
+    ]
+  },
+  {
+    "id": "1fc62e51dfafba19",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 880,
+    "y": 540,
+    "wires": [
+      [
+        "6a864d31b7274f14"
+      ]
+    ]
+  },
+  {
+    "id": "212f7fa8b2b4897b",
+    "type": "buffer-parser",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "data": "payload",
+    "dataType": "msg",
+    "fanOutMultipleResult": false,
+    "items": [
+      {
+        "type": "int32le",
+        "name": "item1",
+        "offset": 0,
+        "length": 1,
+        "offsetbit": 0,
+        "scale": "1",
+        "mask": ""
+      }
+    ],
+    "msgProperty": "payload",
+    "msgPropertyType": "str",
+    "multipleResult": false,
+    "outputs": 1,
+    "resultType": "keyvalue",
+    "resultTypeType": "return",
+    "setTopic": true,
+    "specification": "spec",
+    "specificationType": "ui",
+    "swap1": "swap16",
+    "swap1Type": "swap",
+    "swap2": "",
+    "swap2Type": "swap",
+    "swap3": "",
+    "swap3Type": "swap",
+    "x": 450,
+    "y": 980,
+    "wires": [
+      [
+        "555dc251776257f1"
+      ]
+    ]
+  },
+  {
+    "id": "2134b77dafc92395",
+    "type": "modbus-read",
+    "z": "8c5a7d43355a9b0c",
+    "name": "fdg-80-test",
+    "adr": "199",
+    "d": true,
+    "dataType": "HoldingRegister",
+    "delayOnStart": false,
+    "emptyMsgOnFail": false,
+    "ioFile": "",
+    "logIOActivities": false,
+    "quantity": "1",
+    "rate": "5",
+    "rateUnit": "s",
+    "server": "61c22e847d512110",
+    "showErrors": false,
+    "showStatusActivities": false,
+    "showWarnings": true,
+    "startDelayTime": "",
+    "topic": "",
+    "unitid": "1",
+    "useIOFile": false,
+    "useIOForPayload": false,
+    "x": 140,
+    "y": 80,
+    "wires": [
+      [
+        "71be32bfdc774abd"
+      ],
+      [
+        "a8355677280ba294"
+      ]
+    ]
+  },
+  {
+    "id": "2163d76f2a354dcc",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "read flow rate",
+    "finalize": "",
+    "func": "msg.payload = {\n    'fc': 3,\n    'unitid': 1,\n    'address': 4,\n    'quantity': 2\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 400,
+    "y": 240,
+    "wires": [
+      [
+        "6279ddec10dd96d0"
+      ]
+    ]
+  },
+  {
+    "id": "216f2894458358e0",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Initialization Status",
+    "finalize": "",
+    "func": "/*\n22 16H Initialization status 34 UINT R\n0: Idle\n1: Executing\n*/\nmsg.payload = {\n    'fc': 3,\n    'unitid': 1,\n    'address': 22,\n    'quantity': 1\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 410,
+    "y": 140,
+    "wires": [
+      [
+        "6279ddec10dd96d0"
+      ]
+    ]
+  },
+  {
+    "id": "22242d859bbfa026",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Set flow direction",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "1",
+    "payloadType": "num",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 220,
+    "y": 1280,
+    "wires": [
+      [
+        "f7668da7dac80a9d"
+      ]
+    ]
+  },
+  {
+    "id": "24569d7156ca8569",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Set Conversion Mode 1",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "1",
+    "payloadType": "num",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 240,
+    "y": 1540,
+    "wires": [
+      [
+        "6082a08faf3d4e4a"
+      ]
+    ]
+  },
+  {
+    "id": "2960dfaae12dcbb9",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Druck",
+    "finalize": "",
+    "func": "msg.payload = {\n    'fc': 3,\n    'unitid': 1,\n    'address': 16,\n    'quantity': 1\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 370,
+    "y": 360,
+    "wires": [
+      [
+        "6279ddec10dd96d0"
+      ]
+    ]
+  },
+  {
+    "id": "2cc1170ff436160e",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Pipe Standard (Other)",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "5",
+    "payloadType": "num",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 220,
+    "y": 2000,
+    "wires": [
+      [
+        "f39df17c0d5c2c7e"
+      ]
+    ]
+  },
+  {
+    "id": "2d734281b1a52658",
+    "type": "modbus-write",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "adr": "201",
+    "dataType": "HoldingRegister",
+    "delayOnStart": false,
+    "emptyMsgOnFail": false,
+    "keepMsgProperties": false,
+    "quantity": "1",
+    "server": "61c22e847d512110",
+    "showErrors": false,
+    "showStatusActivities": false,
+    "showWarnings": true,
+    "startDelayTime": "",
+    "unitid": "1",
+    "x": 460,
+    "y": 1600,
+    "wires": [
+      [
+        "70759958cccc7fbf"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "2f32edccb82281b4",
+    "type": "debug",
+    "z": "8c5a7d43355a9b0c",
+    "name": "debug 19",
+    "active": true,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 680,
+    "y": 1660,
+    "wires": []
+  },
+  {
+    "id": "2fd9a52dfc43131c",
+    "type": "debug",
+    "z": "8c5a7d43355a9b0c",
+    "name": "debug 15",
+    "active": true,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 600,
+    "y": 1280,
+    "wires": []
+  },
+  {
+    "id": "3172e00e2186e4eb",
+    "type": "debug",
+    "z": "8c5a7d43355a9b0c",
+    "name": "debug 16",
+    "active": true,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 620,
+    "y": 1360,
+    "wires": []
+  },
+  {
+    "id": "340ff1bd2761d6f9",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 220,
+    "y": 180,
+    "wires": [
+      [
+        "d76f89da8b8827ea"
+      ]
+    ]
+  },
+  {
+    "id": "369782fa57735933",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "flow resolution",
+    "finalize": "",
+    "func": "let deviceId = 'fdg80-europol'\nlet timestamp = Date.now();  // get timestamp\ntimestamp = new Date(timestamp).toISOString();  // add timestamp as string\n\nlet resolution = 1\nlet label = msg.topic\nif (msg.topic === 'flow_rate') {\n    resolution = 0.1\n}\nelse {\n    resolution = 0.01\n}\nlet value = msg.payload.item1 * resolution\n\nmsg.payload = {\n    \"device_id\": deviceId,\n    \"timestamp\": timestamp,\n    [label]: value\n}\nmsg.topic = 'polipol/2000/energy/air/compressor_room/fdg80/' + label\n\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 800,
+    "y": 1020,
+    "wires": [
+      [
+        "0789676110d22749"
+      ]
+    ]
+  },
+  {
+    "id": "37caf0733f5b3e2e",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Druck Art (Analog oder Eingabe)",
+    "finalize": "",
+    "func": "msg.payload = {\n    'fc': 3,\n    'unitid': 1,\n    'address': 200,\n    'quantity': 1\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 448.6666564941406,
+    "y": 410.33331298828125,
+    "wires": [
+      [
+        "6279ddec10dd96d0"
+      ]
+    ]
+  },
+  {
+    "id": "3ccdca44057154f0",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Language German",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "3",
+    "payloadType": "num",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 210,
+    "y": 1860,
+    "wires": [
+      [
+        "b5c9502bc9ba260c"
+      ]
+    ]
+  },
+  {
+    "id": "40178f8a203d7604",
+    "type": "modbus-write",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "adr": "200",
+    "dataType": "HoldingRegister",
+    "delayOnStart": false,
+    "emptyMsgOnFail": false,
+    "keepMsgProperties": false,
+    "quantity": "1",
+    "server": "61c22e847d512110",
+    "showErrors": false,
+    "showStatusActivities": false,
+    "showWarnings": true,
+    "startDelayTime": "",
+    "unitid": "1",
+    "x": 500,
+    "y": 1660,
+    "wires": [
+      [
+        "2f32edccb82281b4"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "48f13e50740ba6b9",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Set Temperature",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "270",
+    "payloadType": "num",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 820,
+    "y": 1280,
+    "wires": [
+      [
+        "9b34627ae9320f0a"
+      ]
+    ]
+  },
+  {
+    "id": "4953e11e502def7f",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Betriebsdruck (pipe internal)",
+    "finalize": "",
+    "func": "msg.payload = {\n    'fc': 3,\n    'unitid': 1,\n    'address': 201,\n    'quantity': 1\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 440,
+    "y": 460,
+    "wires": [
+      [
+        "6279ddec10dd96d0"
+      ]
+    ]
+  },
+  {
+    "id": "555dc251776257f1",
+    "type": "switch",
+    "z": "8c5a7d43355a9b0c",
+    "name": "filter 0",
+    "checkall": "true",
+    "outputs": 1,
+    "property": "payload.item1",
+    "propertyType": "msg",
+    "repair": false,
+    "rules": [
+      {
+        "t": "gt",
+        "v": "0",
+        "vt": "str"
+      }
+    ],
+    "x": 610,
+    "y": 1020,
+    "wires": [
+      [
+        "369782fa57735933"
+      ]
+    ]
+  },
+  {
+    "id": "5792f6d9b0b4ec3c",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Language",
+    "finalize": "",
+    "func": "/*\n143 8FH Language Language 28 Uint 2Byte R/W  0\n0: English\n1: Japanese\n2: Chinese\n3: Deutsch\n*/\nmsg.payload = {\n    'fc': 3,\n    'unitid': 1,\n    'address': 191,\n    'quantity': 1\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 860,
+    "y": 760,
+    "wires": [
+      [
+        "6279ddec10dd96d0"
+      ]
+    ]
+  },
+  {
+    "id": "5836730c45df70ff",
+    "type": "mqtt out",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "broker": "91d2f51704c5c2c2",
+    "contentType": "",
+    "correl": "",
+    "d": true,
+    "expiry": "",
+    "qos": "",
+    "respTopic": "",
+    "retain": "",
+    "topic": "polipol/2000/energy/air/compressor_room/",
+    "userProps": "",
+    "x": 940,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "5883c0949ab1e35f",
+    "type": "switch",
+    "z": "8c5a7d43355a9b0c",
+    "name": "filter 0",
+    "checkall": "true",
+    "outputs": 1,
+    "property": "payload.item1",
+    "propertyType": "msg",
+    "repair": false,
+    "rules": [
+      {
+        "t": "gt",
+        "v": "0",
+        "vt": "str"
+      }
+    ],
+    "x": 630,
+    "y": 1080,
+    "wires": [
+      [
+        "ca15a9dadfc97584"
+      ]
+    ]
+  },
+  {
+    "id": "5db1d2dd7133ee54",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Set Conversion Mode 0",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "0",
+    "payloadType": "num",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 240,
+    "y": 1480,
+    "wires": [
+      [
+        "6082a08faf3d4e4a"
+      ]
+    ]
+  },
+  {
+    "id": "6082a08faf3d4e4a",
+    "type": "modbus-write",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "adr": "198",
+    "dataType": "HoldingRegister",
+    "delayOnStart": false,
+    "emptyMsgOnFail": false,
+    "keepMsgProperties": false,
+    "quantity": "1",
+    "server": "61c22e847d512110",
+    "showErrors": false,
+    "showStatusActivities": false,
+    "showWarnings": true,
+    "startDelayTime": "",
+    "unitid": "1",
+    "x": 460,
+    "y": 1480,
+    "wires": [
+      [
+        "6a0e034c6c9e8edc"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "61f13254c33b4808",
+    "type": "http request",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "authType": "",
+    "headers": [],
+    "insecureHTTPParser": false,
+    "method": "GET",
+    "paytoqs": "ignore",
+    "persist": false,
+    "proxy": "",
+    "ret": "txt",
+    "senderr": false,
+    "tls": "",
+    "url": "http://dpn-svr-iot.rah.polipol.intra/api/docs",
+    "x": 1070,
+    "y": 260,
+    "wires": [
+      [
+        "e1e5d47b210113c2"
+      ]
+    ]
+  },
+  {
+    "id": "6279ddec10dd96d0",
+    "type": "modbus-flex-getter",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "delayOnStart": false,
+    "emptyMsgOnFail": false,
+    "ioFile": "",
+    "keepMsgProperties": false,
+    "logIOActivities": false,
+    "server": "61c22e847d512110",
+    "showErrors": false,
+    "showStatusActivities": false,
+    "showWarnings": true,
+    "startDelayTime": "",
+    "useIOFile": false,
+    "useIOForPayload": false,
+    "x": 610,
+    "y": 240,
+    "wires": [
+      [
+        "c7c95494f4b7b578"
+      ],
+      [
+        "c7c95494f4b7b578"
+      ]
+    ]
+  },
+  {
+    "id": "655d23634e1b8574",
+    "type": "debug",
+    "z": "8c5a7d43355a9b0c",
+    "name": "debug 23",
+    "active": true,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 680,
+    "y": 1940,
+    "wires": []
+  },
+  {
+    "id": "694829b48a20283e",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 200,
+    "y": 580,
+    "wires": [
+      [
+        "bd465728e651a4a9"
+      ]
+    ]
+  },
+  {
+    "id": "6a0e034c6c9e8edc",
+    "type": "debug",
+    "z": "8c5a7d43355a9b0c",
+    "name": "debug 17",
+    "active": true,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 640,
+    "y": 1480,
+    "wires": []
+  },
+  {
+    "id": "6a864d31b7274f14",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Rohdurchmesser (Innen und Außen)",
+    "finalize": "",
+    "func": "/*\n108 6CH Pipe outer diameter*1 28 UINT R/W 1 to 30000\n(Unit: 0.01mm)\n109 6DH Pipe thickness*1 28 UINT R/W 10 to 3000\n(Unit: 0.01mm)\n*1 This is only enabled when Adv. pipe settings is set to ON.\n*/\n\nmsg.payload = {\n    'fc': 3,\n    'unitid': 1,\n    'address': 108,\n    'quantity': 2\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 1130,
+    "y": 540,
+    "wires": [
+      [
+        "6279ddec10dd96d0"
+      ]
+    ]
+  },
+  {
+    "id": "6cdf862448cec456",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Pipe Standard (DIN)",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "3",
+    "payloadType": "num",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 210,
+    "y": 1940,
+    "wires": [
+      [
+        "f39df17c0d5c2c7e"
+      ]
+    ]
+  },
+  {
+    "id": "70759958cccc7fbf",
+    "type": "debug",
+    "z": "8c5a7d43355a9b0c",
+    "name": "debug 18",
+    "active": true,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 640,
+    "y": 1600,
+    "wires": []
+  },
+  {
+    "id": "71be32bfdc774abd",
+    "type": "debug",
+    "z": "8c5a7d43355a9b0c",
+    "name": "debug 10",
+    "active": true,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 350,
+    "y": 80,
+    "wires": []
+  },
+  {
+    "id": "766b6a36abb9553a",
+    "type": "modbus-read",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Read Pressure",
+    "adr": "16",
+    "dataType": "HoldingRegister",
+    "delayOnStart": false,
+    "emptyMsgOnFail": false,
+    "ioFile": "",
+    "logIOActivities": false,
+    "quantity": "1",
+    "rate": "10",
+    "rateUnit": "s",
+    "server": "61c22e847d512110",
+    "showErrors": false,
+    "showStatusActivities": false,
+    "showWarnings": true,
+    "startDelayTime": "",
+    "topic": "pressure",
+    "unitid": "1",
+    "useIOFile": false,
+    "useIOForPayload": false,
+    "x": 220,
+    "y": 1120,
+    "wires": [
+      [
+        "d313b9dcef9ced24"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "7c6311a8b60b5638",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Language English",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "0",
+    "payloadType": "num",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 210,
+    "y": 1800,
+    "wires": [
+      [
+        "b5c9502bc9ba260c"
+      ]
+    ]
+  },
+  {
+    "id": "7da6a0cc6e100454",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 180,
+    "y": 640,
+    "wires": [
+      [
+        "c92bfec824664724"
+      ]
+    ]
+  },
+  {
+    "id": "80afb4139263d380",
+    "type": "buffer-parser",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "data": "payload",
+    "dataType": "msg",
+    "fanOutMultipleResult": false,
+    "items": [
+      {
+        "type": "uint32le",
+        "name": "item1",
+        "offset": 0,
+        "length": 1,
+        "offsetbit": 0,
+        "scale": "1",
+        "mask": ""
+      }
+    ],
+    "msgProperty": "payload",
+    "msgPropertyType": "str",
+    "multipleResult": false,
+    "outputs": 1,
+    "resultType": "keyvalue",
+    "resultTypeType": "return",
+    "setTopic": true,
+    "specification": "spec",
+    "specificationType": "ui",
+    "swap1": "swap16",
+    "swap1Type": "swap",
+    "swap2": "",
+    "swap2Type": "swap",
+    "swap3": "",
+    "swap3Type": "swap",
+    "x": 450,
+    "y": 1060,
+    "wires": [
+      [
+        "555dc251776257f1"
+      ]
+    ]
+  },
+  {
+    "id": "80eabb3710924915",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 220,
+    "y": 240,
+    "wires": [
+      [
+        "2163d76f2a354dcc"
+      ]
+    ]
+  },
+  {
+    "id": "8425a60a32238a7e",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Druck Analogeingang low and high",
+    "finalize": "",
+    "func": "/*\n202 CAH Analog pressure input low 29 UINT R/W 0 to 60000\n(Unit: 0.1kPa)\n203 CBH Analog pressure input high 29 UINT R/W 0 to 60000\n(Unit: 0.1kPa)\n*/\n\nmsg.payload = {\n    'fc': 3,\n    'unitid': 1,\n    'address': 202,\n    'quantity': 2\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 940,
+    "y": 640,
+    "wires": [
+      [
+        "6279ddec10dd96d0"
+      ]
+    ]
+  },
+  {
+    "id": "8bf1406821eb9c4c",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 180,
+    "y": 820,
+    "wires": [
+      [
+        "e57b976a33c0691c"
+      ]
+    ]
+  },
+  {
+    "id": "8ed4c8ee4d9cc45e",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 200,
+    "y": 460,
+    "wires": [
+      [
+        "4953e11e502def7f"
+      ]
+    ]
+  },
+  {
+    "id": "924c263334828807",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Pipe Size and Standard",
+    "finalize": "",
+    "func": "/*\nWhen using the FD-G25: 0: --, 1: 1\", 2: 3/4\"\nWhen using the FD-G50: 0: --, 1: 2\", 2: 1 1/2\", 3: 1 1/4\"\nWhen using the FD-G80: 0: --, 1: 3\", 2: 2 1/2\"\nWhen using the FD-G125: 0: --, 1: 5\", 2: 4\"\nWhen using the FD-G200: 0: --, 1: 8\", 2: 6\"\n\n0: --\n1: JIS(Japan)\n2: ASTM(US)\n3: DIN(Germany)\n4: GB(China)\n5: Other\n*/\nmsg.payload = {\n    'fc': 3,\n    'unitid': 1,\n    'address': 196,\n    'quantity': 2\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 890,
+    "y": 820,
+    "wires": [
+      [
+        "6279ddec10dd96d0"
+      ]
+    ]
+  },
+  {
+    "id": "979bc4504968fd9b",
+    "type": "debug",
+    "z": "8c5a7d43355a9b0c",
+    "name": "debug 21",
+    "active": true,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 1180,
+    "y": 1280,
+    "wires": []
+  },
+  {
+    "id": "984da742c71a7902",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 700,
+    "y": 640,
+    "wires": [
+      [
+        "8425a60a32238a7e"
+      ]
+    ]
+  },
+  {
+    "id": "9a5a481d6c59ca25",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Durchflussmenge",
+    "finalize": "",
+    "func": "msg.payload = {\n    'fc': 3,\n    'unitid': 1,\n    'address': 10,\n    'quantity': 2\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 410,
+    "y": 300,
+    "wires": [
+      [
+        "6279ddec10dd96d0"
+      ]
+    ]
+  },
+  {
+    "id": "9b34627ae9320f0a",
+    "type": "modbus-write",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "adr": "116",
+    "dataType": "HoldingRegister",
+    "delayOnStart": false,
+    "emptyMsgOnFail": false,
+    "keepMsgProperties": false,
+    "quantity": "1",
+    "server": "61c22e847d512110",
+    "showErrors": false,
+    "showStatusActivities": false,
+    "showWarnings": true,
+    "startDelayTime": "",
+    "unitid": "1",
+    "x": 1020,
+    "y": 1280,
+    "wires": [
+      [
+        "979bc4504968fd9b"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "9eec77dd42384426",
+    "type": "modbus-write",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "adr": "148",
+    "dataType": "HoldingRegister",
+    "delayOnStart": false,
+    "emptyMsgOnFail": false,
+    "keepMsgProperties": false,
+    "quantity": "1",
+    "server": "61c22e847d512110",
+    "showErrors": false,
+    "showStatusActivities": false,
+    "showWarnings": true,
+    "startDelayTime": "",
+    "unitid": "1",
+    "x": 500,
+    "y": 1860,
+    "wires": [
+      [
+        "fb0d1d0f48520873"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "a8355677280ba294",
+    "type": "debug",
+    "z": "8c5a7d43355a9b0c",
+    "name": "debug 9",
+    "active": true,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 540,
+    "y": 40,
+    "wires": []
+  },
+  {
+    "id": "aac2c5598bad59c1",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 180,
+    "y": 760,
+    "wires": [
+      [
+        "f7a923026ab0dc6f"
+      ]
+    ]
+  },
+  {
+    "id": "af3fd2fc040ae371",
+    "type": "modbus-read",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Read Flow Rate",
+    "adr": "4",
+    "dataType": "HoldingRegister",
+    "delayOnStart": false,
+    "emptyMsgOnFail": false,
+    "ioFile": "",
+    "logIOActivities": false,
+    "quantity": "2",
+    "rate": "1",
+    "rateUnit": "s",
+    "server": "61c22e847d512110",
+    "showErrors": false,
+    "showStatusActivities": false,
+    "showWarnings": true,
+    "startDelayTime": "",
+    "topic": "flow_rate",
+    "unitid": "1",
+    "useIOFile": false,
+    "useIOForPayload": false,
+    "x": 220,
+    "y": 980,
+    "wires": [
+      [
+        "212f7fa8b2b4897b"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "b0864b6d10c95712",
+    "type": "modbus-write",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "adr": "201",
+    "dataType": "HoldingRegister",
+    "delayOnStart": false,
+    "emptyMsgOnFail": false,
+    "keepMsgProperties": false,
+    "quantity": "1",
+    "server": "61c22e847d512110",
+    "showErrors": false,
+    "showStatusActivities": false,
+    "showWarnings": true,
+    "startDelayTime": "",
+    "unitid": "1",
+    "x": 440,
+    "y": 1360,
+    "wires": [
+      [
+        "3172e00e2186e4eb"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "b5c9502bc9ba260c",
+    "type": "modbus-write",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "adr": "191",
+    "dataType": "HoldingRegister",
+    "delayOnStart": false,
+    "emptyMsgOnFail": false,
+    "keepMsgProperties": false,
+    "quantity": "1",
+    "server": "61c22e847d512110",
+    "showErrors": false,
+    "showStatusActivities": false,
+    "showWarnings": true,
+    "startDelayTime": "",
+    "unitid": "1",
+    "x": 500,
+    "y": 1800,
+    "wires": [
+      [
+        "ea9689e3848824d4"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "bd465728e651a4a9",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Integration & Flussrichtung",
+    "finalize": "",
+    "func": "/*\n194 C2H Integration direction 28 UINT R/W 0: Standard\n1: Bi-directional\n195 C3H Flow direction — UINT R/W 0: To the cable connector\n1: From the cable connector\n*/\nmsg.payload = {\n    'fc': 3,\n    'unitid': 1,\n    'address': 194,\n    'quantity': 2\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 440,
+    "y": 580,
+    "wires": [
+      [
+        "6279ddec10dd96d0"
+      ]
+    ]
+  },
+  {
+    "id": "c04a68f59961e57f",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 200,
+    "y": 300,
+    "wires": [
+      [
+        "9a5a481d6c59ca25"
+      ]
+    ]
+  },
+  {
+    "id": "c6bad0b5a8261824",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Set pressure 6,4 bar",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "6400",
+    "payloadType": "num",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 250,
+    "y": 1600,
+    "wires": [
+      [
+        "2d734281b1a52658"
+      ]
+    ]
+  },
+  {
+    "id": "c74aad96747643e4",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 700,
+    "y": 760,
+    "wires": [
+      [
+        "5792f6d9b0b4ec3c"
+      ]
+    ]
+  },
+  {
+    "id": "c77a7d645856585b",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 220,
+    "y": 140,
+    "wires": [
+      [
+        "216f2894458358e0"
+      ]
+    ]
+  },
+  {
+    "id": "c7b2ca1f4a9a816b",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Set pressure Input to Analog",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "2",
+    "payloadType": "num",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 240,
+    "y": 1700,
+    "wires": [
+      [
+        "40178f8a203d7604"
+      ]
+    ]
+  },
+  {
+    "id": "c7c95494f4b7b578",
+    "type": "debug",
+    "z": "8c5a7d43355a9b0c",
+    "name": "debug 11",
+    "active": true,
+    "complete": "payload",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "targetType": "msg",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 840,
+    "y": 160,
+    "wires": []
+  },
+  {
+    "id": "c92bfec824664724",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Durchflusseinheit",
+    "finalize": "",
+    "func": "msg.payload = {\n    'fc': 3,\n    'unitid': 1,\n    'address': 194,\n    'quantity': 1\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 410,
+    "y": 640,
+    "wires": [
+      [
+        "6279ddec10dd96d0"
+      ]
+    ]
+  },
+  {
+    "id": "c938894ee8594b82",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Set pressure 5 bar",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "0",
+    "payloadType": "num",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 370,
+    "y": 1420,
+    "wires": [
+      [
+        "b0864b6d10c95712"
+      ]
+    ]
+  },
+  {
+    "id": "ca15a9dadfc97584",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "flow resolution",
+    "finalize": "",
+    "func": "let deviceId = 'fdg80-europol'\nlet timestamp = Date.now();  // get timestamp\ntimestamp = new Date(timestamp).toISOString();  // add timestamp as string\n\nlet resolution = 1\nlet label = msg.topic\nif (msg.topic === 'flow_rate') {\n    resolution = 0.1\n}\nelse if (msg.topic === 'pressure') {\n    resolution = 0.001\n}\nelse {\n    resolution = 0.01\n}\nlet value = msg.payload.item1 * resolution\n\nmsg.payload = {\n    \"device_id\": deviceId,\n    \"timestamp\": timestamp,\n    [label]: value\n}\nmsg.topic = 'polipol/2000/energy/air/compressor_room/fdg80/' + label\n\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 800,
+    "y": 1100,
+    "wires": [
+      [
+        "1347e3e7e3aca9b8"
+      ]
+    ]
+  },
+  {
+    "id": "cc8a590cbf97337c",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 900,
+    "y": 260,
+    "wires": [
+      [
+        "61f13254c33b4808"
+      ]
+    ]
+  },
+  {
+    "id": "d2d4e4253230e4e7",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Durchflussauflösung & Durchflussmengenauflösung",
+    "finalize": "",
+    "func": "msg.payload = {\n    'fc': 3,\n    'unitid': 1,\n    'address': 25,\n    'quantity': 2\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 510,
+    "y": 520,
+    "wires": [
+      [
+        "6279ddec10dd96d0"
+      ]
+    ]
+  },
+  {
+    "id": "d313b9dcef9ced24",
+    "type": "change",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "action": "",
+    "from": "",
+    "property": "",
+    "reg": false,
+    "rules": [
+      {
+        "t": "set",
+        "p": "payload.item1",
+        "pt": "msg",
+        "to": "payload[0]",
+        "tot": "msg"
+      }
+    ],
+    "to": "",
+    "x": 450,
+    "y": 1120,
+    "wires": [
+      [
+        "5883c0949ab1e35f"
+      ]
+    ]
+  },
+  {
+    "id": "d76f89da8b8827ea",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Stability",
+    "finalize": "",
+    "func": "/*\n14 EH Stability 90 UINT R\n0: Detection not possible\n1: Low\n2: Medium-low\n3: Medium-high\n4: High\n*/\nmsg.payload = {\n    'fc': 3,\n    'unitid': 1,\n    'address': 14,\n    'quantity': 1\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 380,
+    "y": 180,
+    "wires": [
+      [
+        "6279ddec10dd96d0"
+      ]
+    ]
+  },
+  {
+    "id": "d7d8cdab3141bd8b",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 200,
+    "y": 360,
+    "wires": [
+      [
+        "2960dfaae12dcbb9"
+      ]
+    ]
+  },
+  {
+    "id": "e1e5d47b210113c2",
+    "type": "debug",
+    "z": "8c5a7d43355a9b0c",
+    "name": "debug 1",
+    "active": true,
+    "complete": "true",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "targetType": "full",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 1240,
+    "y": 260,
+    "wires": []
+  },
+  {
+    "id": "e294231a9e321e07",
+    "type": "modbus-read",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Read Flow Integrated",
+    "adr": "10",
+    "dataType": "HoldingRegister",
+    "delayOnStart": false,
+    "emptyMsgOnFail": false,
+    "ioFile": "",
+    "logIOActivities": false,
+    "quantity": "2",
+    "rate": "10",
+    "rateUnit": "s",
+    "server": "61c22e847d512110",
+    "showErrors": false,
+    "showStatusActivities": false,
+    "showWarnings": true,
+    "startDelayTime": "",
+    "topic": "flow_integrated",
+    "unitid": "1",
+    "useIOFile": false,
+    "useIOForPayload": false,
+    "x": 240,
+    "y": 1060,
+    "wires": [
+      [
+        "80afb4139263d380"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "e57b976a33c0691c",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Conversion Settings",
+    "finalize": "",
+    "func": "/*\n0: Normal conversion (NTP)\n1: Standard conversion (STP)\n2: OFF\n*/\nmsg.payload = {\n    'fc': 3,\n    'unitid': 1,\n    'address': 198,\n    'quantity': 1\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 420,
+    "y": 820,
+    "wires": [
+      [
+        "6279ddec10dd96d0"
+      ]
+    ]
+  },
+  {
+    "id": "e7048c91b9a8d215",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Set pressure 5 bar",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "5000",
+    "payloadType": "num",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 230,
+    "y": 1420,
+    "wires": [
+      [
+        "b0864b6d10c95712"
+      ]
+    ]
+  },
+  {
+    "id": "ea9689e3848824d4",
+    "type": "debug",
+    "z": "8c5a7d43355a9b0c",
+    "name": "debug 20",
+    "active": true,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 680,
+    "y": 1800,
+    "wires": []
+  },
+  {
+    "id": "eb11dd92b31b3a7d",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Set pressure Input to Manual",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "1",
+    "payloadType": "num",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 240,
+    "y": 1740,
+    "wires": [
+      [
+        "40178f8a203d7604"
+      ]
+    ]
+  },
+  {
+    "id": "ebc805b80af4a6bb",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "IO Settings",
+    "finalize": "",
+    "func": "/*\n204 CCH I/O settings — UINT R/W\n03H\n06H\n10H\n0: OFF\n1: Output + OFF\n2: Output + Output\n3: Output + Input\n4: Output + Analog\n*/\n\nmsg.payload = {\n    'fc': 3,\n    'unitid': 1,\n    'address': 204,\n    'quantity': 1\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 870,
+    "y": 700,
+    "wires": [
+      [
+        "6279ddec10dd96d0"
+      ]
+    ]
+  },
+  {
+    "id": "f08e78c0aa7a7cbf",
+    "type": "exec",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "addpay": "",
+    "append": "",
+    "command": "",
+    "oldrc": false,
+    "timer": "",
+    "useSpawn": "false",
+    "winHide": false,
+    "x": 1070,
+    "y": 160,
+    "wires": [
+      [],
+      [],
+      []
+    ]
+  },
+  {
+    "id": "f37146807cc3dad0",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Set pressure 5 bar",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "5000",
+    "payloadType": "num",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 250,
+    "y": 1660,
+    "wires": [
+      [
+        "2d734281b1a52658"
+      ]
+    ]
+  },
+  {
+    "id": "f39df17c0d5c2c7e",
+    "type": "modbus-write",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "adr": "197",
+    "dataType": "HoldingRegister",
+    "delayOnStart": false,
+    "emptyMsgOnFail": false,
+    "keepMsgProperties": false,
+    "quantity": "1",
+    "server": "61c22e847d512110",
+    "showErrors": false,
+    "showStatusActivities": false,
+    "showWarnings": true,
+    "startDelayTime": "",
+    "unitid": "1",
+    "x": 500,
+    "y": 1940,
+    "wires": [
+      [
+        "655d23634e1b8574"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "f7668da7dac80a9d",
+    "type": "modbus-write",
+    "z": "8c5a7d43355a9b0c",
+    "name": "",
+    "adr": "195",
+    "dataType": "HoldingRegister",
+    "delayOnStart": false,
+    "emptyMsgOnFail": false,
+    "keepMsgProperties": false,
+    "quantity": "1",
+    "server": "61c22e847d512110",
+    "showErrors": false,
+    "showStatusActivities": false,
+    "showWarnings": true,
+    "startDelayTime": "",
+    "unitid": "1",
+    "x": 420,
+    "y": 1280,
+    "wires": [
+      [
+        "2fd9a52dfc43131c"
+      ],
+      []
+    ]
+  },
+  {
+    "id": "f7a923026ab0dc6f",
+    "type": "function",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Referenztemperatur",
+    "finalize": "",
+    "func": "msg.payload = {\n    'fc': 3,\n    'unitid': 1,\n    'address': 116,\n    'quantity': 1\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 420,
+    "y": 760,
+    "wires": [
+      [
+        "6279ddec10dd96d0"
+      ]
+    ]
+  },
+  {
+    "id": "f98dd87e2373f2ef",
+    "type": "inject",
+    "z": "8c5a7d43355a9b0c",
+    "name": "Set pressure 6,4 bar",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "6400",
+    "payloadType": "num",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 230,
+    "y": 1360,
+    "wires": [
+      [
+        "b0864b6d10c95712"
+      ]
+    ]
+  },
+  {
+    "id": "fb0d1d0f48520873",
+    "type": "debug",
+    "z": "8c5a7d43355a9b0c",
+    "name": "debug 22",
+    "active": true,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 700,
+    "y": 1860,
+    "wires": []
+  },
+  {
+    "id": "06b01926f31d0cc5",
+    "type": "tls-config",
+    "name": "",
+    "alpnprotocol": "",
+    "ca": "",
+    "caname": "ca.crt",
+    "cert": "",
+    "certname": "client.crt",
+    "key": "",
+    "keyname": "client.key",
+    "servername": "",
+    "verifyservercert": true
+  },
+  {
+    "id": "2aa6fe181a8d53df",
+    "type": "websocket-client",
+    "hb": "0",
+    "headers": [],
+    "path": "loaclhost:50002",
+    "subprotocol": "",
+    "tls": "",
+    "wholemsg": "false"
+  },
+  {
+    "id": "311d593e13cd7e12",
+    "type": "modbus-client",
+    "name": "10.100.89.33",
+    "bufferCommands": true,
+    "clientTimeout": "5000",
+    "clienttype": "tcp",
+    "commandDelay": "1",
+    "failureLogEnabled": true,
+    "parallelUnitIdsAllowed": true,
+    "queueLogEnabled": false,
+    "reconnectOnTimeout": true,
+    "reconnectTimeout": "2000",
+    "serialAsciiResponseStartDelimiter": "0x3A",
+    "serialBaudrate": "9600",
+    "serialConnectionDelay": "100",
+    "serialDatabits": "8",
+    "serialParity": "none",
+    "serialPort": "/dev/ttyUSB",
+    "serialStopbits": "1",
+    "serialType": "RTU-BUFFERD",
+    "showErrors": true,
+    "showLogs": true,
+    "showWarnings": true,
+    "stateLogEnabled": false,
+    "tcpHost": "10.100.89.33",
+    "tcpPort": "4001",
+    "tcpType": "TELNET",
+    "unit_id": "1"
+  },
+  {
+    "id": "61c22e847d512110",
+    "type": "modbus-client",
+    "name": "fdg-80",
+    "bufferCommands": true,
+    "clientTimeout": 1000,
+    "clienttype": "tcp",
+    "commandDelay": 1,
+    "failureLogEnabled": true,
+    "parallelUnitIdsAllowed": true,
+    "queueLogEnabled": false,
+    "reconnectOnTimeout": true,
+    "reconnectTimeout": 2000,
+    "serialAsciiResponseStartDelimiter": "0x3A",
+    "serialBaudrate": "9600",
+    "serialConnectionDelay": "100",
+    "serialDatabits": "8",
+    "serialParity": "none",
+    "serialPort": "/dev/ttyUSB",
+    "serialStopbits": "1",
+    "serialType": "RTU-BUFFERD",
+    "showErrors": false,
+    "showLogs": true,
+    "showWarnings": true,
+    "stateLogEnabled": false,
+    "tcpHost": "10.20.22.11",
+    "tcpPort": "502",
+    "tcpType": "DEFAULT",
+    "unit_id": 1
+  },
+  {
+    "id": "7e08db55536bf4e2",
+    "type": "modbus-client",
+    "name": "10.100.89.32",
+    "bufferCommands": true,
+    "clientTimeout": "1000",
+    "clienttype": "tcp",
+    "commandDelay": "1",
+    "failureLogEnabled": true,
+    "parallelUnitIdsAllowed": true,
+    "queueLogEnabled": false,
+    "reconnectOnTimeout": true,
+    "reconnectTimeout": "2000",
+    "serialAsciiResponseStartDelimiter": "0x3A",
+    "serialBaudrate": "9600",
+    "serialConnectionDelay": "100",
+    "serialDatabits": "8",
+    "serialParity": "none",
+    "serialPort": "/dev/ttyUSB",
+    "serialStopbits": "1",
+    "serialType": "RTU-BUFFERD",
+    "showErrors": true,
+    "showLogs": true,
+    "showWarnings": true,
+    "stateLogEnabled": false,
+    "tcpHost": "10.100.89.32",
+    "tcpPort": "4001",
+    "tcpType": "TELNET",
+    "unit_id": "1"
+  },
+  {
+    "id": "8c21bca32cd5543a",
+    "type": "modbus-client",
+    "name": "10.100.89.35",
+    "bufferCommands": true,
+    "clientTimeout": "1000",
+    "clienttype": "tcp",
+    "commandDelay": "1",
+    "failureLogEnabled": true,
+    "parallelUnitIdsAllowed": true,
+    "queueLogEnabled": false,
+    "reconnectOnTimeout": true,
+    "reconnectTimeout": "2000",
+    "serialAsciiResponseStartDelimiter": "0x3A",
+    "serialBaudrate": "9600",
+    "serialConnectionDelay": "100",
+    "serialDatabits": "8",
+    "serialParity": "none",
+    "serialPort": "/dev/ttyUSB",
+    "serialStopbits": "1",
+    "serialType": "RTU-BUFFERD",
+    "showErrors": false,
+    "showLogs": true,
+    "showWarnings": true,
+    "stateLogEnabled": false,
+    "tcpHost": "10.100.89.35",
+    "tcpPort": "4001",
+    "tcpType": "TELNET",
+    "unit_id": "1"
+  },
+  {
+    "id": "90590307eb1c3107",
+    "type": "mqtt-broker",
+    "name": "",
+    "autoConnect": true,
+    "autoUnsubscribe": true,
+    "birthMsg": {},
+    "birthPayload": "",
+    "birthQos": "0",
+    "birthRetain": "false",
+    "birthTopic": "",
+    "broker": "dpn-svr-iot.rah.polipol.intra",
+    "cleansession": true,
+    "clientid": "",
+    "closeMsg": {},
+    "closePayload": "",
+    "closeQos": "0",
+    "closeRetain": "false",
+    "closeTopic": "",
+    "keepalive": 60,
+    "port": "8883",
+    "protocolVersion": "5",
+    "sessionExpiry": "",
+    "tls": "06b01926f31d0cc5",
+    "userProps": "",
+    "usetls": true,
+    "willMsg": {},
+    "willPayload": "",
+    "willQos": "0",
+    "willRetain": "false",
+    "willTopic": ""
+  },
+  {
+    "id": "91d2f51704c5c2c2",
+    "type": "mqtt-broker",
+    "name": "",
+    "autoConnect": true,
+    "autoUnsubscribe": true,
+    "birthMsg": {},
+    "birthPayload": "",
+    "birthQos": "0",
+    "birthRetain": "false",
+    "birthTopic": "",
+    "broker": "192.168.48.240",
+    "cleansession": true,
+    "clientid": "",
+    "closeMsg": {},
+    "closePayload": "",
+    "closeQos": "0",
+    "closeRetain": "false",
+    "closeTopic": "",
+    "keepalive": "60",
+    "port": "8883",
+    "protocolVersion": "4",
+    "sessionExpiry": "",
+    "tls": "06b01926f31d0cc5",
+    "userProps": "",
+    "usetls": true,
+    "willMsg": {},
+    "willPayload": "",
+    "willQos": "0",
+    "willRetain": "false",
+    "willTopic": ""
+  }
+]

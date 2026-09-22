@@ -1,0 +1,9 @@
+{
+  "name": "node-red-jan-test",
+  "description": "Palette for jan-test",
+  "private": true,
+  "dependencies": {
+    "node-red-contrib-postgresql": "~0.15.4",
+    "node-red-contrib-queue-gate": "~1.5.5"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "node-red-srem-test",
+  "description": "Palette for srem-test",
+  "private": true,
+  "dependencies": {
+    "@flowfuse/nr-assistant": "~0.3.0",
+    "@martip/node-red-xlsx": "~1.0.2",
+    "node-red-contrib-postgresql": "~0.14.2",
+    "node-red-contrib-queue-gate": "~1.5.5",
+    "node-red-contrib-ui-upload": "~0.8.1",
+    "node-red-dashboard": "~3.6.5",
+    "node-red-node-ui-table": "~0.4.5"
+  }
+}

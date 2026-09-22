@@ -1,0 +1,24 @@
+# Hadolint configuration
+# https://github.com/hadolint/hadolint#configure
+
+# Globally ignored rules
+ignored:
+  # DL3008: Pin versions in apt-get - acceptable for dev containers
+  # - DL3008
+
+# Override severity (treat as style, not error)
+override:
+  style:
+    - DL3015 # Avoid additional packages with apt-get install
+  warning:
+    - DL3059 # Multiple consecutive RUN
+
+# Trusted registries (optional)
+trustedRegistries:
+  - docker.io
+  - gcr.io
+  - ghcr.io
+  - harbor.aks-infra.polipol-service.de
+
+# Per-file rule ignores for dev Dockerfiles
+# Note: HEALTHCHECK (DL3055) is LOW severity, acceptable for dev

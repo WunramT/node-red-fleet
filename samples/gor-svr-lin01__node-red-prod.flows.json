@@ -1,0 +1,2065 @@
+[
+    {
+        "id": "ef733f55563d3157",
+        "type": "tab",
+        "label": "PROD",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ce9c01f46b71fa81",
+        "type": "tab",
+        "label": "Digitale Buffer",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "27e1fbc3eba3037f",
+        "type": "tab",
+        "label": "ZPROD Upload",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "tab_manual_tour_ta",
+        "type": "tab",
+        "label": "Ręczna aktualizacja Tour/TA",
+        "disabled": false,
+        "info": "Ręczna aktualizacja zielonego daty trasy i TA na podstawie listy numerów"
+    },
+    {
+        "id": "67fedc6e21cf9a53",
+        "type": "group",
+        "z": "ce9c01f46b71fa81",
+        "name": "AFPO",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "a994c933f5e44bcd",
+            "b3f7c2f6add058fb",
+            "b69ad1fc3f7e0987",
+            "6f8f0a03b52df29f",
+            "06b90193a87a8a8b",
+            "dcf61e2dafdbdfb5",
+            "38614dec8954676a",
+            "608d5895ed54278a",
+            "6171f4cd0b231319",
+            "41fa92565f5eaa7e",
+            "dd563d727146ad35",
+            "4189c6fee3b2444e",
+            "f9c660691cc37a01",
+            "9e2a171614bfa21a",
+            "dde27ca4002ada8b"
+        ],
+        "x": 74,
+        "y": 359,
+        "w": 1432,
+        "h": 562
+    },
+    {
+        "id": "57dd3fb05e0b1bd4",
+        "type": "group",
+        "z": "ce9c01f46b71fa81",
+        "name": "VBAP",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "7ff1d50416f3546d",
+            "ebd0c895ede212b0",
+            "e0b82f141756f0a2",
+            "fd58952ae225f3cf",
+            "a684227b6318cbcb",
+            "524106b02335a154",
+            "ddcf849840b0575d",
+            "ba0a31032a294bde",
+            "cc9b4221bbe52f82",
+            "b3de43615ccec75e"
+        ],
+        "x": 104,
+        "y": 979,
+        "w": 1102,
+        "h": 342
+    },
+    {
+        "id": "0a61aca289127ad5",
+        "type": "group",
+        "z": "ce9c01f46b71fa81",
+        "name": "3Tec-Sortierer-DB",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "2f9758012c69079c",
+            "4d4aef6970ce878a",
+            "dd8abd28c92f1baf",
+            "216056ae7e068e1d",
+            "ca5258e61499fc68"
+        ],
+        "x": 194,
+        "y": 119,
+        "w": 892,
+        "h": 202
+    },
+    {
+        "id": "c4c4fc58ca91420f",
+        "type": "mqtt-broker",
+        "name": "mosquitto",
+        "broker": "192.168.48.240",
+        "port": "8883",
+        "tls": "65a648f5af6e4647",
+        "clientid": "Test",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "5",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": false,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": "3600"
+    },
+    {
+        "id": "922fa28be1dcb7a7",
+        "type": "mqtt-broker",
+        "name": "hive mqtt://gor-svr-lin01",
+        "broker": "hivemq",
+        "port": "1883",
+        "tls": "65a648f5af6e4647",
+        "clientid": "gor-svr-lin01-1888",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": false,
+        "autoUnsubscribe": false,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": "3600"
+    },
+    {
+        "id": "65a648f5af6e4647",
+        "type": "tls-config",
+        "name": "dpn-svr-iot_tls",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "client.crt",
+        "keyname": "client.key",
+        "caname": "ca.crt",
+        "servername": "dpn-svr-iot",
+        "verifyservercert": false,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "2b4b58da72b4f323",
+        "type": "MSSQL-CN",
+        "tdsVersion": "7_4",
+        "name": "Sortierer",
+        "server": "gor-svr-sql02.GOR.polipol.intra\\DREITEC",
+        "port": "1433",
+        "encyption": false,
+        "trustServerCertificate": false,
+        "database": "CP_SORTER",
+        "useUTC": true,
+        "connectTimeout": "15000",
+        "requestTimeout": "15000",
+        "cancelTimeout": "5000",
+        "pool": "5",
+        "parseJSON": false,
+        "enableArithAbort": true,
+        "readOnlyIntent": false
+    },
+    {
+        "id": "73e667365887f357",
+        "type": "postgreSQLConfig",
+        "name": "dbt-svr-postgres DWH_TABLEAU",
+        "host": "dpn-svr-postgres.rah.polipol.intra",
+        "hostFieldType": "str",
+        "port": "5432",
+        "portFieldType": "num",
+        "database": "DWH_TABLEAU",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": "10",
+        "maxFieldType": "num",
+        "idle": "1000",
+        "idleFieldType": "num",
+        "connectionTimeout": "10000",
+        "connectionTimeoutFieldType": "num",
+        "user": "technik_reader_user",
+        "userFieldType": "str",
+        "password": "N5Hd8cZmIlod",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "4810867b41a48b8e",
+        "type": "mqtt-broker",
+        "name": "hivemq v5",
+        "broker": "hivemq",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "5",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "ui-tab-zprod",
+        "type": "ui_tab",
+        "name": "ZPROD Upload",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "ea4fba173ac7c1e9",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD.MM.YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "c008b9578be6d624",
+        "type": "ui_group",
+        "name": "Upload",
+        "tab": "ui-tab-zprod",
+        "order": 1,
+        "disp": false,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "mqtt_broker",
+        "type": "mqtt-broker",
+        "name": "MQTT Broker",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "c15feb9b669a15ec",
+        "type": "OpcUa-Endpoint",
+        "endpoint": "opc.tcp://10.65.33.2:4842",
+        "secpol": "None",
+        "secmode": "None",
+        "none": true,
+        "login": false,
+        "usercert": false,
+        "usercertificate": "",
+        "userprivatekey": ""
+    },
+    {
+        "id": "mqtt_broker1",
+        "type": "mqtt-broker",
+        "name": "Local MQTT Broker",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "b798e2a24da4199b",
+        "type": "ui_tab",
+        "name": "Test",
+        "icon": "test",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "4f6b0f15a19209be",
+        "type": "ui_group",
+        "name": "Test",
+        "tab": "b798e2a24da4199b",
+        "order": 1,
+        "disp": true,
+        "width": "13",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "e6d178f4eabba76b",
+        "type": "postgreSQLConfig",
+        "name": "",
+        "host": "192.168.53.22",
+        "hostFieldType": "str",
+        "port": "5432",
+        "portFieldType": "num",
+        "database": "APIs",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": "10",
+        "maxFieldType": "num",
+        "idle": "1000",
+        "idleFieldType": "num",
+        "connectionTimeout": "10000",
+        "connectionTimeoutFieldType": "num",
+        "user": "postgres",
+        "userFieldType": "str",
+        "password": "lyDYw6rKl062MsrfXUFH",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "42117fbbbd14bd46",
+        "type": "postgreSQLConfig",
+        "name": "",
+        "host": "timescaledb",
+        "hostFieldType": "str",
+        "port": "5432",
+        "portFieldType": "num",
+        "database": "postgres",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": "10",
+        "maxFieldType": "num",
+        "idle": "1000",
+        "idleFieldType": "num",
+        "connectionTimeout": "10000",
+        "connectionTimeoutFieldType": "num",
+        "user": "postgres",
+        "userFieldType": "str",
+        "password": "polipol",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "ui-tab-manual-afpo",
+        "type": "ui_tab",
+        "name": "Manual AFPO",
+        "icon": "send",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "ui-group-manual-afpo",
+        "type": "ui_group",
+        "name": "Auftragsnummern eingeben",
+        "tab": "ui-tab-manual-afpo",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ui-tab-manual-tour-ta",
+        "type": "ui_tab",
+        "name": "Aktualizacja Tour/TA",
+        "icon": "update",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "ui-group-manual-tour-ta",
+        "type": "ui_group",
+        "name": "Wprowadź numery",
+        "tab": "ui-tab-manual-tour-ta",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "6a7f563146ace7e7",
+        "type": "debug",
+        "z": "ef733f55563d3157",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 360,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "73e54caf92647ef2",
+        "type": "mqtt in",
+        "z": "ef733f55563d3157",
+        "name": "",
+        "topic": "$SYS/broker/version",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "c4c4fc58ca91420f",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 80,
+        "wires": [
+            [
+                "6a7f563146ace7e7"
+            ]
+        ]
+    },
+    {
+        "id": "4d4aef6970ce878a",
+        "type": "MSSQL",
+        "z": "ce9c01f46b71fa81",
+        "g": "0a61aca289127ad5",
+        "mssqlCN": "2b4b58da72b4f323",
+        "name": "",
+        "outField": "payload",
+        "returnType": 0,
+        "throwErrors": "0",
+        "query": "DECLARE @lastRunTimestampUTC DATETIMEOFFSET = CAST('{{{timestamp}}}' AS DATETIMEOFFSET);\r\nDECLARE @lastRunTimestampMEZ DATETIME2 = \r\n    CONVERT(datetime2, @lastRunTimestampUTC AT TIME ZONE 'Central European Standard Time');\r\n\r\nSELECT\r\n    O.Tour AS tour_set_name,\r\n    O.STATUS_KEY AS tour_state_id,\r\n    O.UPDATE_TS AS tour_update_ts,    \r\n    OP.OrderID AS vbeln,\r\n    CASE\r\n        WHEN OP.QUANTITY_MISSING > 0 THEN 'Missing Items'\r\n        WHEN OP.QUANTITY_DONE = OP.QUANTITY THEN 'Completed'\r\n        WHEN OP.QUANTITY_DONE > 0 THEN 'In Progress'\r\n        WHEN OP.QUANTITY_PREPARED = OP.QUANTITY THEN 'Prepared'\r\n        WHEN OP.QUANTITY_PREPARED > 0 THEN 'Partially Prepared'\r\n        ELSE 'Not Started'\r\n    END AS vbeln_state,\r\n    OP.UPDATE_TS AS vbeln_update_ts    \r\nFROM\r\n    [CP_Sorter].[dbo].[T3_ORDER] O\r\nINNER JOIN\r\n    [CP_Sorter].[dbo].[T3_ORDERPOS] OP\r\n    ON O.ORDER_NO = OP.ORDER_NO\r\nWHERE\r\n    O.INSERT_TS > @lastRunTimestampMEZ or\r\n    O.UPDATE_TS > @lastRunTimestampMEZ or\r\n    OP.INSERT_TS > @lastRunTimestampMEZ or\r\n    OP.UPDATE_TS > @lastRunTimestampMEZ\r\nORDER BY\r\n    O.Tour, OP.OrderID;\r\n",
+        "modeOpt": "queryMode",
+        "modeOptType": "query",
+        "queryOpt": "payload",
+        "queryOptType": "editor",
+        "paramsOpt": "queryParams",
+        "paramsOptType": "none",
+        "rows": "rows",
+        "rowsType": "msg",
+        "parseMustache": true,
+        "params": [],
+        "x": 640,
+        "y": 260,
+        "wires": [
+            [
+                "2f9758012c69079c"
+            ]
+        ]
+    },
+    {
+        "id": "dd8abd28c92f1baf",
+        "type": "inject",
+        "z": "ce9c01f46b71fa81",
+        "g": "0a61aca289127ad5",
+        "name": "5 sec",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 290,
+        "y": 280,
+        "wires": [
+            [
+                "216056ae7e068e1d"
+            ]
+        ]
+    },
+    {
+        "id": "216056ae7e068e1d",
+        "type": "function",
+        "z": "ce9c01f46b71fa81",
+        "g": "0a61aca289127ad5",
+        "name": "timestamp format",
+        "func": "let lastRunTimestamp = flow.get(\"last_successful_run_timestamp\") || '1970-01-01T00:00:00.000Z';\n\n\nmsg.timestamp = lastRunTimestamp;\n\nmsg.current_run_timestamp = new Date().toISOString();\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 160,
+        "wires": [
+            [
+                "4d4aef6970ce878a"
+            ]
+        ]
+    },
+    {
+        "id": "2f9758012c69079c",
+        "type": "function",
+        "z": "ce9c01f46b71fa81",
+        "g": "0a61aca289127ad5",
+        "name": "mqtt format",
+        "func": "if (!Array.isArray(msg.payload)) {\n    node.error(\"MSSQL node did not return an array.\", msg);\n    return null; // Stoppt den Flow hier\n}\n\nif (msg.payload.length === 0) {\n    node.log(\"No changes detected since \" + msg.timestamp);\n    flow.set(\"last_successful_run_timestamp\", msg.current_run_timestamp);\n    return null; // Stoppt den Flow hier\n}\n\nnode.log(`Processing ${msg.payload.length} changed rows...`);\n\nlet messagesToSend = [];\nlet updatedTours = {};\n\nfor (const row of msg.payload) {\n    const tourName = row.tour_set_name.replace(/\\//g, '_');\n    const vbeln = row.vbeln;\n\n    // TOUR DATA\n    if (!updatedTours[tourName]) {\n        const tourTopic = `polipol/8200/mag/mag-mag/tour/${tourName}/sortierer_state`;\n        const tourPayload = {\n            state_id: row.tour_state_id,\n            updated_at: row.tour_update_ts, \n            checked_at: msg.current_run_timestamp \n        };\n        messagesToSend.push({\n            topic: tourTopic,\n            payload: tourPayload,\n            qos: 1, \n            retain: true \n        });\n        updatedTours[tourName] = true;\n    }\n\n    // TA DATA\n    const vbelnTopic = `polipol/8200/mag/mag-mag/tour/${tourName}/sortierer_ta/${vbeln}`;\n    const vbelnPayload = {\n        state: row.vbeln_state,\n        updated_at: row.vbeln_update_ts,\n        checked_at: msg.current_run_timestamp\n    };\n    messagesToSend.push({\n        topic: vbelnTopic,\n        payload: vbelnPayload,\n        qos: 1,\n        retain: true \n    });\n}\n\n// Update timestamp var\nflow.set(\"last_successful_run_timestamp\", msg.current_run_timestamp);\nnode.log(`Successfully processed changes. Next run will check after ${msg.current_run_timestamp}`);\n\n\nreturn [messagesToSend];\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 180,
+        "wires": [
+            [
+                "ca5258e61499fc68"
+            ]
+        ]
+    },
+    {
+        "id": "ca5258e61499fc68",
+        "type": "mqtt out",
+        "z": "ce9c01f46b71fa81",
+        "g": "0a61aca289127ad5",
+        "name": "hive mqtt",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "345600",
+        "broker": "922fa28be1dcb7a7",
+        "x": 1000,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "7ff1d50416f3546d",
+        "type": "postgresql",
+        "z": "ce9c01f46b71fa81",
+        "g": "57dd3fb05e0b1bd4",
+        "name": "Select from PostgreSQL",
+        "query": "",
+        "postgreSQLConfig": "73e667365887f357",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 650,
+        "y": 1080,
+        "wires": [
+            [
+                "ebd0c895ede212b0"
+            ]
+        ]
+    },
+    {
+        "id": "ebd0c895ede212b0",
+        "type": "function",
+        "z": "ce9c01f46b71fa81",
+        "g": "57dd3fb05e0b1bd4",
+        "name": "Format Response",
+        "func": "if (!Array.isArray(msg.payload) || msg.payload.length === 0) {\n    // Keine Daten gefunden\n    return {\n        topic: `polipol/response/vbeln/vbap/${msg.vbeln}`,\n        payload: {\n            vbeln: msg.vbeln,\n            status: \"not_found\",\n            timestamp: new Date().toISOString()\n        },\n        qos: 1,\n        retain: false\n    };\n}\n\n// Daten gefunden, formatiere Antwort für die Gesamtübersicht\nconst result = {\n    vbeln: msg.vbeln,\n    status: \"found\",\n    timestamp: new Date().toISOString(),\n    data: msg.payload\n};\n\n// Setze das Response-Topic basierend auf den gefundenen Daten\n// Wir verwenden das Werk aus dem ersten Eintrag, falls vorhanden\nlet werk = \"unknown\";\nif (msg.payload.length > 0 && msg.payload[0].zzprwrk) {\n    werk = msg.payload[0].zzprwrk;\n}\n\n// Speichere diese vbeln in der Liste der zu aktualisierenden Aufträge\nlet requestedOrders = flow.get(\"requestedOrders_vbap\") || [];\nconst existingEntry = requestedOrders.find(entry => entry.vbeln === msg.vbeln);\nif (!existingEntry) {\n    requestedOrders.push({\n        vbeln: msg.vbeln,\n        timestamp: new Date().toISOString()\n    });\n    flow.set(\"requestedOrders_vbap\", requestedOrders);\n    node.debug(`Neue Verkaufsbelegnummer ${msg.vbeln} zur täglichen Aktualisierung hinzugefügt`);\n}\n\n// Erstelle ein Array für alle zu sendenden Nachrichten\nconst messages = [];\n\n// Hauptnachricht mit allen Positionen\nmessages.push({\n    topic: `polipol/${werk}/order/vbap/vbeln/${msg.vbeln}`,\n    payload: result,\n    qos: 1,\n    retain: true\n});\n\n// Einzelne Nachrichten für jede Position\nmsg.payload.forEach(position => {\n    if (position.posnr) {\n        const posResult = {\n            vbeln: msg.vbeln,\n            posnr: position.posnr,\n            status: \"found\",\n            timestamp: new Date().toISOString(),\n            data: position\n        };\n\n        messages.push({\n            topic: `polipol/${werk}/order/vbap/vbeln/${msg.vbeln}/${position.posnr}`,\n            payload: posResult,\n            qos: 1,\n            retain: true\n        });\n    }\n});\n\nreturn [messages];\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 860,
+        "y": 1080,
+        "wires": [
+            [
+                "e0b82f141756f0a2"
+            ]
+        ]
+    },
+    {
+        "id": "e0b82f141756f0a2",
+        "type": "mqtt out",
+        "z": "ce9c01f46b71fa81",
+        "g": "57dd3fb05e0b1bd4",
+        "name": "MQTT Response",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "2419200",
+        "broker": "4810867b41a48b8e",
+        "x": 1090,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "fd58952ae225f3cf",
+        "type": "function",
+        "z": "ce9c01f46b71fa81",
+        "g": "57dd3fb05e0b1bd4",
+        "name": "Build SQL Query",
+        "func": "let vbeln;\n\nif (msg.payload && typeof msg.payload === 'object') {\n    vbeln = msg.payload.vbeln;\n} else if (typeof msg.payload === 'string') {\n    try {\n        const data = JSON.parse(msg.payload);\n        vbeln = data.vbeln;\n    } catch (e) {\n        vbeln = msg.payload;\n    }\n}\n\nif (!vbeln) {\n    node.error(\"Keine Verkaufsbelegnummer gefunden\");\n    return null;\n}\n\nmsg.vbeln = vbeln;\n\nmsg.query = `SELECT\n    vbap.auditinsertdate,\n    vbap.vbeln, vbap.posnr, vbap.matnr, vbap.zzmbdat, vbap.zzprwrk, vbap.zzhstoff, vbap.zzastoff, vbap.meins, vbap.spart,\n    makt.maktx as hstoff,\n\tmakt_a.maktx as astoff\nFROM \n    ods.fa_vbap vbap LEFT JOIN ods.st_makt makt on makt.matnr=vbap.zzhstoff and makt.spras='D'\n\tLEFT JOIN ods.st_makt makt_a on makt.matnr=vbap.zzastoff and makt.spras='D'\nWHERE \n    vbap.vbeln = '${vbeln}';\n`;\n\nnode.debug(`SQL-Abfrage für Verkaufsbelegnummer ${vbeln} erstellt`);\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 1020,
+        "wires": [
+            [
+                "7ff1d50416f3546d"
+            ]
+        ]
+    },
+    {
+        "id": "a684227b6318cbcb",
+        "type": "mqtt in",
+        "z": "ce9c01f46b71fa81",
+        "g": "57dd3fb05e0b1bd4",
+        "name": "MQTT Request",
+        "topic": "polipol/request/vbeln/vbap/#",
+        "qos": "1",
+        "datatype": "auto",
+        "broker": "922fa28be1dcb7a7",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 230,
+        "y": 1080,
+        "wires": [
+            [
+                "cc9b4221bbe52f82"
+            ]
+        ]
+    },
+    {
+        "id": "524106b02335a154",
+        "type": "inject",
+        "z": "ce9c01f46b71fa81",
+        "g": "57dd3fb05e0b1bd4",
+        "name": "Tägliche Aktualisierung",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "00 23 * * *",
+        "once": false,
+        "onceDelay": "10",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 260,
+        "y": 1200,
+        "wires": [
+            [
+                "ba0a31032a294bde"
+            ]
+        ]
+    },
+    {
+        "id": "ddcf849840b0575d",
+        "type": "function",
+        "z": "ce9c01f46b71fa81",
+        "g": "57dd3fb05e0b1bd4",
+        "name": "Update Requested Orders",
+        "func": "// Hole die Liste der angefragten Verkaufsbelegnummern\nconst requestedOrders = flow.get(\"requestedOrders_vbap\") || [];\n\nif (requestedOrders.length === 0) {\n    node.warn(\"Keine Verkaufsbelegnummern zum Aktualisieren vorhanden\");\n    return null;\n}\n\n// Erstelle für jede Verkaufsbelegnummer eine Nachricht\nconst messages = [];\n\nrequestedOrders.forEach(entry => {\n    messages.push({\n        vbeln: entry.vbeln,\n        query: `SELECT\n    vbap.auditinsertdate,\n    vbap.vbeln, vbap.posnr, vbap.matnr, vbap.zzmbdat, vbap.zzprwrk, vbap.zzhstoff, vbap.zzastoff, vbap.meins, vbap.spart,\n    makt.maktx as hstoff,\n\tmakt_a.maktx as astoff\nFROM \n    ods.fa_vbap vbap LEFT JOIN ods.st_makt makt on makt.matnr=vbap.zzhstoff and makt.spras='D'\n\tLEFT JOIN ods.st_makt makt_a on makt_a.matnr=vbap.zzastoff and makt_a.spras='D'\nWHERE  \n            vbeln = '${entry.vbeln}';\n        `\n    });\n});\n\nnode.debug(`${messages.length} Verkaufsbelegnummern werden aktualisiert`);\nreturn [messages];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "// Initialisiere die Liste der angefragten Verkaufsbelegnummern\nif (!flow.get(\"requestedOrders_vbap\")) {\n    flow.set(\"requestedOrders_vbap\", []);\n}",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 1200,
+        "wires": [
+            [
+                "b3de43615ccec75e"
+            ]
+        ]
+    },
+    {
+        "id": "ba0a31032a294bde",
+        "type": "function",
+        "z": "ce9c01f46b71fa81",
+        "g": "57dd3fb05e0b1bd4",
+        "name": "delete requests after 6 months",
+        "func": "function cleanupRequestedOrders() {\n    const requestedOrders = flow.get(\"requestedOrders_vbap\") || [];\n    if (requestedOrders.length === 0) return;\n    \n    const sixMonthsAgo = new Date();\n    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);\n    \n    const filteredOrders = requestedOrders.filter(entry => {\n        const entryDate = new Date(entry.timestamp);\n        return entryDate > sixMonthsAgo;\n    });\n    \n    flow.set(\"requestedOrders_vbap\", filteredOrders);\n    node.debug(`Bereinigung durchgeführt: ${requestedOrders.length - filteredOrders.length} alte Einträge entfernt`);\n}\ncleanupRequestedOrders()\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 1280,
+        "wires": [
+            [
+                "ddcf849840b0575d"
+            ]
+        ]
+    },
+    {
+        "id": "cc9b4221bbe52f82",
+        "type": "delay",
+        "z": "ce9c01f46b71fa81",
+        "g": "57dd3fb05e0b1bd4",
+        "name": "limit 5/s",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "5",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 350,
+        "y": 1140,
+        "wires": [
+            [
+                "fd58952ae225f3cf"
+            ]
+        ]
+    },
+    {
+        "id": "b3de43615ccec75e",
+        "type": "delay",
+        "z": "ce9c01f46b71fa81",
+        "g": "57dd3fb05e0b1bd4",
+        "name": "limit 3/s",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "3",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 640,
+        "y": 1160,
+        "wires": [
+            [
+                "7ff1d50416f3546d"
+            ]
+        ]
+    },
+    {
+        "id": "a994c933f5e44bcd",
+        "type": "postgresql",
+        "z": "ce9c01f46b71fa81",
+        "g": "67fedc6e21cf9a53",
+        "name": "Select from PostgreSQL",
+        "query": "",
+        "postgreSQLConfig": "73e667365887f357",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 830,
+        "y": 400,
+        "wires": [
+            [
+                "608d5895ed54278a"
+            ]
+        ]
+    },
+    {
+        "id": "b3f7c2f6add058fb",
+        "type": "function",
+        "z": "ce9c01f46b71fa81",
+        "g": "67fedc6e21cf9a53",
+        "name": "Build SQL Query",
+        "func": "let aufnr, vbeln;\n\nif (msg.payload && typeof msg.payload === 'object') {\n    if (msg.payload.aufnr) {\n        aufnr = msg.payload.aufnr;\n    }\n    if (msg.payload.vbeln) {\n        vbeln = msg.payload.vbeln;\n    }\n} else if (typeof msg.payload === 'string') {\n    try {\n        const data = JSON.parse(msg.payload);\n        if (data.aufnr) aufnr = data.aufnr;\n        if (data.vbeln) vbeln = data.vbeln;\n    } catch (e) {\n        aufnr = msg.payload;\n    }\n}\n\nif (!aufnr && !vbeln) {\n    node.error(\"Weder Auftragsnummer (aufnr) noch Verkaufsbelegnummer (vbeln) gefunden\");\n    return null;\n}\n\n// Speichere die Nummern im msg-Objekt\nif (aufnr) msg.aufnr = aufnr;\nif (vbeln) msg.vbeln = vbeln;\n\n// Erstelle die SQL-Abfrage je nach vorhandenem Wert\nif (aufnr) {\n    msg.request_value='aufnr';\n    msg.query = `\nSELECT    \n    aufnr,\n    posnr,\n    psmng,\n    kdauf as vbeln,\n    afpo.matnr,\n    CASE WHEN ltrmi != '0001-01-01 BC' THEN ltrmi END as ltmri,\n    ltrmp,\n    dwerk,\n    afpo.auditinsertdate,\n\tmaktx,\n\tsubstring(maktx FROM ' ([^ ]+)') AS dispo_group\nFROM \n    ods.fa_afpo afpo\n\tjoin ods.st_makt makt on afpo.matnr = makt.matnr and makt.spras='D'\nWHERE \n    aufnr = '${aufnr}'\nLIMIT 1;\n`;\n} else if (vbeln) {\n    msg.request_value='vbeln';\n    msg.query = `\n\nSELECT    \n    aufnr,\n    posnr,\n    psmng,\n    kdauf as vbeln,\n    afpo.matnr,\n    CASE WHEN ltrmi != '0001-01-01 BC' THEN ltrmi END as ltmri,\n    ltrmp,\n    dwerk,\n    afpo.auditinsertdate,\n\tmaktx,\n\tsubstring(maktx FROM ' ([^ ]+)') AS dispo_group\nFROM \n    ods.fa_afpo afpo\n\tjoin ods.st_makt makt on afpo.matnr = makt.matnr and makt.spras='D'\nWHERE \n    kdauf = '${vbeln}' and maktx like 'PAK%' \n`;\n}\n\nnode.debug(`SQL-Abfrage für ${aufnr ? \"Auftragsnummer \" + aufnr : \"Verkaufsbelegnummer \" + vbeln} erstellt`);\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 420,
+        "wires": [
+            [
+                "a994c933f5e44bcd"
+            ]
+        ]
+    },
+    {
+        "id": "b69ad1fc3f7e0987",
+        "type": "inject",
+        "z": "ce9c01f46b71fa81",
+        "g": "67fedc6e21cf9a53",
+        "name": "Tägliche Aktualisierung",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "30 23 * * *",
+        "once": false,
+        "onceDelay": "10",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 270,
+        "y": 880,
+        "wires": [
+            [
+                "06b90193a87a8a8b"
+            ]
+        ]
+    },
+    {
+        "id": "6f8f0a03b52df29f",
+        "type": "function",
+        "z": "ce9c01f46b71fa81",
+        "g": "67fedc6e21cf9a53",
+        "name": "Update Requested Aufnr/ Vbeln",
+        "func": "// Hole die Liste der angefragten Auftragsnummern\nconst requestedAufnr = flow.get(\"requestedAufnr_afpo\") || [];\nconst requestedVbelns = flow.get(\"requestedVbelns_afpo\") || [];\n// Erstelle für jede Auftragsnummer eine Nachricht\nconst messages = [];\n\nif (requestedAufnr.length === 0) {\n    node.warn(\"Keine Auftragsnummern zum Aktualisieren vorhanden\");\n}\nelse {\n    requestedAufnr.forEach(entry => {\n        messages.push({\n            aufnr: entry.aufnr,\n            request_value: 'aufnr',\n            query : `\n                SELECT    \n                    aufnr,\n                    posnr,\n                    psmng,\n                    kdauf as vbeln,\n                    afpo.matnr,\n                    CASE WHEN ltrmi != '0001-01-01 BC' THEN ltrmi END as ltmri,\n                    ltrmp,\n                    dwerk,\n                    afpo.auditinsertdate,\n                    maktx,\n                    substring(maktx FROM ' ([^ ]+)') AS dispo_group\n                FROM \n                    ods.fa_afpo afpo\n                    join ods.st_makt makt on afpo.matnr = makt.matnr and makt.spras='D'\n                WHERE \n                    aufnr = '${entry.aufnr}'\n                LIMIT 1; \n            `\n        });\n    });\n\n    node.debug(`${messages.length} Auftragsnummern werden aktualisiert`);\n}\nif (requestedVbelns.length === 0) {\n    node.warn(\"Keine Verkaufsbelege zum Aktualisieren vorhanden\");\n}\nelse\n{\n\n    requestedAufnr.forEach(entry => {\n        messages.push({\n            aufnr: entry.aufnr,\n            request_value: 'aufnr',\n            query : `\n                SELECT\n                    aufnr,\n                    posnr,\n                    psmng,\n                    kdauf as vbeln,\n                    afpo.matnr,\n                    CASE WHEN ltrmi != '0001-01-01 BC' THEN ltrmi END as ltmri,\n                    ltrmp,\n                    dwerk,\n                    afpo.auditinsertdate,\n                    maktx,\n                    substring(maktx FROM ' ([^ ]+)') AS dispo_group\n                FROM\n                    ods.fa_afpo afpo\n                    join ods.st_makt makt on afpo.matnr = makt.matnr and makt.spras='D'\n                WHERE\n                    kdauf = '${entry.vbeln}' and maktx like 'PAK%'\n            `\n        });\n    });\n    node.debug(`${messages.length} Verkaufsbelege werden aktualisiert`);\n}\n\nreturn [messages];\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "// Initialisiere die Liste der angefragten Auftragsnummern\nif (!flow.get(\"requestedOrders_afpo\")) {\n    flow.set(\"requestedOrders_afpo\", []);\n}",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 560,
+        "wires": [
+            [
+                "38614dec8954676a"
+            ]
+        ]
+    },
+    {
+        "id": "06b90193a87a8a8b",
+        "type": "function",
+        "z": "ce9c01f46b71fa81",
+        "g": "67fedc6e21cf9a53",
+        "name": "delete requests after 6 months",
+        "func": "function cleanupRequestedOrders() {\n    const requestedOrders = flow.get(\"requestedOrders_afpo\") || [];\n    if (requestedOrders.length === 0) return;\n    \n    const sixMonthsAgo = new Date();\n    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);\n    \n    const filteredOrders = requestedOrders.filter(entry => {\n        const entryDate = new Date(entry.timestamp);\n        return entryDate > sixMonthsAgo;\n    });\n    \n    flow.set(\"requestedOrders_afpo\", filteredOrders);\n    node.debug(`Bereinigung durchgeführt: ${requestedOrders.length - filteredOrders.length} alte Einträge entfernt`);\n}\ncleanupRequestedOrders()\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 800,
+        "wires": [
+            [
+                "6f8f0a03b52df29f"
+            ]
+        ]
+    },
+    {
+        "id": "dcf61e2dafdbdfb5",
+        "type": "delay",
+        "z": "ce9c01f46b71fa81",
+        "g": "67fedc6e21cf9a53",
+        "name": "limit 5/s",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 300,
+        "y": 460,
+        "wires": [
+            [
+                "b3f7c2f6add058fb"
+            ]
+        ]
+    },
+    {
+        "id": "38614dec8954676a",
+        "type": "delay",
+        "z": "ce9c01f46b71fa81",
+        "g": "67fedc6e21cf9a53",
+        "name": "limit 3/s",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "3",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 650,
+        "y": 500,
+        "wires": [
+            [
+                "a994c933f5e44bcd"
+            ]
+        ]
+    },
+    {
+        "id": "608d5895ed54278a",
+        "type": "switch",
+        "z": "ce9c01f46b71fa81",
+        "g": "67fedc6e21cf9a53",
+        "name": "vbeln oder aufnr?",
+        "property": "request_value",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "aufnr",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "vbeln",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 750,
+        "y": 720,
+        "wires": [
+            [
+                "41fa92565f5eaa7e"
+            ],
+            [
+                "6171f4cd0b231319"
+            ]
+        ]
+    },
+    {
+        "id": "6171f4cd0b231319",
+        "type": "function",
+        "z": "ce9c01f46b71fa81",
+        "g": "67fedc6e21cf9a53",
+        "name": "Format Response (vbeln)",
+        "func": "if (!Array.isArray(msg.payload) || msg.payload.length === 0) {\n    // Keine Daten gefunden\n    return {\n        topic: `polipol/response/vbeln/afpo${msg.vbeln}`,\n        payload: {\n            vbeln: msg.vbeln,\n            status: \"not_found\",\n            timestamp: new Date().toISOString()\n        },\n        qos: 1,\n        retain: false\n    };\n}\n\n// Übersicht: Nur aufnr-Liste\nconst overview = {\n    vbeln: msg.vbeln,\n    status: \"found\",\n    timestamp: new Date().toISOString(),\n    aufnr: msg.payload.map(entry => entry.aufnr)\n};\n\n// Einzelne Nachrichten für jede aufnr\nconst messages = msg.payload.map(entry => {\n    return {\n        topic: `polipol/${entry.dwerk}/order/afpo/vbeln/${msg.vbeln}/aufnr/${entry.aufnr}`,\n        payload: entry,\n        qos: 1,\n        retain: true\n    };\n});\n\n// Übersichtsnachricht (nur aufnr-Liste)\nconst overviewTopic = `polipol/${msg.payload[0].dwerk}/order/afpo/vbeln/${msg.vbeln}`;\nmessages.push({\n    topic: overviewTopic,\n    payload: overview,\n    qos: 1,\n    retain: true\n});\n\n// Optionale Verwaltung der angefragten vbeln für spätere Aktualisierung\nlet requestedVbelns = flow.get(\"requestedVbelns_afpo\") || [];\nconst existingEntry = requestedVbelns.find(entry => entry.vbeln === msg.vbeln);\nif (!existingEntry) {\n    requestedVbelns.push({\n        vbeln: msg.vbeln,\n        timestamp: new Date().toISOString()\n    });\n    flow.set(\"requestedVbelns_afpo\", requestedVbelns);\n    node.debug(`Neue vbeln ${msg.vbeln} zur täglichen Aktualisierung hinzugefügt`);\n}\n\n// Mehrere Nachrichten zurückgeben\nreturn [messages];\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 760,
+        "wires": [
+            [
+                "9e2a171614bfa21a"
+            ]
+        ]
+    },
+    {
+        "id": "41fa92565f5eaa7e",
+        "type": "function",
+        "z": "ce9c01f46b71fa81",
+        "g": "67fedc6e21cf9a53",
+        "name": "Format Response (aufnr)",
+        "func": "if (!Array.isArray(msg.payload) || msg.payload.length === 0) {\n    // Keine Daten gefunden\n    return {\n        topic: `polipol/response/aufnr/afpo${msg.aufnr}`,\n        payload: {\n            aufnr: msg.aufnr,\n            status: \"not_found\",\n            timestamp: new Date().toISOString()\n        },\n        qos: 1,\n        retain: false\n    };\n}\n\n// Daten gefunden, formatiere Antwort\nconst result = {\n    aufnr: msg.aufnr,\n    status: \"found\",\n    timestamp: new Date().toISOString(),\n    data: msg.payload\n};\n\n// Setze das Response-Topic basierend auf den gefundenen Daten\nconst entry = msg.payload[0];\nmsg.responseTopic = `polipol/${entry.dwerk}/order/afpo/vbeln/${entry.vbeln}/aufnr/${entry.aufnr}`;\n\n\n// Speichere diese aufnr in der Liste der zu aktualisierenden Aufträge\nlet requestedOrders = flow.get(\"requestedAufnr_afpo\") || [];\nconst existingEntry = requestedOrders.find(entry => entry.aufnr === msg.aufnr);\nif (!existingEntry) {\n    requestedOrders.push({\n        aufnr: msg.aufnr,\n        timestamp: new Date().toISOString()\n    });\n    flow.set(\"requestedAufnr_afpo\", requestedOrders);\n    node.debug(`Neue Auftragsnummer ${msg.aufnr} zur täglichen Aktualisierung hinzugefügt`);\n}\n\nreturn {\n    topic: msg.responseTopic,\n    payload: result,\n    qos: 1,\n    retain: true\n};\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 700,
+        "wires": [
+            [
+                "9e2a171614bfa21a"
+            ]
+        ]
+    },
+    {
+        "id": "dd563d727146ad35",
+        "type": "mqtt out",
+        "z": "ce9c01f46b71fa81",
+        "g": "67fedc6e21cf9a53",
+        "name": "MQTT Response",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "2419200",
+        "broker": "4810867b41a48b8e",
+        "x": 1390,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "4189c6fee3b2444e",
+        "type": "mqtt in",
+        "z": "ce9c01f46b71fa81",
+        "g": "67fedc6e21cf9a53",
+        "name": "MQTT Request",
+        "topic": "polipol/request/vbeln/afpo/#",
+        "qos": "1",
+        "datatype": "auto",
+        "broker": "922fa28be1dcb7a7",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 600,
+        "wires": [
+            [
+                "f9c660691cc37a01"
+            ]
+        ]
+    },
+    {
+        "id": "f9c660691cc37a01",
+        "type": "delay",
+        "z": "ce9c01f46b71fa81",
+        "g": "67fedc6e21cf9a53",
+        "name": "limit 5/s",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 320,
+        "y": 660,
+        "wires": [
+            [
+                "b3f7c2f6add058fb"
+            ]
+        ]
+    },
+    {
+        "id": "9e2a171614bfa21a",
+        "type": "delay",
+        "z": "ce9c01f46b71fa81",
+        "g": "67fedc6e21cf9a53",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "10",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1300,
+        "y": 600,
+        "wires": [
+            [
+                "dd563d727146ad35"
+            ]
+        ]
+    },
+    {
+        "id": "dde27ca4002ada8b",
+        "type": "mqtt in",
+        "z": "ce9c01f46b71fa81",
+        "g": "67fedc6e21cf9a53",
+        "name": "MQTT Request",
+        "topic": "polipol/request/aufnr/afpo/#",
+        "qos": "1",
+        "datatype": "auto",
+        "broker": "4810867b41a48b8e",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 400,
+        "wires": [
+            [
+                "dcf61e2dafdbdfb5"
+            ]
+        ]
+    },
+    {
+        "id": "9a4f43a2d1c649e3",
+        "type": "ui_upload",
+        "z": "27e1fbc3eba3037f",
+        "group": "c008b9578be6d624",
+        "title": "Prześlij plik Excel",
+        "accept": ".xlsx,.xls",
+        "name": "Excel Upload",
+        "order": 1,
+        "width": "6",
+        "height": 2,
+        "chunk": 256,
+        "transfer": "binary",
+        "x": 170,
+        "y": 140,
+        "wires": [
+            [
+                "89708e5fd45df6f4"
+            ]
+        ]
+    },
+    {
+        "id": "89708e5fd45df6f4",
+        "type": "function",
+        "z": "27e1fbc3eba3037f",
+        "name": "File Validation",
+        "func": "// Save file in flow context\nif (msg.payload && msg.payload.length > 0) {\n    flow.set('uploadedFile', msg.payload);\n    flow.set('fileName', msg.file.name || 'uploaded.xlsx');\n    \n    // Validate file type\n    const fileName = msg.file.name || '';\n    const validExtensions = ['.xlsx', '.xls', '.XLSX'];\n    const isValid = validExtensions.some(ext => fileName.toLowerCase().endsWith(ext));\n    \n    if (isValid) {\n        msg.payload = `✅ Plik \"${fileName}\" został załadowany`;\n        msg.topic = 'file_ready';\n        return [msg, null];\n    } else {\n        msg.payload = `❌ Nieprawidłowy typ pliku. Dozwolone są tylko pliki .xlsx i .xls.`;\n        msg.topic = 'file_error';\n        return [null, msg];\n    }\n} else {\n    msg.payload = 'Nie wybrano pliku';\n    msg.topic = 'no_file';\n    return [null, msg];\n}",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 200,
+        "wires": [
+            [
+                "c3dc70432603e629"
+            ],
+            [
+                "c3dc70432603e629"
+            ]
+        ]
+    },
+    {
+        "id": "364559bce6b8ee88",
+        "type": "ui_button",
+        "z": "27e1fbc3eba3037f",
+        "name": "Process & Send",
+        "group": "c008b9578be6d624",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "passthru": false,
+        "label": "📤 Przetwórz i wyślij",
+        "tooltip": "Przetwórz dane i wyślij do MQTT",
+        "color": "primary",
+        "bgcolor": "",
+        "className": "",
+        "icon": "upload",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 150,
+        "y": 320,
+        "wires": [
+            [
+                "4ce375ab81bc7f1f"
+            ]
+        ]
+    },
+    {
+        "id": "4ce375ab81bc7f1f",
+        "type": "function",
+        "z": "27e1fbc3eba3037f",
+        "name": "Trigger Processing",
+        "func": "// Get stored file\nconst fileData = flow.get('uploadedFile');\nconst fileName = flow.get('fileName');\n\nif (!fileData) {\n    msg.payload = '❌ Brak pliku do przetworzenia';\n    msg.topic = 'error';\n    return [null, msg];\n}\n\nmsg.payload = fileData;\nmsg.filename = fileName;\nmsg.topic = 'process_file';\n\nconst statusMsg = {\n    payload: '🔄 Przetwarzanie rozpoczęte...',\n    topic: 'processing'\n};\nnode.log(\"File uploaded\");\nreturn [msg, statusMsg];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 260,
+        "wires": [
+            [
+                "7737099569944ae5"
+            ],
+            [
+                "c3dc70432603e629"
+            ]
+        ]
+    },
+    {
+        "id": "7737099569944ae5",
+        "type": "xlsx",
+        "z": "27e1fbc3eba3037f",
+        "name": "Parse Excel",
+        "x": 530,
+        "y": 440,
+        "wires": [
+            [
+                "a2c52c83574a8347"
+            ]
+        ]
+    },
+    {
+        "id": "a2c52c83574a8347",
+        "type": "function",
+        "z": "27e1fbc3eba3037f",
+        "name": "Process ZPROD Data",
+        "func": "try {\n    const data = msg.payload;\n    const messages = [];\n    const tableData = [];\n    let processedCount = 0;\n\n    if (!Array.isArray(data) || data.length < 2) {\n        const errorMsg = {\n            payload: '❌ Brak poprawnych danych w pliku Excel',\n            topic: 'error'\n        };\n        return [null, null, null, errorMsg];\n    }\n\n    const headers = data[0];\n    const rows = data.slice(1);\n    const processedRows = rows.map(row =>\n        headers.reduce((obj, key, i) => {\n            obj[key] = row[i] !== undefined ? row[i] : null;\n            return obj;\n        }, {})\n    );\n\n    processedRows.forEach((row, index) => {\n        try {\n            const matBereitstellungsDatum = row['Mat.Bereitst.Datum'] || row['MatBereitstellungsDatum']|| row['Mat.Bereitst.Datum'] || row['Datum'] || row['Data dostępn. mat.'];\n            let route = row['Route'] || row['Trasa'];\n            if (route === 'SHOP') {\n                route = -1;\n            }\n            const verkaufsbeleg = row['Verkaufsbeleg'] || row['VBELN'] || row['Dokument sprzedaży'];\n            const hauptstoff = row['Hauptstoff'] || row['Tkanina główna'] ;\n            const absatzstoff = row['Absatzstoff'] || row['Tkanina druga'];\n            let garniturId = row['Garnitur- ID'] || \"\";\n            let parts = garniturId.split('/');\n            const werks = parts[parts.length - 1];\n            if (!matBereitstellungsDatum || !route || !verkaufsbeleg) {\n                node.warn(`Wiersz ${index + 1}: Brak wymaganych danych`);\n                return;\n            }\n            let formattedDate;\n            if (matBereitstellungsDatum instanceof Date) {\n                formattedDate = matBereitstellungsDatum.toISOString().split('T')[0];\n            } else if (typeof matBereitstellungsDatum === 'string') {\n                const dateStr = matBereitstellungsDatum.trim();\n                if (dateStr.includes('.')) {\n                    const parts = dateStr.split('.');\n                    if (parts.length === 3) {\n                        formattedDate = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;\n                    }\n                } else {\n                    formattedDate = dateStr;\n                }\n            }\n            const tour_id = `${route}_${formattedDate.replace(/-/g, '')}_${werks}`;\n            const topic = `polipol/${werks}/order/zprod/tour_id/${tour_id}/vbeln/${verkaufsbeleg}`;\n            const payload = {\n                tour_id: tour_id,\n                vbeln: verkaufsbeleg,\n                route: route,\n                mat_bereitstellungs_datum: formattedDate,\n                hauptstoff: hauptstoff || null,\n                absatzstoff: absatzstoff || null,\n                bestaetigte_menge: row['Bestätigte Menge'] || row['BestaetigteMenge'] || row['Ilość potwierdzona'],\n                lieferpriorität: row['Lieferpriorität'] || row['Lieferprioritaet'] || row['Priorytet dostawy'],\n                position: row['Position'] || row['Poz. dok. sprzedaży'],\n                material: row['Material'] || row['Materiał'],\n                materialkurztext: row['Materialkurztext'] || row['Opis materiału'],\n                bezeichnung: row['Bezeichnung'] || row['Nazwa'],\n                timestamp: new Date().toISOString(),\n                source_file: msg.filename\n            };\n            messages.push({\n                topic: topic,\n                payload: payload,\n                qos: 1,\n                retain: true\n            });\n            tableData.push({\n                vbeln: verkaufsbeleg,\n                tour_id: tour_id,\n                hauptstoff: hauptstoff || '-'\n            });\n            processedCount++;\n            node.log(\"neuer Beleg hinzugefügt\");\n        } catch (rowError) {\n            node.error(`Wiersz ${index + 1}: ${rowError.message}`);\n        }\n    });\n    if (messages.length === 0) {\n        const errorMsg = {\n            payload: '❌ Nie przetworzono żadnych poprawnych rekordów',\n            topic: 'error'\n        };\n        return [null, null, null, errorMsg];\n    }\n    const tableMsg = {\n        payload: tableData,\n        topic: 'table_update'\n    };\n    const counterMsg = {\n        payload: `${processedCount} z ${processedRows.length} rekordów`,\n        topic: 'counter_update'\n    };\n    const statusMsg = {\n        payload: `✅ ${processedCount} rekordów poprawnie przetworzono`,\n        topic: 'success'\n    };\n    const notificationMsg = {\n        payload: `🚀 ${processedCount} rekordów ZPROD zostało pomyślnie przesłanych!`,\n        topic: 'success'\n    };\n    return [messages, tableMsg, counterMsg, statusMsg, notificationMsg];\n} catch (error) {\n    node.error(`Błąd przetwarzania: ${error.message}`);\n    const errorMsg = {\n        payload: `❌ Błąd przetwarzania: ${error.message}`,\n        topic: 'error'\n    };\n    return [null, null, null, errorMsg, errorMsg];\n}\n",
+        "outputs": 5,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 260,
+        "wires": [
+            [
+                "db52b76fdf1bd48d",
+                "f50cab7a9707780c",
+                "95b9b164625a2c5e"
+            ],
+            [
+                "1da04ec9ac1e81b9"
+            ],
+            [
+                "1a73487621545c04"
+            ],
+            [
+                "8f55cad12bb1061d"
+            ],
+            [
+                "c3dc70432603e629"
+            ]
+        ]
+    },
+    {
+        "id": "4160e98885ea2d7b",
+        "type": "mqtt out",
+        "z": "27e1fbc3eba3037f",
+        "name": "Publish ZPROD",
+        "topic": "",
+        "qos": "0",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "1209600",
+        "broker": "4810867b41a48b8e",
+        "x": 1380,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "1a73487621545c04",
+        "type": "ui_text",
+        "z": "27e1fbc3eba3037f",
+        "group": "c008b9578be6d624",
+        "order": 3,
+        "width": "0",
+        "height": "0",
+        "name": "Rekordy przetworzone",
+        "label": "Rekordy przetworzone:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "x": 1200,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "8f55cad12bb1061d",
+        "type": "ui_text",
+        "z": "27e1fbc3eba3037f",
+        "group": "c008b9578be6d624",
+        "order": 4,
+        "width": "0",
+        "height": "0",
+        "name": "Status",
+        "label": "Status:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "x": 1230,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "1da04ec9ac1e81b9",
+        "type": "ui_table",
+        "z": "27e1fbc3eba3037f",
+        "group": "c008b9578be6d624",
+        "name": "Przetworzone rekordy",
+        "order": 5,
+        "width": "0",
+        "height": "0",
+        "columns": [
+            {
+                "field": "vbeln",
+                "title": "VBELN",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "tour_id",
+                "title": "ID trasy",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "hauptstoff",
+                "title": "Tkanina główna",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            }
+        ],
+        "outputs": 0,
+        "cts": false,
+        "x": 1290,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "c3dc70432603e629",
+        "type": "ui_toast",
+        "z": "27e1fbc3eba3037f",
+        "position": "top right",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Status Message",
+        "x": 1090,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "f50cab7a9707780c",
+        "type": "delay",
+        "z": "27e1fbc3eba3037f",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "1",
+        "timeoutUnits": "milliseconds",
+        "rate": "5",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 540,
+        "y": 620,
+        "wires": [
+            [
+                "04c1e5416d96d017"
+            ]
+        ]
+    },
+    {
+        "id": "04c1e5416d96d017",
+        "type": "function",
+        "z": "27e1fbc3eba3037f",
+        "name": "Materialnummern normieren & Query bauen",
+        "func": "// Originaldaten sichern\nmsg._original = RED.util.cloneMessage(msg.payload);\n\n// Hilfsfunktion für 18-stellige Materialnummer\nfunction padMatnr(num) {\n    if (!num) return null;\n    num = String(num).replace(/^0+/, ''); // führende Nullen entfernen\n    return num.padStart(18, '0');\n}\n\nconst hauptstoff = padMatnr(msg.payload.hauptstoff);\nconst absatzstoff = padMatnr(msg.payload.absatzstoff);\n\nmsg.hauptstoff = hauptstoff;\nmsg.absatzstoff = absatzstoff;\n\nreturn [msg, msg, msg];",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 1000,
+        "wires": [
+            [
+                "e7fba9bf72640c6f"
+            ],
+            [
+                "ea3e8501e34a294f"
+            ],
+            [
+                "431a576519584991"
+            ]
+        ]
+    },
+    {
+        "id": "e7fba9bf72640c6f",
+        "type": "function",
+        "z": "27e1fbc3eba3037f",
+        "name": "SQL für Hauptstoff",
+        "func": "if (!msg.hauptstoff) return null;\nmsg.query = `SELECT maktx, 'hauptstoff' as type FROM ods.st_makt WHERE matnr = '${msg.hauptstoff}' AND spras = 'D' LIMIT 1;`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 820,
+        "wires": [
+            [
+                "4b72c446d7cef4a0"
+            ]
+        ]
+    },
+    {
+        "id": "ea3e8501e34a294f",
+        "type": "function",
+        "z": "27e1fbc3eba3037f",
+        "name": "SQL für Absatzstoff",
+        "func": "if (!msg.absatzstoff) return null;\nmsg.query = `SELECT maktx, 'absatzstoff' as type FROM ods.st_makt WHERE matnr = '${msg.absatzstoff}' AND spras = 'D' LIMIT 1;`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 860,
+        "wires": [
+            [
+                "4b72c446d7cef4a0"
+            ]
+        ]
+    },
+    {
+        "id": "4b72c446d7cef4a0",
+        "type": "postgresql",
+        "z": "27e1fbc3eba3037f",
+        "name": "Materialtext abfragen",
+        "query": "",
+        "postgreSQLConfig": "73e667365887f357",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 750,
+        "y": 840,
+        "wires": [
+            [
+                "431a576519584991"
+            ]
+        ]
+    },
+    {
+        "id": "33cfaf720dafb91c",
+        "type": "join",
+        "z": "27e1fbc3eba3037f",
+        "name": "Ergebnisse & Original joinen",
+        "mode": "custom",
+        "build": "merged",
+        "property": "",
+        "propertyType": "full",
+        "key": "lookupType",
+        "joiner": "",
+        "joinerType": "auto",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "2",
+        "count": "3",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 1070,
+        "y": 1160,
+        "wires": [
+            [
+                "966c563843167c83"
+            ]
+        ]
+    },
+    {
+        "id": "966c563843167c83",
+        "type": "function",
+        "z": "27e1fbc3eba3037f",
+        "name": "Zusammenführen & Ausgabe",
+        "func": "if (msg.payload.length === 0) {\n    return null;\n}\nlet payload = msg._original;\n\nif (msg.hauptstoff_name) payload.hauptstoff = msg.hauptstoff_name;\nif (msg.absatzstoff_name) payload.absatzstoff = msg.absatzstoff_name;\n\nmsg.payload = payload;\nif (msg.hauptstoff && !msg.hauptstoff_name) return null;\nif (msg.absatzstoff && !msg.absatzstoff_name) return null;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1160,
+        "y": 940,
+        "wires": [
+            [
+                "4160e98885ea2d7b"
+            ]
+        ]
+    },
+    {
+        "id": "431a576519584991",
+        "type": "function",
+        "z": "27e1fbc3eba3037f",
+        "name": "function 1",
+        "func": "if (Array.isArray(msg.payload)) {\n    msg.payload.forEach(obj => {\n        if (obj.type === \"hauptstoff\" && obj.maktx) {\n            msg.hauptstoff_name = obj.maktx;\n        }\n        if (obj.type === \"absatzstoff\" && obj.maktx) {\n            msg.absatzstoff_name = obj.maktx;\n        }\n    });\n}\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 1060,
+        "wires": [
+            [
+                "33cfaf720dafb91c"
+            ]
+        ]
+    },
+    {
+        "id": "db52b76fdf1bd48d",
+        "type": "function",
+        "z": "27e1fbc3eba3037f",
+        "name": "create sql insert",
+        "func": "try {\n    var payload = msg.payload;\n\n    // tour_id aus dem Payload extrahieren\n    var tour_id = payload.tour_id;\n    var werks = payload.werks || 8200;\n\n    if (!tour_id) {\n        throw new Error('tour_id fehlt im Payload');\n    }\n\n    // Split tour_id in tour_number und tour_date\n    var parts = tour_id.split('_');\n    if (parts.length !== 3) {\n        throw new Error('tour_id Format ungültig, erwartet tour_number_tour_date_plant');\n    }\n\n    var tour_number = parts[0];\n    var tour_date = parts[1];\n\n    var schema = 'digital_buffer_szw';\n    var table = 'tour_ids';\n\n    msg.sql = {\n        schema: schema,\n        table: table,\n        columns: ['tour_id', 'tour_date', 'tour_number', 'werks'],\n        values: [tour_id, tour_date, tour_number, werks]\n    };\n\n    var columns = msg.sql.columns.join(', ');\n    var values = msg.sql.values;\n    var sqlValues = values.map(value => {\n        if (value === null || value === undefined || value === '') {\n            return 'NULL';\n        } else if (typeof value === 'string') {\n            return `'${value}'`;\n        } else if (typeof value === 'boolean') {\n            return value ? 'TRUE' : 'FALSE';\n        } else {\n            return value;\n        }\n    }).join(', ');\n\n    var query = `\n        INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues})\n        ON CONFLICT (tour_id) \n        DO UPDATE SET \n            tour_date = EXCLUDED.tour_date,\n            tour_number = EXCLUDED.tour_number,\n            werks = EXCLUDED.werks;`;\n\n    msg.query = query;\n\n    return msg;\n\n} catch (error) {\n    node.error(`Fehler beim Verarbeiten der tour_id: ${error.message}`);\n    msg.error = error.message;\n    return msg;\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1050,
+        "y": 100,
+        "wires": [
+            [
+                "807cbcc1ed4d7fc3",
+                "972a22c386275d78"
+            ]
+        ]
+    },
+    {
+        "id": "807cbcc1ed4d7fc3",
+        "type": "postgresql",
+        "z": "27e1fbc3eba3037f",
+        "name": "",
+        "query": "",
+        "postgreSQLConfig": "e6d178f4eabba76b",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 1260,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "972a22c386275d78",
+        "type": "postgresql",
+        "z": "27e1fbc3eba3037f",
+        "name": "",
+        "query": "",
+        "postgreSQLConfig": "42117fbbbd14bd46",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 1270,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "26756af491c84eab",
+        "type": "catch",
+        "z": "27e1fbc3eba3037f",
+        "name": "",
+        "scope": [
+            "7737099569944ae5"
+        ],
+        "uncaught": false,
+        "x": 270,
+        "y": 460,
+        "wires": [
+            [
+                "de344ed50a4ac52a"
+            ]
+        ]
+    },
+    {
+        "id": "de344ed50a4ac52a",
+        "type": "function",
+        "z": "27e1fbc3eba3037f",
+        "name": "function 2",
+        "func": "const error_msg = {\n    payload: 'plik za duży',\n    topic: 'failure'\n}\nreturn error_msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 500,
+        "wires": [
+            [
+                "8f55cad12bb1061d"
+            ]
+        ]
+    },
+    {
+        "id": "95b9b164625a2c5e",
+        "type": "debug",
+        "z": "27e1fbc3eba3037f",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 890,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "textarea_nummern",
+        "type": "ui_text_input",
+        "z": "tab_manual_tour_ta",
+        "name": "Pole wprowadzania numerów",
+        "label": "Numery (jeden na linię)",
+        "tooltip": "Wprowadź numery – każda linia to jeden numer",
+        "group": "ui-group-manual-tour-ta",
+        "order": 1,
+        "width": "12",
+        "height": "6",
+        "passthru": true,
+        "mode": "textarea",
+        "delay": "0",
+        "topic": "nummern_input",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "str",
+        "x": 210,
+        "y": 140,
+        "wires": [
+            [
+                "store_nummern_input"
+            ]
+        ]
+    },
+    {
+        "id": "store_nummern_input",
+        "type": "function",
+        "z": "tab_manual_tour_ta",
+        "name": "Zapisz dane wejściowe",
+        "func": "flow.set('nummern_input', msg.payload);\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "btn_send_tour_ta",
+        "type": "ui_button",
+        "z": "tab_manual_tour_ta",
+        "name": "Przycisk wysyłania",
+        "group": "ui-group-manual-tour-ta",
+        "order": 2,
+        "width": "6",
+        "height": "1",
+        "passthru": false,
+        "label": "📤 Aktualizuj dane trasy",
+        "tooltip": "Wysyła żądanie aktualizacji dla każdego numeru",
+        "color": "",
+        "bgcolor": "#1976D2",
+        "className": "",
+        "icon": "send",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "",
+        "topicType": "str",
+        "x": 180,
+        "y": 280,
+        "wires": [
+            [
+                "parse_nummern_list"
+            ]
+        ]
+    },
+    {
+        "id": "parse_nummern_list",
+        "type": "function",
+        "z": "tab_manual_tour_ta",
+        "name": "Parsuj i waliduj listę",
+        "func": "const raw = flow.get('nummern_input') || '';\n\n// Podziel linie, przytnij, usuń puste\nconst lines = raw.split(/[\\r\\n]+/)\n    .map(l => l.trim())\n    .filter(l => l.length > 0);\n\nif (lines.length === 0) {\n    return [null, { payload: '❌ Nie wprowadzono żadnych numerów' }];\n}\n\n// Usuń duplikaty\nconst unique = [...new Set(lines)];\nconst duplicates = lines.length - unique.length;\n\n// Utwórz wiadomości MQTT\nconst messages = unique.map(nummer => ({\n    topic: 'polipol/request/aufnr/afpo/manual',\n    payload: nummer,\n    qos: 1,\n    retain: false\n}));\n\n// Komunikat statusu\nlet statusText = `🔄 Wysyłanie ${unique.length} numer(ów)...`;\nif (duplicates > 0) {\n    statusText += ` (usunięto ${duplicates} duplikat(ów))`;\n}\nconst statusMsg = { payload: statusText };\n\nflow.set('tour_ta_total', unique.length);\nflow.set('tour_ta_sent', 0);\n\nreturn [messages, statusMsg];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 280,
+        "wires": [
+            [
+                "rate_limit_tour_ta"
+            ],
+            [
+                "toast_tour_ta",
+                "status_text_tour_ta"
+            ]
+        ]
+    },
+    {
+        "id": "rate_limit_tour_ta",
+        "type": "delay",
+        "z": "tab_manual_tour_ta",
+        "name": "Limit (5/s)",
+        "pauseType": "rate",
+        "timeout": "1",
+        "timeoutUnits": "seconds",
+        "rate": "5",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 670,
+        "y": 280,
+        "wires": [
+            [
+                "mqtt_publish_tour_ta",
+                "count_sent_tour_ta"
+            ]
+        ]
+    },
+    {
+        "id": "mqtt_publish_tour_ta",
+        "type": "mqtt out",
+        "z": "tab_manual_tour_ta",
+        "name": "Publikuj żądanie",
+        "topic": "",
+        "qos": "1",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "4810867b41a48b8e",
+        "x": 920,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "count_sent_tour_ta",
+        "type": "function",
+        "z": "tab_manual_tour_ta",
+        "name": "Licznik i sprawdzenie",
+        "func": "let sent = (flow.get('tour_ta_sent') || 0) + 1;\nconst total = flow.get('tour_ta_total') || 0;\nflow.set('tour_ta_sent', sent);\n\nconst counterMsg = {\n    payload: `${sent} / ${total}`\n};\n\nif (sent >= total) {\n    const doneMsg = {\n        payload: `✅ Wszystkie ${total} żądania zostały pomyślnie wysłane!`\n    };\n    return [counterMsg, doneMsg];\n}\n\nreturn [counterMsg, null];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 380,
+        "wires": [
+            [
+                "counter_text_tour_ta"
+            ],
+            [
+                "status_text_tour_ta",
+                "toast_tour_ta"
+            ]
+        ]
+    },
+    {
+        "id": "counter_text_tour_ta",
+        "type": "ui_text",
+        "z": "tab_manual_tour_ta",
+        "group": "ui-group-manual-tour-ta",
+        "order": 3,
+        "width": "6",
+        "height": "1",
+        "name": "Licznik wysłanych",
+        "label": "Wysłano:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "x": 1190,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "status_text_tour_ta",
+        "type": "ui_text",
+        "z": "tab_manual_tour_ta",
+        "group": "ui-group-manual-tour-ta",
+        "order": 4,
+        "width": "12",
+        "height": "1",
+        "name": "Status",
+        "label": "Status:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "x": 1170,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "toast_tour_ta",
+        "type": "ui_toast",
+        "z": "tab_manual_tour_ta",
+        "position": "top right",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "Powiadomienie",
+        "x": 1190,
+        "y": 500,
+        "wires": []
+    }
+]

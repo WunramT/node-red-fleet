@@ -1,0 +1,912 @@
+[
+  {
+    "id": "e5009bfa584c1919",
+    "type": "tab",
+    "label": "Zünd Janipol",
+    "info": "",
+    "disabled": false,
+    "env": []
+  },
+  {
+    "id": "0491bf1189cb5834",
+    "type": "function",
+    "z": "e5009bfa584c1919",
+    "g": "8f6830dc3bc68c45",
+    "name": "check context",
+    "finalize": "",
+    "func": "msg.payload = flow.get(msg.deviceId)\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 1440,
+    "y": 120,
+    "wires": [
+      [
+        "90f68b3d76cc8eb7"
+      ]
+    ]
+  },
+  {
+    "id": "0dff8ce7c0cd4532",
+    "type": "function",
+    "z": "e5009bfa584c1919",
+    "name": "Cutter State",
+    "finalize": "",
+    "func": "// get latestStates flow variable\nlet latestStates = flow.get(msg.deviceId);\nlet beamA = latestStates['a'];\nlet beamB = latestStates['b'];\nlet cutter = latestStates['cutter'];\n\n// Determine state of whole cutter\nif (beamA.baseState === \"error\" || beamB.baseState === \"error\") {\n    cutter.baseState = \"error\";\n    cutter.detailedState = \"error\";\n} else if (beamA.baseState === \"working\" && beamB.baseState === \"working\") {\n    // If both beams are working, the beam with the latest JB timestamp decides the detailed state\n    cutter.baseState = \"working\";\n    // Determine which beam has the newer job timestamp\n    let latestBeam = beamA.latestJB >= beamB.latestJB ? beamA : beamB;\n    cutter.detailedState = latestBeam.detailedState;\n} else if (beamA.baseState === \"handling\") {\n    // If beam A is in handling, whole cutter is in handling\n    cutter.baseState = \"handling\";\n    cutter.detailedState = beamA.detailedState;\n} else if (beamA.baseState === \"working\" || beamB.baseState === \"working\") {\n    // If one of the beams is working, set the cutter's state to \"working\"\n    cutter.baseState = \"working\";\n    // Set cutter's detailed state to the detailed state of the beam that's working\n    if (beamA.baseState === \"working\") {\n        cutter.detailedState = beamA.detailedState;\n    } else {\n        cutter.detailedState = beamB.detailedState;\n    }\n} else if (beamA.baseState === \"idle\" || beamB.baseState === \"idle\") {\n    cutter.baseState = \"idle\";\n    // Check if either beam has a non-\"unknown\" detailed state\n    if (beamA.baseState === \"idle\" && beamA.detailedState !== \"unknown\") {\n        cutter.detailedState = beamA.detailedState;\n    } else if (beamB.baseState === \"idle\" && beamB.detailedState !== \"unknown\") {\n        cutter.detailedState = beamB.detailedState;\n    } else {\n        cutter.detailedState = \"unknown\";  // If both are \"unknown\", set the cutter's state as \"unknown\"\n    }\n} else if (beamA.baseState === \"offline\" && beamB.baseState === \"offline\") {\n    cutter.baseState = \"offline\";\n    cutter.detailedState = \"offline\";\n}\n\n// Store latestStates Variable back to context\nlatestStates['cutter'] = cutter;\nflow.set(msg.deviceId, latestStates)\n\n// Get Timestamp for computation time measurement\nmsg.timestampLatest = Date.now()\n\nmsg.payload = {\n    \"device_id\": msg.deviceId,\n    \"timestamp\": msg.timestamp,\n    \"base_state\": cutter.baseState,\n    \"detailed_state\": cutter.detailedState,\n    \"computation_time_ms\": (msg.timestampLatest - msg.timestamp_ms)\n};\n\nmsg.topic = `polipol/3000/szw/krt/${msg.deviceId}/state`;\n\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 1350,
+    "y": 380,
+    "wires": [
+      [
+        "494b9dfbf247843d"
+      ]
+    ]
+  },
+  {
+    "id": "12c6bf706829ea87",
+    "type": "tcp in",
+    "z": "e5009bfa584c1919",
+    "g": "423f2dac14e2219f",
+    "name": "G300L250104-a",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "POJA-ZU06",
+    "newline": ";",
+    "port": "50002",
+    "server": "client",
+    "tls": "",
+    "topic": "G300L250104-a",
+    "trim": false,
+    "x": 160,
+    "y": 440,
+    "wires": [
+      [
+        "28f93070493ebe08"
+      ]
+    ]
+  },
+  {
+    "id": "16f89a441a3a8c05",
+    "type": "rbe",
+    "z": "e5009bfa584c1919",
+    "name": "",
+    "func": "deadbandEq",
+    "gap": "1",
+    "inout": "out",
+    "property": "timestamp_ms",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 1700,
+    "y": 440,
+    "wires": [
+      [
+        "f38fc4a8d8a5deae"
+      ]
+    ]
+  },
+  {
+    "id": "27aeb80751309f2c",
+    "type": "tcp in",
+    "z": "e5009bfa584c1919",
+    "g": "423f2dac14e2219f",
+    "name": "G300L251506-a",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "POJA-ZU04",
+    "newline": ";",
+    "port": "50002",
+    "server": "client",
+    "tls": "",
+    "topic": "G300L251506-a",
+    "trim": false,
+    "x": 160,
+    "y": 320,
+    "wires": [
+      [
+        "28f93070493ebe08"
+      ]
+    ]
+  },
+  {
+    "id": "28f93070493ebe08",
+    "type": "link out",
+    "z": "e5009bfa584c1919",
+    "name": "link out 2",
+    "links": [
+      "d4994874b5c0b45d"
+    ],
+    "mode": "link",
+    "x": 335,
+    "y": 340,
+    "wires": []
+  },
+  {
+    "id": "2dac0e870939d4c1",
+    "type": "tcp in",
+    "z": "e5009bfa584c1919",
+    "g": "423f2dac14e2219f",
+    "name": "G300L251480-a",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "POJA-ZU07.jan.polipol.intra",
+    "newline": ";",
+    "port": "50002",
+    "server": "client",
+    "tls": "",
+    "topic": "G300L251480-a",
+    "trim": false,
+    "x": 160,
+    "y": 500,
+    "wires": [
+      [
+        "28f93070493ebe08"
+      ]
+    ]
+  },
+  {
+    "id": "3fc7f5be92840eec",
+    "type": "switch",
+    "z": "e5009bfa584c1919",
+    "name": "Filter Mnemonic",
+    "checkall": "true",
+    "outputs": 6,
+    "property": "parsedCommand.mnemonic",
+    "propertyType": "msg",
+    "repair": false,
+    "rules": [
+      {
+        "t": "eq",
+        "v": "JB",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "SY",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "ST",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "FS",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "VS",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "ER",
+        "vt": "str"
+      }
+    ],
+    "x": 780,
+    "y": 340,
+    "wires": [
+      [
+        "8943beed68efad3a"
+      ],
+      [
+        "8943beed68efad3a"
+      ],
+      [
+        "8943beed68efad3a"
+      ],
+      [
+        "8943beed68efad3a"
+      ],
+      [
+        "8943beed68efad3a"
+      ],
+      [
+        "8943beed68efad3a"
+      ]
+    ]
+  },
+  {
+    "id": "423f2dac14e2219f",
+    "type": "group",
+    "z": "e5009bfa584c1919",
+    "name": "Cutter TCP Connection",
+    "h": 522,
+    "nodes": [
+      "bb41ae1d9ed9b2b3",
+      "5b7c40e1286485cf",
+      "ca34d9a34173821e",
+      "27aeb80751309f2c",
+      "7e5797f86322cacc",
+      "12c6bf706829ea87",
+      "2dac0e870939d4c1",
+      "c1f4c129585cb4b3"
+    ],
+    "style": {
+      "label": true
+    },
+    "w": 212,
+    "x": 54,
+    "y": 99
+  },
+  {
+    "id": "4738ca0df167074d",
+    "type": "link out",
+    "z": "e5009bfa584c1919",
+    "name": "link out 4",
+    "links": [
+      "d4994874b5c0b45d"
+    ],
+    "mode": "link",
+    "x": 635,
+    "y": 580,
+    "wires": []
+  },
+  {
+    "id": "494b9dfbf247843d",
+    "type": "rbe",
+    "z": "e5009bfa584c1919",
+    "name": "change filter",
+    "func": "rbei",
+    "gap": "",
+    "inout": "out",
+    "property": "payload.detailed_state",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 1530,
+    "y": 340,
+    "wires": [
+      [
+        "7b2ec96b4b012734"
+      ]
+    ]
+  },
+  {
+    "id": "4985e0639c2d7f6f",
+    "type": "delay",
+    "z": "e5009bfa584c1919",
+    "name": "",
+    "allowrate": false,
+    "drop": false,
+    "nbRateUnits": "0.01",
+    "outputs": 1,
+    "pauseType": "rate",
+    "randomFirst": "1",
+    "randomLast": "5",
+    "randomUnits": "seconds",
+    "rate": "1",
+    "rateUnits": "second",
+    "timeout": "5",
+    "timeoutUnits": "seconds",
+    "x": 500,
+    "y": 260,
+    "wires": [
+      [
+        "9d178a6981de69dd"
+      ]
+    ]
+  },
+  {
+    "id": "4d316d1da6be0d4a",
+    "type": "function",
+    "z": "e5009bfa584c1919",
+    "name": "intervalTrigger",
+    "finalize": "",
+    "func": "// Function node to continuously check the beams' timestamp_ts attributes\nconst machines = flow.get(\"machines\");  // Get all machines from flow context\n\nmachines.forEach(machine => {\n    const machineContext = flow.get(machine);  // Get the machine's flow context\n\n    // Check each beam in the machine\n    ['a', 'b'].forEach(beam => {\n        const beamContext = machineContext[beam];  // Get the beam's context\n\n        // Only proceed if the baseState of the beam is \"working\"\n        if (beamContext.baseState === \"working\" || beamContext.baseState === \"handling\") {\n            const currentTimestamp = Date.now();  // Get current timestamp in milliseconds\n            const timestampDifference = currentTimestamp - beamContext.timestamp_ts;\n\n            // If the timestamp is older than 2 seconds, send a message\n            if (timestampDifference > 2000) {\n                // Create a message with trigger set to true\n                const msg = {\n                    trigger: true,\n                    deviceId: machine + '-' + beam,\n                    timestamp_ms: currentTimestamp,\n                    timestamp: new Date(currentTimestamp).toISOString()\n                };\n\n                node.send(msg);  // Send the message\n            }\n        }\n    });\n});\n",
+    "initialize": "// Der Code hier wird ausgeführt,\n// wenn der Node gestartet wird\n// Initialize the latestStates object in global context if not already set\n// SY = System State\n// ST = System Tool\n// FS = Feed State\n// CF = Cradle Feeder State\n// ER = Error Messages\nflow.set(\"latestStates\", {})\n// Initialize the latestStates object in the node context\nconst monitoredCommands = [\"SY\", \"ST\", \"FS\", \"CF\", \"ER\", \"JB\"];\nconst machines = [\"zund-cut01\", \"zund-cut02\", \"zund-cut03\", \"zund-cut04\", \"zund-cut05\",\n    \"zund-cut06\", \"zund-cut07\", \"zund-cut08\", \"zund-cut09\", \"zund-cut10\"];\n\nlet latestStates = flow.get(\"latestStates\") || {};\nlet timestamp_ms = Date.now()\n\n// Prepopulate the structure for all machines and monitored commands\nmachines.forEach(machine => {\n    if (!latestStates[machine]) {\n        latestStates[machine] = {};\n        monitoredCommands.forEach(command => {\n            latestStates[machine][command] = { timestamp: timestamp_ms, parameters: [] };\n            latestStates[machine][\"timestamp_ms\"] = timestamp_ms;\n        });\n    }\n});\nflow.set(\"latestStates\", latestStates);",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 720,
+    "y": 440,
+    "wires": [
+      [
+        "8943beed68efad3a"
+      ]
+    ]
+  },
+  {
+    "id": "4f38dc838b030fe1",
+    "type": "rbe",
+    "z": "e5009bfa584c1919",
+    "name": "change filter",
+    "func": "rbei",
+    "gap": "",
+    "inout": "out",
+    "property": "payload.error_code",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 1530,
+    "y": 440,
+    "wires": [
+      [
+        "16f89a441a3a8c05"
+      ]
+    ]
+  },
+  {
+    "id": "524e965677f9ad16",
+    "type": "function",
+    "z": "e5009bfa584c1919",
+    "name": "Beam State",
+    "finalize": "",
+    "func": "let SY = parseInt(msg.cmdStore.SY[0], 10);\nlet ST = parseInt(msg.cmdStore.ST[0], 10);\nlet FS = parseInt(msg.cmdStore.FS[0], 10);\nlet VS = parseInt(msg.cmdStore.VS[1], 10);  // Get Vacuum State parameter\nlet JBcount = msg.cmdStore.JBHistory.length;  // length of JBHistory\n\nconst cutter_id = msg.deviceId.slice(0, -2)  // extract base cutter id without beam (-a / -b)\nconst beam = msg.deviceId.slice(-1);  // extract beam\nlet latestStates = flow.get(cutter_id);  // get latestStates flow context\n\nlet baseState = latestStates[beam].baseState;\nlet detailedState = latestStates[beam].detailedState;\n\n/*\nDetermine the beam state based on the commands.\nIf the beam was in handling feed before, a further heuristic is necessary:\nAfter the feed is finished the beam (A) performs a movement to a position where he will\ncontinue some work. The problem is, that the beam is sending Job Echos (JB) for these movement.\nThat would result in small \"cutting\" states, because normally the cutting ST is selected during that time.\nA kind of \"frozen time\" should be applied to suppress this.\nThis frozen time will be of base state \"handling\" and detailed state \"feed finished\"\n*/\n\nfunction checkFrozenTime(changeTimestamp, frozenTime, currentTimestamp) {\n    const duration = currentTimestamp - changeTimestamp;\n    return duration < frozenTime;  // true = within frozen time / false = outside frozen time\n};\n\nif ([0, 1].includes(SY)) {\n    /*\n    Handle SY in [0, 1]. 0 and 1 means that the machine could possibly produce.\n    The state the machine is currently in does matter, because of the frozen time for finshed handling.\n    */\n    if (VS === 1 && FS === 1) {\n        let frozen = false;\n        if (detailedState === \"feed\") {\n            baseState = \"handling\"\n            detailedState = \"feed finished\"\n            frozen = true;\n        } else if (detailedState === \"feed finished\") {\n            frozen = checkFrozenTime(latestStates[beam].changeTimestamp, 5000, msg.timestamp_ms)\n        }\n        if (frozen === false) {\n            baseState = \"working\";\n            switch (ST) {\n                case 11:\n                    detailedState = \"notch\";\n                    break;\n                case 21:\n                    detailedState = \"cutting\";\n                    break;\n                case 31:\n                    detailedState = \"uv\";\n                    break;\n                case 91:\n                    baseState = \"handling\";\n                    detailedState = \"laser\";\n                    break;\n            }\n        }\n    } else if (FS !== 1) {\n        switch(FS) {\n            case 0:\n                baseState = \"handling\"\n                detailedState = \"feed\"\n                break;\n            case 10:\n            case 11:\n                baseState = \"handling\"\n                detailedState = \"feed continued\"\n                break;\n            case 20:\n                baseState = \"idle\"\n                detailedState = \"feed suspended (external)\"\n                break;\n            case 30:\n            case 31:\n            case 32:\n            case 33:\n                baseState = \"idle\"\n                detailedState = \"feed stopped\"\n                break;\n        }\n    } else if (FS === 1) {\n        let frozen = false;\n        if (detailedState === \"feed\") {\n            baseState = \"handling\"\n            detailedState = \"feed finished\"\n            frozen = true;\n        } else if (detailedState === \"feed finished\") {\n            frozen = checkFrozenTime(latestStates[beam].changeTimestamp, 5000, msg.timestamp_ms)\n        }\n        if (frozen === false){\n            baseState = \"idle\";\n            detailedState = \"unknown\";\n        }\n    }\n} else if ([2, 4, 5].includes(SY)) {\n    baseState = \"idle\";\n    detailedState = \"unknown\";\n    switch (FS) {\n        case 20:\n            baseState = \"idle\"\n            detailedState = \"feed suspended (external)\"\n            break;\n        case 30:\n        case 31:\n        case 32:\n        case 33:\n            baseState = \"idle\"\n            detailedState = \"feed stopped\"\n            break;\n    }\n} else if ([9, 10].includes(SY)) {\n    baseState = \"offline\";\n    detailedState = \"offline\";\n} else if (SY === 3) {\n    baseState = \"error\";\n    detailedState = \"error\";\n}\n\nmsg.payload = {\n    \"device_id\": cutter_id,\n    \"beam\": beam,\n    \"timestamp\": msg.timestamp,\n    \"base_state\": baseState,\n    \"detailed_state\": detailedState\n};\n\nmsg.topic = `polipol/3000/szw/krt/${cutter_id}/beam-${beam}/state`;\n\n// Check if baseState or detailedState has changed\nconst baseChanged = latestStates[beam].baseState !== baseState;\nconst detailedChanged = latestStates[beam].detailedState !== detailedState;\n// If either changed, update the changeTimestamp\nif (baseChanged || detailedChanged) {\n    latestStates[beam].changeTimestamp = msg.timestamp_ms;\n}\n\n// Update latest States for the beam\nlatestStates[beam].baseState = baseState;\nlatestStates[beam].detailedState = detailedState;\nlatestStates[beam].latestJB = msg.cmdStore.JBHistory.length > 0 ? msg.cmdStore.JBHistory[JBcount - 1].timestamp : 0;\nlatestStates[beam].timestamp_ms = msg.timestamp_ms;\n\n// Set the latestStates flow variable\nflow.set(cutter_id, latestStates)\n\n// Reset deviceId to cutter_id\nmsg.deviceId = cutter_id;\n\nreturn msg;\n",
+    "initialize": "\n",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 1170,
+    "y": 340,
+    "wires": [
+      [
+        "0dff8ce7c0cd4532",
+        "494b9dfbf247843d"
+      ]
+    ]
+  },
+  {
+    "id": "5b7c40e1286485cf",
+    "type": "tcp in",
+    "z": "e5009bfa584c1919",
+    "g": "423f2dac14e2219f",
+    "name": "G300L251505-a",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "POJA-ZU02",
+    "newline": ";",
+    "port": "50002",
+    "server": "client",
+    "tls": "",
+    "topic": "G300L251505-a",
+    "trim": false,
+    "x": 160,
+    "y": 200,
+    "wires": [
+      [
+        "28f93070493ebe08"
+      ]
+    ]
+  },
+  {
+    "id": "6e0bd9f7df948d57",
+    "type": "mqtt out",
+    "z": "e5009bfa584c1919",
+    "name": "MQTT DPN-SVR-IOT",
+    "broker": "91d2f51704c5c2c2",
+    "contentType": "",
+    "correl": "",
+    "expiry": "",
+    "qos": "1",
+    "respTopic": "",
+    "retain": "true",
+    "topic": "",
+    "userProps": "",
+    "x": 1020,
+    "y": 200,
+    "wires": []
+  },
+  {
+    "id": "74e479928334ae49",
+    "type": "inject",
+    "z": "e5009bfa584c1919",
+    "g": "8f6830dc3bc68c45",
+    "name": "G300L251480-a",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "props": [
+      {
+        "p": "deviceId",
+        "v": "G300L251480-a",
+        "vt": "str"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 1260,
+    "y": 80,
+    "wires": [
+      [
+        "0491bf1189cb5834"
+      ]
+    ]
+  },
+  {
+    "id": "7af4459a6dda51d6",
+    "type": "inject",
+    "z": "e5009bfa584c1919",
+    "name": "startup",
+    "crontab": "",
+    "once": true,
+    "onceDelay": "0",
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 120,
+    "y": 60,
+    "wires": [
+      [
+        "8049a388f6b8a7ef"
+      ]
+    ]
+  },
+  {
+    "id": "7b2ec96b4b012734",
+    "type": "rbe",
+    "z": "e5009bfa584c1919",
+    "name": "",
+    "func": "deadbandEq",
+    "gap": "1",
+    "inout": "out",
+    "property": "timestamp_ms",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 1700,
+    "y": 340,
+    "wires": [
+      [
+        "f38fc4a8d8a5deae"
+      ]
+    ]
+  },
+  {
+    "id": "7c76a8fb537f9395",
+    "type": "rbe",
+    "z": "e5009bfa584c1919",
+    "name": "",
+    "func": "deadbandEq",
+    "gap": "1",
+    "inout": "out",
+    "property": "timestamp_ms",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 900,
+    "y": 140,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "7e5797f86322cacc",
+    "type": "tcp in",
+    "z": "e5009bfa584c1919",
+    "g": "423f2dac14e2219f",
+    "name": "G300L251116-a",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "POJA-ZU05",
+    "newline": ";",
+    "port": "50002",
+    "server": "client",
+    "tls": "",
+    "topic": "G300L251116-a",
+    "trim": false,
+    "x": 160,
+    "y": 380,
+    "wires": [
+      [
+        "28f93070493ebe08"
+      ]
+    ]
+  },
+  {
+    "id": "8049a388f6b8a7ef",
+    "type": "function",
+    "z": "e5009bfa584c1919",
+    "name": "Setup flow context",
+    "finalize": "",
+    "func": "/*\nThis node sets up flow context variables that will be used all over the flow to track state,\nstore tool information, ...\n\nTI of all machines:\n\n{\"device_id\":\"G300L251504\",\"beam\":\"a\",\"timestamp\":\"2025-03-25T17:22:44.134Z\",\"command\":\"TI\",\"parameters\":[\"11EOT#1\",\"0\",\"7600\",\"85\",\"715\",\"-1.00\",\"0\",\"200\",\"1\",\"7600\",\"21PRT#1\",\"3\",\"5034\",\"95\",\"55\",\"-1.00\",\"0\",\"200\",\"1\",\"5034\",\"31GAT#1\",\"5\",\"0\",\"0\",\"10000\",\"-1.00\",\"0\",\"200\",\"0\",\"0\"]}\n{\"device_id\":\"G300L251506\",\"beam\":\"a\",\"timestamp\":\"2025-03-25T17:22:44.203Z\",\"command\":\"TI\",\"parameters\":[\"11EOT#1\",\"0\",\"7710\",\"60\",\"630\",\"-1.00\",\"0\",\"200\",\"1\",\"7710\",\"21PRT#1\",\"3\",\"5069\",\"125\",\"25\",\"-1.00\",\"0\",\"200\",\"1\",\"5069\",\"31GAT#1\",\"5\",\"0\",\"0\",\"10000\",\"-1.00\",\"0\",\"200\",\"0\",\"0\"]}\n{\"device_id\":\"G300L250104\",\"beam\":\"a\",\"timestamp\":\"2025-03-25T17:22:44.326Z\",\"command\":\"TI\",\"parameters\":[\"11EOT#1\",\"0\",\"7600\",\"115\",\"685\",\"-1.00\",\"0\",\"200\",\"1\",\"7600\",\"21PRT#1\",\"3\",\"5047\",\"110\",\"40\",\"-1.00\",\"0\",\"200\",\"1\",\"5047\",\"31GAT#1\",\"5\",\"0\",\"0\",\"10000\",\"-1.00\",\"0\",\"200\",\"0\",\"0\"]}\n{\"device_id\":\"G300L251505\",\"beam\":\"a\",\"timestamp\":\"2025-03-25T17:22:44.367Z\",\"command\":\"TI\",\"parameters\":[\"11EOT#1\",\"0\",\"7690\",\"55\",\"655\",\"-1.00\",\"0\",\"200\",\"1\",\"7690\",\"21PRT#1\",\"3\",\"5044\",\"90\",\"60\",\"-1.00\",\"0\",\"200\",\"1\",\"5044\",\"31GAT#1\",\"5\",\"0\",\"0\",\"10000\",\"-1.00\",\"0\",\"200\",\"0\",\"0\"]}\n{\"device_id\":\"G300L251116\",\"beam\":\"a\",\"timestamp\":\"2025-03-25T17:22:44.359Z\",\"command\":\"TI\",\"parameters\":[\"11EOT#1\",\"0\",\"7855\",\"85\",\"460\",\"-1.00\",\"0\",\"0\",\"1\",\"7855\",\"21PRT#1\",\"3\",\"5144\",\"135\",\"15\",\"-1.00\",\"0\",\"0\",\"1\",\"5144\",\"31GAT#1\",\"5\",\"0\",\"0\",\"10000\",\"-1.00\",\"0\",\"0\",\"0\",\"0\"]}\n{\"device_id\":\"G300L251481\",\"beam\":\"a\",\"timestamp\":\"2025-03-25T17:25:58.180Z\",\"command\":\"TI\",\"parameters\":[\"11EOT#1\",\"3\",\"7610\",\"125\",\"25\",\"-1.00\",\"0\",\"200\",\"1\",\"7610\",\"21PRT#1\",\"3\",\"5052\",\"65\",\"85\",\"-1.00\",\"0\",\"200\",\"1\",\"5052\",\"31GAT#1\",\"5\",\"0\",\"0\",\"10000\",\"-1.00\",\"0\",\"200\",\"0\",\"0\"]}\n*/\n\n\n\n// Variable for all machine ids\nconst machines = [\n    \"G300L251481\",\n    \"G300L251505\",\n    \"G300L251504\",\n    \"G300L251506\",\n    \"G300L251116\",\n    \"G300L250104\",\n    \"G300L251480\"\n    ]\nconst monitoredCommands = [\"SY\", \"ST\", \"FS\", \"CF\", \"ER\", \"JB\"];\nconst beams = [\"a\", \"b\"]\n\nflow.set(\"machines\", machines);  // Can be used in other nodes\nflow.set(\"beams\", beams);  // Can be used in other nodes\n\nconst machineBeams = machines.map(machine => `${machine}${beams}`)\nmsg.machineBeams = machineBeams;\n\nmachines.forEach(machine => {\n    // machine flow variable\n    let flowContext = {\n        \"a\": {\n            \"detailedState\": \"unknown\",\n            \"baseState\": \"idle\",\n            \"timestamp_ts\": 0,  // is used to trigger an beam state update at an minimum of each 2 seconds\n            \"latestJB\": 0\n        },\n        \"b\": {\n            \"detailedState\": \"unknown\",\n            \"baseState\": \"idle\",\n            \"timestamp_ts\": 0,\n            \"latestJB\": 0\n        },\n        \"cutter\": {\n            \"detailedState\": \"\",\n            \"baseState\": \"\",\n            \"timestamp_ts\": 0,\n            \"latestJB\": 0\n        }\n    };\n    flow.set(machine, flowContext)\n\n    // machine beam flow variable\n    beams.forEach(beam => {\n        const contextName = `${machine}-${beam}`;\n        let beamFlowContext = {};\n\n        // Initialize all monitored commands with empty arrays\n        monitoredCommands.forEach(cmd => {\n            beamFlowContext[cmd] = [0];\n        });\n        beamFlowContext[\"SY\"] = [0];\n        beamFlowContext[\"ST\"] = [11];\n        beamFlowContext[\"FS\"] = [1];\n        beamFlowContext[\"VS\"] = [0, 0, 0, 0, 0];\n        beamFlowContext[\"ER\"] = [];\n        beamFlowContext[\"changeTimestamp\"] = Date.now()\n        beamFlowContext[\"JBHistory\"] = [0];\n\n        msg.payload = beamFlowContext;\n        node.send(msg);\n        flow.set(contextName, beamFlowContext)\n    });\n});\n\nnode.status({fill:\"green\", shape:\"dot\", text:\"Flow context initialized\"});",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 290,
+    "y": 60,
+    "wires": [
+      [
+        "8dbd7ae212717357"
+      ]
+    ]
+  },
+  {
+    "id": "8206af54d6c64f3d",
+    "type": "function",
+    "z": "e5009bfa584c1919",
+    "name": "CMD to MQTT",
+    "finalize": "",
+    "func": "/*\nSends the command and its parameters to a mqtt topic based on machine id and beam\n*/\n\nlet machine = msg.topic\nconst cutter_id = machine.slice(0, -2)  // extract base cutter id without beam (-a / -b)\nconst beam = machine.slice(-1);  // extract beam\n\nlet baseTopic = `polipol/3000/szw/krt/${cutter_id}/beam-${beam}/commands/`;\n\nlet mnemonic = msg.parsedCommand.mnemonic\nlet parameters = msg.parsedCommand.parameters;\n// Format the Date object to ISO string\nmsg.timestamp = new Date(msg.timestamp).toISOString();\n\n// Construct the payload with the desired structure\nmsg.payload = {\n    \"device_id\": cutter_id,\n    \"beam\": beam,\n    \"timestamp\": msg.timestamp,\n    \"command\": mnemonic,\n    \"parameters\": parameters\n};\n\n// Set the topic for the message\nmsg.topic = baseTopic + mnemonic;\n\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 780,
+    "y": 200,
+    "wires": [
+      [
+        "6e0bd9f7df948d57"
+      ]
+    ]
+  },
+  {
+    "id": "8943beed68efad3a",
+    "type": "function",
+    "z": "e5009bfa584c1919",
+    "name": "CMD Store",
+    "finalize": "",
+    "func": "// beamContextName is the deviceId (cutter + beam)\nconst beamContextName = msg.deviceId;\n// Get flow context variable\nlet beamContext = flow.get(beamContextName);\nmsg.beam = msg.deviceId.slice(-1); // set msg.beam\n\n// Check if it is not an trigger msg that was generated by the intervalTrigger Node\n// Else compute the machine command msg\nif (msg.trigger == false) {\n    // Update cmd store\n    if (msg.parsedCommand.mnemonic === \"JB\" && msg.parsedCommand.parameters[1] == \"1\") {\n        // add timestamp in milliseconds to JBHistory and filter elements older than 2 seconds\n        beamContext.JBHistory.push(msg.timestamp_ms);\n    }\n    // If Beam = a and command = SY check if SY changed from SY = 3 or changed to SY = 3\n    // If so, send a further message to second output.\n    else if (msg.parsedCommand.mnemonic === \"SY\" && msg.beam === \"a\") {\n        const previousSY = beamContext.SY[0];\n        const currentSY = msg.parsedCommand.parameters[0];\n        if ((previousSY !== \"3\" && currentSY === \"3\") || (previousSY === \"3\" && currentSY !== \"3\")) {\n            msg.SY = currentSY;\n            msg.ER = beamContext.ER;\n            node.send([null, msg])\n        }\n    }\n    // Store parameters in beamContext\n    beamContext[msg.parsedCommand.mnemonic] = msg.parsedCommand.parameters;\n}\n\n// Filter JB History and add timestamp_ts\nbeamContext.JBHistory = beamContext.JBHistory.filter(eventTime => eventTime >= Date.now() - 2000);\nbeamContext.timestamp_ts = Date.now();\n\nmsg.cmdStore = beamContext;\n\nflow.set(beamContextName, beamContext);  // Set the updated beamContext\n\nreturn [msg, null];",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 2,
+    "timeout": 0,
+    "x": 990,
+    "y": 340,
+    "wires": [
+      [
+        "524e965677f9ad16"
+      ],
+      [
+        "d877cab05a7fcfd6"
+      ]
+    ]
+  },
+  {
+    "id": "8dbd7ae212717357",
+    "type": "debug",
+    "z": "e5009bfa584c1919",
+    "name": "debug 6",
+    "active": true,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 480,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "8f6830dc3bc68c45",
+    "type": "group",
+    "z": "e5009bfa584c1919",
+    "name": "Debug Flow Context",
+    "h": 122,
+    "nodes": [
+      "0491bf1189cb5834",
+      "90f68b3d76cc8eb7",
+      "c82e9c485cf67eb9",
+      "74e479928334ae49"
+    ],
+    "style": {
+      "label": true
+    },
+    "w": 572,
+    "x": 1134,
+    "y": 39
+  },
+  {
+    "id": "90f68b3d76cc8eb7",
+    "type": "debug",
+    "z": "e5009bfa584c1919",
+    "g": "8f6830dc3bc68c45",
+    "name": "debug 7",
+    "active": true,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 1600,
+    "y": 120,
+    "wires": []
+  },
+  {
+    "id": "96715bd63ea7668d",
+    "type": "inject",
+    "z": "e5009bfa584c1919",
+    "name": "interval 3s",
+    "crontab": "",
+    "once": true,
+    "onceDelay": "10",
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "2",
+    "topic": "",
+    "x": 530,
+    "y": 440,
+    "wires": [
+      [
+        "4d316d1da6be0d4a"
+      ]
+    ]
+  },
+  {
+    "id": "9d178a6981de69dd",
+    "type": "function",
+    "z": "e5009bfa584c1919",
+    "name": "transform Cmd",
+    "finalize": "",
+    "func": "/*\nThis node transforms the incoming Socket message.\n*/\n\nlet timestamp = Date.now();  // get timestamp\nmsg.timestamp = new Date(timestamp).toISOString();  // add timestamp as string\nmsg.timestamp_ms = timestamp;  // add timestamp as ms\nmsg.trigger = false;  // necessary to determine if it is a real command msg from cutter (see intervalTrigger)\n\nmsg.deviceId = msg.topic;  // set deviceId\n\n/*\n* Parse the command and all its parameters\n*/\n\nlet cmd = msg.payload.replace(/[\\r\\n]/g, \"\");  // remove line breaks\ncmd = cmd.trim()  // Trim the command to remove any leading/trailing spaces\n\nlet parsedCommand = {};  // array for parsed commands\n\n// regular expression to extract the mnemonic and parameters\nlet match = cmd.match(/^([A-Z]{2})\\s+(.*)$/); // Match 2 uppercase letters followed by one or more whitespaces\nif (match) {\n    let mnemonic = match[1]; // First group is the mnemonic\n    let parameters = match[2] ? match[2].split(\",\").map(p => p.trim()) : []; // Split parameters by ',' and trim\n\n    parsedCommand = { mnemonic, parameters };  // Add to parsed commands array\n} else {\n    node.warn(`Unrecognized command format: \"${cmd}\"`);  // Log unrecognized format for debugging purposes\n}\n\nmsg.parsedCommand = parsedCommand;  // Assign parsed commands to the message payload\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 540,
+    "y": 340,
+    "wires": [
+      [
+        "8206af54d6c64f3d",
+        "3fc7f5be92840eec"
+      ]
+    ]
+  },
+  {
+    "id": "bb41ae1d9ed9b2b3",
+    "type": "tcp in",
+    "z": "e5009bfa584c1919",
+    "g": "423f2dac14e2219f",
+    "name": "G300L251481-a",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "POJA-ZU01",
+    "newline": ";",
+    "port": "50002",
+    "server": "client",
+    "tls": "",
+    "topic": "G300L251481-a",
+    "trim": false,
+    "x": 160,
+    "y": 140,
+    "wires": [
+      [
+        "28f93070493ebe08"
+      ]
+    ]
+  },
+  {
+    "id": "c1f4c129585cb4b3",
+    "type": "status",
+    "z": "e5009bfa584c1919",
+    "g": "423f2dac14e2219f",
+    "name": "TCP Status",
+    "scope": "group",
+    "x": 150,
+    "y": 580,
+    "wires": [
+      [
+        "f870b6639db2c52d"
+      ]
+    ]
+  },
+  {
+    "id": "c82e9c485cf67eb9",
+    "type": "inject",
+    "z": "e5009bfa584c1919",
+    "g": "8f6830dc3bc68c45",
+    "name": "G300L251480",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "props": [
+      {
+        "p": "deviceId",
+        "v": "G300L251480",
+        "vt": "str"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 1250,
+    "y": 120,
+    "wires": [
+      [
+        "0491bf1189cb5834"
+      ]
+    ]
+  },
+  {
+    "id": "ca34d9a34173821e",
+    "type": "tcp in",
+    "z": "e5009bfa584c1919",
+    "g": "423f2dac14e2219f",
+    "name": "G300L251504-a",
+    "base64": false,
+    "datamode": "stream",
+    "datatype": "utf8",
+    "host": "POJA-ZU03",
+    "newline": ";",
+    "port": "50002",
+    "server": "client",
+    "tls": "",
+    "topic": "G300L251504-a",
+    "trim": false,
+    "x": 160,
+    "y": 260,
+    "wires": [
+      [
+        "28f93070493ebe08"
+      ]
+    ]
+  },
+  {
+    "id": "d4994874b5c0b45d",
+    "type": "link in",
+    "z": "e5009bfa584c1919",
+    "name": "link in 2",
+    "links": [
+      "28f93070493ebe08",
+      "4738ca0df167074d"
+    ],
+    "x": 405,
+    "y": 340,
+    "wires": [
+      [
+        "4985e0639c2d7f6f"
+      ]
+    ]
+  },
+  {
+    "id": "d877cab05a7fcfd6",
+    "type": "function",
+    "z": "e5009bfa584c1919",
+    "name": "ERROR Messages",
+    "finalize": "",
+    "func": "/*\nThis node creates messages to indicate the current error state of a cutter.\nOnly SY messages that changed from or changed to an error state are incoming. (See CMD Store node)\nIf SY = 3 a new message with error code, parameters, metadata will be published to the MQTT Broker.\nIf SY =! 3 a message with erro code = 0 will be published to the MQTT Broker.\n\nhe last number in the hexadecimal code of ErrorNumber defines the error \ncategory. There are four categories:\n1: User information (not an Error, cutter will not stop or go offline)\n2: Warning (There may be a problem, but the cutter will not stop or go offline)\n3: Failure (Cutter switches to stopped mode. The user can solve the problem \nand go online afterwards)\n4: Fatal Error (Cutter switches to stopped mode, the user must shutdown \ncutter)\n*/\nconst cutter_id = msg.deviceId.slice(0, -2)  // extract base cutter id without beam (-a / -b)\nlet SY = parseInt(msg.SY, 10);\n\nif (SY === 3) {\n    let error_code = msg.ER[0];\n    let category = parseInt(error_code.slice(-1), 10);  // Parse the category (last digit of error code)\n    let index1 = msg.ER?.[1] ?? null;\n    let index2 = msg.ER?.[2] ?? null;\n\n    msg.payload = {\n        \"device_id\": cutter_id,\n        \"timestamp\": msg.timestamp,\n        \"error_code\": error_code,\n        \"category\": category,\n        \"index1\": index1,\n        \"index2\": index2\n    }\n}\nelse {\n    msg.payload = {\n        \"device_id\": cutter_id,\n        \"timestamp\": msg.timestamp,\n        \"error_code\": \"no error\",\n        \"category\": 0,\n        \"index1\": null,\n        \"index2\": null\n    }\n}\n\nmsg.topic = `polipol/3000/szw/krt/${cutter_id}/error`;\n\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 1190,
+    "y": 440,
+    "wires": [
+      [
+        "4f38dc838b030fe1"
+      ]
+    ]
+  },
+  {
+    "id": "f38fc4a8d8a5deae",
+    "type": "link out",
+    "z": "e5009bfa584c1919",
+    "name": "link out 6",
+    "links": [
+      "f471a89e093ea9c4"
+    ],
+    "mode": "link",
+    "x": 1805,
+    "y": 340,
+    "wires": []
+  },
+  {
+    "id": "f471a89e093ea9c4",
+    "type": "link in",
+    "z": "e5009bfa584c1919",
+    "name": "link in 3",
+    "links": [
+      "f38fc4a8d8a5deae"
+    ],
+    "x": 845,
+    "y": 240,
+    "wires": [
+      [
+        "6e0bd9f7df948d57"
+      ]
+    ]
+  },
+  {
+    "id": "f870b6639db2c52d",
+    "type": "function",
+    "z": "e5009bfa584c1919",
+    "name": "Send SY 10 on disconnect",
+    "finalize": "",
+    "func": "/*\nExample payload of the status messages from TCP connections:\n\n{\n    \"status\": {\n        \"fill\": \"red\",\n        \"shape\": \"ring\",\n        \"text\": \"common.status.disconnected\",\n        \"_session\": {\n            \"type\": \"tcp\",\n            \"id\": \"2f3e3f30b31e820b\" \n        },\n        \"source\": {\n            \"id\": \"8e42b6a85757df1c\",\n            \"type\": \"tcp in\",\n            \"name\": \"zund-cut04\"\n        }\n    },\n    \"_msgid\": \"e1f08d1a4f110733\"\n}\n*/\nif (msg.status.text === \"common.status.disconnected\") {\n    msg.topic = msg.status.source.name  // set topic to node name (machine id)\n    msg.payload = \"SY 10\";  // Send a msg with payload set to SY 10 which is a custom system state\n} else {\n    return null;\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 440,
+    "y": 580,
+    "wires": [
+      [
+        "4738ca0df167074d"
+      ]
+    ]
+  },
+  {
+    "id": "06b01926f31d0cc5",
+    "type": "tls-config",
+    "name": "",
+    "alpnprotocol": "",
+    "ca": "",
+    "caname": "ca.crt",
+    "cert": "",
+    "certname": "client.crt",
+    "key": "",
+    "keyname": "client.key",
+    "servername": "dpn-svr-iot",
+    "verifyservercert": true
+  },
+  {
+    "id": "91d2f51704c5c2c2",
+    "type": "mqtt-broker",
+    "name": "dpn-svr-iot",
+    "autoConnect": true,
+    "autoUnsubscribe": true,
+    "birthMsg": {},
+    "birthPayload": "",
+    "birthQos": "0",
+    "birthRetain": "false",
+    "birthTopic": "",
+    "broker": "dpn-svr-iot",
+    "cleansession": true,
+    "clientid": "",
+    "closeMsg": {},
+    "closePayload": "",
+    "closeQos": "0",
+    "closeRetain": "false",
+    "closeTopic": "",
+    "keepalive": "60",
+    "port": "8883",
+    "protocolVersion": "4",
+    "sessionExpiry": "",
+    "tls": "06b01926f31d0cc5",
+    "userProps": "",
+    "usetls": true,
+    "willMsg": {},
+    "willPayload": "",
+    "willQos": "0",
+    "willRetain": "false",
+    "willTopic": ""
+  }
+]

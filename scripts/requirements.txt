@@ -1,0 +1,6 @@
+# Deployment and validation scripts.
+PyYAML==6.0.2
+jsonschema==4.25.1
+
+# collect-inventory.py only; the CI jobs do not need it.
+paramiko==4.0.0

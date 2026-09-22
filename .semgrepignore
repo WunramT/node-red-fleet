@@ -1,0 +1,19 @@
+# Test files - security patterns may differ in tests
+**/tests/
+**/fixtures/
+**/*_test.py
+
+# Generated/vendored code
+**/node_modules/
+**/.venv/
+**/venv/
+**/__pycache__/
+
+# Sample flows captured from running instances — data, not source.
+# They contain no credentials (those live in flows_cred.json, which is
+# gitignored), but they do contain broker hostnames and topic names that
+# read as secrets to the scanner.
+samples/
+
+# Per-host discovery reports produced by scripts/discover-gaps.sh
+inventory/

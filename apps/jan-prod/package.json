@@ -1,0 +1,6 @@
+{
+  "name": "node-red-jan-prod",
+  "description": "Palette for jan-prod",
+  "private": true,
+  "dependencies": {}
+}

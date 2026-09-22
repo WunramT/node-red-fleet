@@ -1,0 +1,109 @@
+// Copy to nr.local.json and fill in. That file is gitignored.
+// A password left out — "" or absent — is asked for at the prompt and not stored.
+//
+// The url is what a BROWSER reaches, through the proxy: host plus the path it
+// routes on. It is not admin_root. admin_root in registry.yml is what the
+// runtime itself serves, and the deploy on the target host uses that against
+// the container. The two can differ — a proxy path is not proof of the
+// runtime's own root — so do not copy one into the other. Across this estate
+// they happen to match: each runtime serves its own prefix.
+//
+// Where each instance answers: docs/runbook.md, 'Reaching an instance from a
+// workstation'. Where the url and admin_root overlap, the tools strip the
+// duplicate and say so.
+{
+  "cho-prod": {
+    "url": "http://cho-svr-lin01/node-red-prod",
+    "user": "admin",
+    "password": ""
+  },
+  "cho-test": {
+    "url": "http://cho-svr-lin01/node-red-test",
+    "user": "admin",
+    "password": ""
+  },
+  "gor-prod": {
+    "url": "http://gor-svr-lin01/node-red-prod",
+    "user": "admin",
+    "password": ""
+  },
+  "gor-test": {
+    "url": "http://gor-svr-lin01/node-red-test",
+    "user": "admin",
+    "password": ""
+  },
+  "jan-prod": {
+    "url": "http://jan-svr-lin01/node-red-prod",
+    "user": "admin",
+    "password": ""
+  },
+  "jan-test": {
+    "url": "http://jan-svr-lin01/node-red-test",
+    "user": "admin",
+    "password": ""
+  },
+  "slu-prod": {
+    "url": "http://slu-svr-lin02/node-red-prod",
+    "user": "admin",
+    "password": ""
+  },
+  "slu-test": {
+    "url": "http://slu-svr-lin02/node-red-test",
+    "user": "admin",
+    "password": ""
+  },
+  "srem-prod": {
+    "url": "http://srem-svr-lin01/node-red-prod",
+    "user": "admin",
+    "password": ""
+  },
+  "srem-test": {
+    "url": "http://srem-svr-lin01/node-red-test",
+    "user": "admin",
+    "password": ""
+  },
+  "wag-prod": {
+    "url": "http://wag-svr-lin01/node-red-prod",
+    "user": "admin",
+    "password": ""
+  },
+  "wag-test": {
+    "url": "http://wag-svr-lin01/node-red-test",
+    "user": "admin",
+    "password": ""
+  },
+  // pod-prod publishes 1880 like the agent it replaces; nothing routes
+  // /node-red-prod on that host yet, so the port is in the url.
+  "pod-prod": {
+    "url": "http://pod-svr-lin01:1880/node-red-prod",
+    "user": "admin",
+    "password": ""
+  },
+  "pod-test": {
+    "url": "http://pod-svr-lin01:1880/node-red-test",
+    "user": "admin",
+    "password": ""
+  },
+  // dpn-svr-iot is the second FlowFuse host: the agent holds 1880 until the
+  // cutover, and the plain container takes the same port after it.
+  "dpn-prod": {
+    "url": "http://dpn-svr-iot:1880/node-red-prod",
+    "user": "admin",
+    "password": ""
+  },
+  "dpn-test": {
+    "url": "http://dpn-svr-iot:1880/node-red-test",
+    "user": "admin",
+    "password": ""
+  },
+  "wfm-prod": {
+    "url": "http://wfm-svr-lin01/node-red-prod",
+    "user": "admin",
+    "password": ""
+  },
+  "wfm-test": {
+    "url": "http://wfm-svr-lin01/node-red-test",
+    "user": "admin",
+    "password": ""
+  }
+}

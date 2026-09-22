@@ -1,0 +1,4606 @@
+[
+    {
+        "id": "664f5a44fe7615ec",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6f9cc73b79d52fc1",
+        "type": "tab",
+        "label": "Baeumer",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "14050e4f3f807d7b",
+        "type": "tab",
+        "label": "PUReFloor",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "76b3786a13d77125",
+        "type": "subflow",
+        "name": "Insert Queue V4 DPN",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 80,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "32d8e2edfcc6a2f2"
+                    }
+                ]
+            }
+        ],
+        "out": [],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99",
+        "status": {
+            "x": 720,
+            "y": 460,
+            "wires": [
+                {
+                    "id": "0c080fdb1fbac39c",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "cf68600aa359b2fb",
+        "type": "subflow",
+        "name": "Insert Queue V4 WAG",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 180,
+                "y": 200,
+                "wires": [
+                    {
+                        "id": "83f389243238398b"
+                    }
+                ]
+            }
+        ],
+        "out": [],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99",
+        "status": {
+            "x": 880,
+            "y": 560,
+            "wires": [
+                {
+                    "id": "09c313fd5ed85707",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "6d24dcdf1e53403f",
+        "type": "group",
+        "z": "6f9cc73b79d52fc1",
+        "name": "is_m_2_3576",
+        "style": {
+            "fill": "#d1d1d1",
+            "label": true,
+            "fill-opacity": "0.5"
+        },
+        "nodes": [
+            "fbc63e56aac04552",
+            "73011eacdc4346d4",
+            "1f11046d2f1f4b70",
+            "50d58af536e240bb",
+            "025a81a4f3e24ae2",
+            "0d1ebf02ff8e4e44",
+            "a4bf85b5f3c64f21",
+            "901409c439864a21",
+            "4118cefa30e74187",
+            "b2613a888bee4126",
+            "bc0f4748f8cd49b6",
+            "2c6396c5fae98bdd",
+            "9be1bb3c036287a2",
+            "609ee1d04e63a960",
+            "2e8d036176e6501a",
+            "a5b62bdae6e60cf8",
+            "32694da438e58647",
+            "d696da1b3be7e4fd"
+        ],
+        "x": 34,
+        "y": 19,
+        "w": 1592,
+        "h": 282
+    },
+    {
+        "id": "751cc3be20554e23",
+        "type": "group",
+        "z": "6f9cc73b79d52fc1",
+        "name": "ofs_he3_11_1786",
+        "style": {
+            "fill": "#d1d1d1",
+            "label": true,
+            "fill-opacity": "0.5"
+        },
+        "nodes": [
+            "408e2ffeb4c54f1d",
+            "611407c50b9d41a8",
+            "da2ff0b34e914868",
+            "cf76f20f83624797",
+            "a4a91e56243e4483",
+            "9e74b04353404182",
+            "428d89ab2b514c6a",
+            "a945211b9dc24792",
+            "bd460a1ef46b4456",
+            "d26a4c6038184c87",
+            "e84bf69019e941df",
+            "8a936b21e1ae4d72",
+            "310e203fa3d54881",
+            "2b3e5566cf4040b6",
+            "df61685cac7940de",
+            "abe8b645052e4c5e",
+            "84ca8075b432513a",
+            "5cc89f886aa9c0ef",
+            "b60a9fe5a8fe3c40",
+            "2749be42709470bd",
+            "be3a598b5dbbcec6",
+            "ae66c25b991a3b64",
+            "5045525a4e61b873",
+            "9501dbccaf78411f"
+        ],
+        "x": 34,
+        "y": 319,
+        "w": 1592,
+        "h": 362
+    },
+    {
+        "id": "5f581117d6694636",
+        "type": "group",
+        "z": "6f9cc73b79d52fc1",
+        "name": "ofs_vs_12_0384",
+        "style": {
+            "fill": "#d1d1d1",
+            "label": true,
+            "fill-opacity": "0.5"
+        },
+        "nodes": [
+            "da738afe41544106",
+            "4dd263484d7d4d49",
+            "381bf4e21eef419f",
+            "2426bd5045044e1d",
+            "b1d824704f954668",
+            "83f403eeee42467f",
+            "c7124778c73242d2",
+            "a3e49673163b404a",
+            "48615927a7c14948",
+            "0ded23ec86914200",
+            "40f8f12169ba4525",
+            "147cd2397e2b4f2a",
+            "303c1e21e4524dfc",
+            "0365a460e6004edb",
+            "c95e29b531354160",
+            "0b8264b5ad474849",
+            "dd09b2b726691b38",
+            "0aef80dc281e046a",
+            "c4f9e0b5eea18dd7",
+            "18445c69c78fb5c8",
+            "75de831e59613b70",
+            "e4d47fb2f882360b",
+            "bdee4c3e3f2f01d5",
+            "4d1f03d14585585a"
+        ],
+        "x": 34,
+        "y": 699,
+        "w": 1592,
+        "h": 362
+    },
+    {
+        "id": "52cc26489cbeee53",
+        "type": "group",
+        "z": "14050e4f3f807d7b",
+        "name": "demolding",
+        "style": {
+            "fill": "#d1d1d1",
+            "label": true,
+            "fill-opacity": "0.5"
+        },
+        "nodes": [
+            "f4422e08eba6025f",
+            "2c856a69f36e5892",
+            "d1d39bf016b74f19",
+            "2849f27e6a3dfc61",
+            "c12b12a6bddf334d",
+            "69312ac60164f20f",
+            "a31e3c859dcbafd3",
+            "6d1d2deff46ee320",
+            "ec54ac19bbc3afde",
+            "3fa983fd535dbde7",
+            "d8ce04e87eece12c",
+            "90e7d113dfb5a712",
+            "b9fc99a5b2574923",
+            "4cca2cbf9ce5e81f"
+        ],
+        "x": 34,
+        "y": 39,
+        "w": 1652,
+        "h": 202
+    },
+    {
+        "id": "6986f5c1b5325368",
+        "type": "group",
+        "z": "14050e4f3f807d7b",
+        "name": "ir_cam",
+        "style": {
+            "fill": "#d1d1d1",
+            "fill-opacity": "0.5",
+            "label": true
+        },
+        "nodes": [
+            "56284e0568094c34",
+            "c07e21cd9bdfbf29",
+            "38c38e3c75ab88b7",
+            "1f64caecf246f489",
+            "4a5e365436323e13",
+            "ce2cd6dd67bd8bd6",
+            "0a949b8e54bd76ac",
+            "a6209a725dd54607",
+            "d47dffbbe8540327",
+            "861885df7ba2498b",
+            "6d82088583fe3e0b",
+            "e6e2e20577adc616",
+            "2bd0b8a49f0473d6"
+        ],
+        "x": 34,
+        "y": 259,
+        "w": 1652,
+        "h": 202
+    },
+    {
+        "id": "5ed95e4d3fb76952",
+        "type": "group",
+        "z": "14050e4f3f807d7b",
+        "name": "kran",
+        "style": {
+            "fill": "#d1d1d1",
+            "fill-opacity": "0.5",
+            "label": true
+        },
+        "nodes": [
+            "34c6a89110382ee9",
+            "6b26816d4b788d7a",
+            "c71e87efbbd2e5f3",
+            "f441d9ac6c926096",
+            "01baa6486d1c32f1",
+            "f7f1ca225c5bd1dd",
+            "c82a6e0178fad839"
+        ],
+        "x": 34,
+        "y": 479,
+        "w": 1652,
+        "h": 122
+    },
+    {
+        "id": "9d1ef7d846aa07e0",
+        "type": "group",
+        "z": "14050e4f3f807d7b",
+        "name": "overall",
+        "style": {
+            "fill": "#d1d1d1",
+            "fill-opacity": "0.5",
+            "label": true
+        },
+        "nodes": [
+            "3de6874aa445b51f",
+            "59c2d804202c9b44",
+            "e7f9cd3d37399684",
+            "18ceec631022cc54",
+            "c5b426152a333526",
+            "f444b20a3e0fd9b5",
+            "8213fa0967091874",
+            "f31a1bbcbc6039a8",
+            "bdadcd183a091371",
+            "6f9a23cf5cff3fdb",
+            "9bce5bca8e1755a2",
+            "dba0b019fa4cd500",
+            "ba4ee1cbf73f64d8",
+            "8a998a459aa89000"
+        ],
+        "x": 34,
+        "y": 619,
+        "w": 1652,
+        "h": 202
+    },
+    {
+        "id": "07c0042f97d4fca1",
+        "type": "group",
+        "z": "14050e4f3f807d7b",
+        "name": "pu_application",
+        "style": {
+            "fill": "#d1d1d1",
+            "fill-opacity": "0.5",
+            "label": true
+        },
+        "nodes": [
+            "e044dc7b15d1f6f4",
+            "bf58ef66071ce2ca",
+            "bc42c28a6dc4ea0c",
+            "aa1f6ca7f4055b7c",
+            "791953b4cd7a6af9",
+            "7ee0d3dba21c73c6",
+            "9d5f60b0d33920a5",
+            "3b0da952dd12f589",
+            "2b3239d4cc1d6e44",
+            "75e881698b4ec724",
+            "b6488f88c15741b7",
+            "faf5598804179edc",
+            "ca109a7646642987",
+            "ce8d32af33f743a4"
+        ],
+        "x": 34,
+        "y": 839,
+        "w": 1652,
+        "h": 202
+    },
+    {
+        "id": "d9d07ea41ada5b3c",
+        "type": "group",
+        "z": "14050e4f3f807d7b",
+        "name": "rfid",
+        "style": {
+            "fill": "#d1d1d1",
+            "fill-opacity": "0.5",
+            "label": true
+        },
+        "nodes": [
+            "7c7948dbbda187f5",
+            "076cdb20bbeb5c5d",
+            "c7d7ae895a61b079",
+            "6c836d9ec661dad7",
+            "b60683f7c11a0ce6",
+            "8944111a56baa7c2",
+            "874e1073fee63164"
+        ],
+        "x": 34,
+        "y": 1059,
+        "w": 1652,
+        "h": 122
+    },
+    {
+        "id": "7d413cf4368a7ddd",
+        "type": "group",
+        "z": "14050e4f3f807d7b",
+        "name": "robot",
+        "style": {
+            "fill": "#d1d1d1",
+            "fill-opacity": "0.5",
+            "label": true
+        },
+        "nodes": [
+            "6683c6bcdc9240bc",
+            "0c49c80a1e005468",
+            "3074cd1c2eafd540",
+            "44ca1a03faf1757b",
+            "093a6ea3742f8114",
+            "f685c095e0041882",
+            "fabb087693fc81a7"
+        ],
+        "x": 34,
+        "y": 1339,
+        "w": 1652,
+        "h": 122
+    },
+    {
+        "id": "d2ebef2d22d1673e",
+        "type": "group",
+        "z": "14050e4f3f807d7b",
+        "name": "OrdersArray",
+        "style": {
+            "fill": "#d1d1d1",
+            "fill-opacity": "0.5",
+            "label": true
+        },
+        "nodes": [
+            "b93a98ee73d11eae",
+            "5eab0dac1c541253",
+            "31694e5d2eaa0a23",
+            "a044fcd0938f0e49",
+            "f062562b921c30d6"
+        ],
+        "x": 34,
+        "y": 1493,
+        "w": 1658,
+        "h": 334
+    },
+    {
+        "id": "2251baf7612c3971",
+        "type": "group",
+        "z": "14050e4f3f807d7b",
+        "name": "rfid",
+        "style": {
+            "fill": "#d1d1d1",
+            "fill-opacity": "0.5",
+            "label": true
+        },
+        "nodes": [
+            "214279bbe0840ee2",
+            "6c549d7a42dfd3bc",
+            "2e6244d69c461f40",
+            "32e6ba58bf3457b8",
+            "e6afa424aadda1c6",
+            "9a7fc81291647480",
+            "9f394674b047e54f"
+        ],
+        "x": 34,
+        "y": 1199,
+        "w": 1652,
+        "h": 122
+    },
+    {
+        "id": "31694e5d2eaa0a23",
+        "type": "group",
+        "z": "14050e4f3f807d7b",
+        "g": "d2ebef2d22d1673e",
+        "name": "slot_events",
+        "style": {
+            "fill": "#bfdbef",
+            "fill-opacity": "0.5",
+            "label": true
+        },
+        "nodes": [
+            "07b3caaeef072638",
+            "f58dbaf34d1718ca",
+            "61a64b67cc7ba3cc",
+            "6fbea0bc861e8d8f"
+        ],
+        "x": 754,
+        "y": 1519,
+        "w": 912,
+        "h": 122
+    },
+    {
+        "id": "a044fcd0938f0e49",
+        "type": "group",
+        "z": "14050e4f3f807d7b",
+        "g": "d2ebef2d22d1673e",
+        "name": "production_order_events",
+        "style": {
+            "fill": "#ffefbf",
+            "fill-opacity": "0.5",
+            "label": true
+        },
+        "nodes": [
+            "2bd02234e262c569",
+            "f5d2de8fc72c55b1",
+            "ea78c38ebacda826",
+            "a7a424d57c1c375d"
+        ],
+        "x": 754,
+        "y": 1679,
+        "w": 912,
+        "h": 122
+    },
+    {
+        "id": "f19d13b8a2878029",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "p12": "",
+        "p12name": "",
+        "ca": "",
+        "certname": "client.crt",
+        "keyname": "client.key",
+        "caname": "ca.crt",
+        "servername": "dpn-svr-iot",
+        "verifyservercert": true,
+        "alpnprotocol": "",
+        "certEnv": "",
+        "keyEnv": "",
+        "caEnv": ""
+    },
+    {
+        "id": "4e714f14d7af13f4",
+        "type": "mqtt-broker",
+        "name": "dpn-svr-iot",
+        "broker": "192.168.48.240",
+        "port": "8883",
+        "tls": "f19d13b8a2878029",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "5",
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": "86400"
+    },
+    {
+        "id": "f43294141dfb4f45",
+        "type": "postgreSQLConfig",
+        "z": "76b3786a13d77125",
+        "name": "DPN_SVR_postgres",
+        "host": "192.168.48.209",
+        "hostFieldType": "str",
+        "port": "6432",
+        "portFieldType": "num",
+        "database": "iot",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": 10,
+        "maxFieldType": "num",
+        "idle": 1000,
+        "idleFieldType": "num",
+        "connectionTimeout": 10000,
+        "connectionTimeoutFieldType": "num",
+        "user": "iot_user_sub",
+        "userFieldType": "str",
+        "password": "pwevalhyxb",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "de890302f6c0c06d",
+        "type": "postgreSQLConfig",
+        "name": "WAG-SVR-LIN01-1",
+        "host": "10.60.1.198",
+        "hostFieldType": "str",
+        "port": 5432,
+        "portFieldType": "num",
+        "database": "postgres",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": 10,
+        "maxFieldType": "num",
+        "idle": 1000,
+        "idleFieldType": "num",
+        "connectionTimeout": 10000,
+        "connectionTimeoutFieldType": "num",
+        "user": "postgres",
+        "userFieldType": "str",
+        "password": "kQPZnlWTEBXvTtOxMhKA8doIx0TLhScB",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "fe9839ef8da4c078",
+        "type": "link out",
+        "z": "76b3786a13d77125",
+        "name": "",
+        "links": [
+            "cce986b7f5e614d1"
+        ],
+        "x": 1085,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "cce986b7f5e614d1",
+        "type": "link in",
+        "z": "76b3786a13d77125",
+        "name": "",
+        "links": [
+            "fe9839ef8da4c078"
+        ],
+        "x": 125,
+        "y": 280,
+        "wires": [
+            [
+                "32d8e2edfcc6a2f2",
+                "858ee01069666424"
+            ]
+        ]
+    },
+    {
+        "id": "de6e9bd1104ea4ad",
+        "type": "function",
+        "z": "76b3786a13d77125",
+        "name": "drop message & reactivate trigger",
+        "func": "// Delete the oldest message on success\n// Send a delay message to the trigger which will change the delay settings and restart the trigger\nnode.send([\n    {topic: \"control\", payload: \"drop\"},  // Output 1\n    {delay: 1000} // Output 2\n]);",
+        "outputs": 2,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "// Der Code hier wird ausgeführt,\n// wenn der Node gestartet wird\n\n// Set a initial state to see if a message has reached this node.\nconst errorFlag = flow.get(\"errorFlag\") || false;",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 100,
+        "wires": [
+            [
+                "fe9839ef8da4c078"
+            ],
+            [
+                "c585d6f27fd51bdd"
+            ]
+        ]
+    },
+    {
+        "id": "c0a699da6d0e1dc1",
+        "type": "catch",
+        "z": "76b3786a13d77125",
+        "name": "SQL Error",
+        "scope": [
+            "6705c95239a26a46"
+        ],
+        "uncaught": false,
+        "x": 280,
+        "y": 200,
+        "wires": [
+            [
+                "89f05afa55943516",
+                "a563cea57d73f796"
+            ]
+        ]
+    },
+    {
+        "id": "89f05afa55943516",
+        "type": "function",
+        "z": "76b3786a13d77125",
+        "name": "set errorFlag & change delay",
+        "func": "const errorFlag = flow.get(\"errorFlag\") || false;\nif (!errorFlag) {\n    flow.set(\"errorFlag\", true)\n};\nmsg.delay = 10000;  // 10 seconds between retry\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 200,
+        "wires": [
+            [
+                "c585d6f27fd51bdd"
+            ]
+        ]
+    },
+    {
+        "id": "0c080fdb1fbac39c",
+        "type": "function",
+        "z": "76b3786a13d77125",
+        "name": "status message",
+        "func": "return msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0ca4a63e853d0c9f",
+        "type": "status",
+        "z": "76b3786a13d77125",
+        "name": "status",
+        "scope": [
+            "a563cea57d73f796",
+            "858ee01069666424"
+        ],
+        "x": 270,
+        "y": 460,
+        "wires": [
+            [
+                "0c080fdb1fbac39c"
+            ]
+        ]
+    },
+    {
+        "id": "c585d6f27fd51bdd",
+        "type": "trigger",
+        "z": "76b3786a13d77125",
+        "name": "Trigger",
+        "op1": "1",
+        "op2": "0",
+        "op1type": "str",
+        "op2type": "num",
+        "duration": "-10",
+        "extend": false,
+        "overrideDelay": true,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 820,
+        "y": 200,
+        "wires": [
+            [
+                "4d40c96f9af9d485"
+            ]
+        ]
+    },
+    {
+        "id": "4d40c96f9af9d485",
+        "type": "function",
+        "z": "76b3786a13d77125",
+        "name": "peek",
+        "func": "// get errorFlag\nconst errorFlag = flow.get('errorFlag') || false;\n\n// if errorFlag is True, do nothing and set errorFlag to false\nif (errorFlag) {\n    flow.set('errorFlag', false)\n    return null\n} else {\n    msg.topic = 'control'\n    msg.payload = 'peek'\n    return msg\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 200,
+        "wires": [
+            [
+                "fe9839ef8da4c078"
+            ]
+        ]
+    },
+    {
+        "id": "a563cea57d73f796",
+        "type": "function",
+        "z": "76b3786a13d77125",
+        "name": "SQL Error Status Message",
+        "func": "// Combine the error message and the queueText\n\nconst errorMessage = msg.error.message;\nconst queueText = flow.get(\"queueText\") || \"Queue: 0\";\nconst combinedMessage = `${queueText} - ${errorMessage}`\nnode.status({ fill: \"red\", shape: \"ring\", text: combinedMessage});",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "521690d20c4de49f",
+        "type": "status",
+        "z": "76b3786a13d77125",
+        "name": "status",
+        "scope": [
+            "32d8e2edfcc6a2f2"
+        ],
+        "x": 270,
+        "y": 520,
+        "wires": [
+            [
+                "566311abd0d4a3be"
+            ]
+        ]
+    },
+    {
+        "id": "566311abd0d4a3be",
+        "type": "function",
+        "z": "76b3786a13d77125",
+        "name": "Set queueText",
+        "func": "// Set the queue text to use it in another node status\nflow.set(\"queueText\", msg.status.text)",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "903bfea62df56fcd",
+        "type": "inject",
+        "z": "76b3786a13d77125",
+        "name": "init trigger",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 460,
+        "y": 260,
+        "wires": [
+            [
+                "c585d6f27fd51bdd"
+            ]
+        ]
+    },
+    {
+        "id": "858ee01069666424",
+        "type": "function",
+        "z": "76b3786a13d77125",
+        "name": "Queue Success status",
+        "func": "// Set the Flow status to the status message of the q-gate\nconst queueText = flow.get(\"queueText\") || \"Queue: 0\";\nnode.status({ fill: \"yellow\", shape: \"ring\", text: queueText});",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e5ac8fac2308fd36",
+        "type": "function",
+        "z": "76b3786a13d77125",
+        "name": "reset trigger",
+        "func": "// Reset the trigger and set the delay to high value to avoid\n// peeking the same message from the queue again,\n// if the database is not responding within a few seconds\n\nmsg.reset = true;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 140,
+        "wires": [
+            [
+                "c585d6f27fd51bdd"
+            ]
+        ]
+    },
+    {
+        "id": "05654549c6edc225",
+        "type": "comment",
+        "z": "76b3786a13d77125",
+        "name": "Subflow description",
+        "info": "# Insert Queue\n\nProcess of this subflow:\n 1. queue messages\n 2. insert message by message into postgresql node\n 3. drop the message from the queue, when it was processed succesfull\n 4. peek a new message from the queue\n 5. repeat\n\nEach input will be queued inside the q-gate node. (FIFO)\nDuring start of the subflow a Trigger will be activated. This trigger will send a \"control: peek\" message at a given interval.\nThis is necessary because when the queue is empty we need to periodically check if a new message is available.\nWhen a message is dequeued the trigger will be deactivated (msg.reset: true) until the message is processed by the postgresql node.\n",
+        "x": 150,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "ab8a2539d5f8c5f1",
+        "type": "comment",
+        "z": "76b3786a13d77125",
+        "name": "",
+        "info": "",
+        "x": 800,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "6705c95239a26a46",
+        "type": "postgresql",
+        "z": "76b3786a13d77125",
+        "name": "insert",
+        "query": "",
+        "postgreSQLConfig": "f43294141dfb4f45",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 430,
+        "y": 80,
+        "wires": [
+            [
+                "de6e9bd1104ea4ad"
+            ]
+        ]
+    },
+    {
+        "id": "32d8e2edfcc6a2f2",
+        "type": "q-gate",
+        "z": "76b3786a13d77125",
+        "name": "q-gate",
+        "controlTopic": "control",
+        "defaultState": "queueing",
+        "openCmd": "open",
+        "closeCmd": "close",
+        "toggleCmd": "toggle",
+        "queueCmd": "queue",
+        "defaultCmd": "default",
+        "triggerCmd": "trigger",
+        "flushCmd": "flush",
+        "resetCmd": "reset",
+        "peekCmd": "peek",
+        "dropCmd": "drop",
+        "statusCmd": "status",
+        "maxQueueLength": "3000",
+        "keepNewest": false,
+        "qToggle": false,
+        "persist": true,
+        "storeName": "memory",
+        "x": 270,
+        "y": 100,
+        "wires": [
+            [
+                "6705c95239a26a46",
+                "e5ac8fac2308fd36"
+            ]
+        ]
+    },
+    {
+        "id": "83f389243238398b",
+        "type": "q-gate",
+        "z": "cf68600aa359b2fb",
+        "name": "q-gate",
+        "controlTopic": "control",
+        "defaultState": "queueing",
+        "openCmd": "open",
+        "closeCmd": "close",
+        "toggleCmd": "toggle",
+        "queueCmd": "queue",
+        "defaultCmd": "default",
+        "triggerCmd": "trigger",
+        "flushCmd": "flush",
+        "resetCmd": "reset",
+        "peekCmd": "peek",
+        "dropCmd": "drop",
+        "statusCmd": "status",
+        "maxQueueLength": "3000",
+        "keepNewest": false,
+        "qToggle": false,
+        "persist": true,
+        "storeName": "memory",
+        "x": 370,
+        "y": 200,
+        "wires": [
+            [
+                "e0e5abcf708ea80a",
+                "1576fb574f6b0e9c"
+            ]
+        ]
+    },
+    {
+        "id": "05bbca988ee8027f",
+        "type": "link out",
+        "z": "cf68600aa359b2fb",
+        "name": "",
+        "links": [
+            "9ff583fe28e2670e"
+        ],
+        "x": 1185,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "9ff583fe28e2670e",
+        "type": "link in",
+        "z": "cf68600aa359b2fb",
+        "name": "",
+        "links": [
+            "05bbca988ee8027f"
+        ],
+        "x": 225,
+        "y": 380,
+        "wires": [
+            [
+                "83f389243238398b",
+                "388392a262460bff"
+            ]
+        ]
+    },
+    {
+        "id": "3a6b73f83b692182",
+        "type": "function",
+        "z": "cf68600aa359b2fb",
+        "name": "drop message & reactivate trigger",
+        "func": "// Delete the oldest message on success\n// Send a delay message to the trigger which will change the delay settings and restart the trigger\nnode.send([\n    {topic: \"control\", payload: \"drop\"},  // Output 1\n    {delay: 1000} // Output 2\n]);",
+        "outputs": 2,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "// Der Code hier wird ausgeführt,\n// wenn der Node gestartet wird\n\n// Set a initial state to see if a message has reached this node.\nconst errorFlag = flow.get(\"errorFlag\") || false;",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 200,
+        "wires": [
+            [
+                "05bbca988ee8027f"
+            ],
+            [
+                "4a6548c4af382628"
+            ]
+        ]
+    },
+    {
+        "id": "e0e5abcf708ea80a",
+        "type": "postgresql",
+        "z": "cf68600aa359b2fb",
+        "name": "insert",
+        "query": "",
+        "postgreSQLConfig": "de890302f6c0c06d",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 530,
+        "y": 180,
+        "wires": [
+            [
+                "3a6b73f83b692182"
+            ]
+        ]
+    },
+    {
+        "id": "4a3663ee7de177a1",
+        "type": "catch",
+        "z": "cf68600aa359b2fb",
+        "name": "SQL Error",
+        "scope": [
+            "e0e5abcf708ea80a"
+        ],
+        "uncaught": false,
+        "x": 380,
+        "y": 300,
+        "wires": [
+            [
+                "a33b735c92a0095f",
+                "0c17f2a080fcf13f"
+            ]
+        ]
+    },
+    {
+        "id": "a33b735c92a0095f",
+        "type": "function",
+        "z": "cf68600aa359b2fb",
+        "name": "set errorFlag & change delay",
+        "func": "const errorFlag = flow.get(\"errorFlag\") || false;\nif (!errorFlag) {\n    flow.set(\"errorFlag\", true)\n};\nmsg.delay = 10000;  // 10 seconds between retry\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 300,
+        "wires": [
+            [
+                "4a6548c4af382628"
+            ]
+        ]
+    },
+    {
+        "id": "09c313fd5ed85707",
+        "type": "function",
+        "z": "cf68600aa359b2fb",
+        "name": "status message",
+        "func": "return msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7e563f8cf5bafa8f",
+        "type": "status",
+        "z": "cf68600aa359b2fb",
+        "name": "status",
+        "scope": [
+            "0c17f2a080fcf13f",
+            "388392a262460bff"
+        ],
+        "x": 370,
+        "y": 560,
+        "wires": [
+            [
+                "09c313fd5ed85707"
+            ]
+        ]
+    },
+    {
+        "id": "4a6548c4af382628",
+        "type": "trigger",
+        "z": "cf68600aa359b2fb",
+        "name": "Trigger",
+        "op1": "1",
+        "op2": "0",
+        "op1type": "str",
+        "op2type": "num",
+        "duration": "-10",
+        "extend": false,
+        "overrideDelay": true,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 920,
+        "y": 300,
+        "wires": [
+            [
+                "e4fb32a3205de3a4"
+            ]
+        ]
+    },
+    {
+        "id": "e4fb32a3205de3a4",
+        "type": "function",
+        "z": "cf68600aa359b2fb",
+        "name": "peek",
+        "func": "// get errorFlag\nconst errorFlag = flow.get('errorFlag') || false;\n\n// if errorFlag is True, do nothing and set errorFlag to false\nif (errorFlag) {\n    flow.set('errorFlag', false)\n    return null\n} else {\n    msg.topic = 'control'\n    msg.payload = 'peek'\n    return msg\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1090,
+        "y": 300,
+        "wires": [
+            [
+                "05bbca988ee8027f"
+            ]
+        ]
+    },
+    {
+        "id": "0c17f2a080fcf13f",
+        "type": "function",
+        "z": "cf68600aa359b2fb",
+        "name": "SQL Error Status Message",
+        "func": "// Combine the error message and the queueText\n\nconst errorMessage = msg.error.message;\nconst queueText = flow.get(\"queueText\") || \"Queue: 0\";\nconst combinedMessage = `${queueText} - ${errorMessage}`\nnode.status({ fill: \"red\", shape: \"ring\", text: combinedMessage});",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7af2398ecaa18ca9",
+        "type": "status",
+        "z": "cf68600aa359b2fb",
+        "name": "status",
+        "scope": [
+            "83f389243238398b"
+        ],
+        "x": 370,
+        "y": 620,
+        "wires": [
+            [
+                "0457792fe5a9ec34"
+            ]
+        ]
+    },
+    {
+        "id": "0457792fe5a9ec34",
+        "type": "function",
+        "z": "cf68600aa359b2fb",
+        "name": "Set queueText",
+        "func": "// Set the queue text to use it in another node status\nflow.set(\"queueText\", msg.status.text)",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 620,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dbb9c9678afa5301",
+        "type": "inject",
+        "z": "cf68600aa359b2fb",
+        "name": "init trigger",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 560,
+        "y": 360,
+        "wires": [
+            [
+                "4a6548c4af382628"
+            ]
+        ]
+    },
+    {
+        "id": "388392a262460bff",
+        "type": "function",
+        "z": "cf68600aa359b2fb",
+        "name": "Queue Success status",
+        "func": "// Set the Flow status to the status message of the q-gate\nconst queueText = flow.get(\"queueText\") || \"Queue: 0\";\nnode.status({ fill: \"yellow\", shape: \"ring\", text: queueText});",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1576fb574f6b0e9c",
+        "type": "function",
+        "z": "cf68600aa359b2fb",
+        "name": "reset trigger",
+        "func": "// Reset the trigger and set the delay to high value to avoid\n// peeking the same message from the queue again,\n// if the database is not responding within a few seconds\n\nmsg.reset = true;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 240,
+        "wires": [
+            [
+                "4a6548c4af382628"
+            ]
+        ]
+    },
+    {
+        "id": "10d5f697a0f603c7",
+        "type": "comment",
+        "z": "cf68600aa359b2fb",
+        "name": "Subflow description",
+        "info": "# Insert Queue\n\nProcess of this subflow:\n 1. queue messages\n 2. insert message by message into postgresql node\n 3. drop the message from the queue, when it was processed succesfull\n 4. peek a new message from the queue\n 5. repeat\n\nEach input will be queued inside the q-gate node. (FIFO)\nDuring start of the subflow a Trigger will be activated. This trigger will send a \"control: peek\" message at a given interval.\nThis is necessary because when the queue is empty we need to periodically check if a new message is available.\nWhen a message is dequeued the trigger will be deactivated (msg.reset: true) until the message is processed by the postgresql node.\n",
+        "x": 250,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "a54baa412887c8ba",
+        "type": "comment",
+        "z": "cf68600aa359b2fb",
+        "name": "",
+        "info": "",
+        "x": 900,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "fbc63e56aac04552",
+        "type": "mqtt in",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "is_m_2_3576_device_state",
+        "topic": "polipol/6000/pia/pia-pp/pia-pp1/2_3576/device_state",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 60,
+        "wires": [
+            [
+                "2e8d036176e6501a"
+            ]
+        ]
+    },
+    {
+        "id": "73011eacdc4346d4",
+        "type": "inject",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1230,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1f11046d2f1f4b70",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'is_m_2_3576_device_state',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 60,
+        "wires": [
+            [
+                "50d58af536e240bb"
+            ]
+        ]
+    },
+    {
+        "id": "50d58af536e240bb",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 60,
+        "wires": [
+            [
+                "d696da1b3be7e4fd"
+            ]
+        ]
+    },
+    {
+        "id": "025a81a4f3e24ae2",
+        "type": "inject",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1230,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0d1ebf02ff8e4e44",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'is_m_2_3576_diagnostic_interval',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 140,
+        "wires": [
+            [
+                "a4bf85b5f3c64f21"
+            ]
+        ]
+    },
+    {
+        "id": "a4bf85b5f3c64f21",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 140,
+        "wires": [
+            [
+                "a5b62bdae6e60cf8"
+            ]
+        ]
+    },
+    {
+        "id": "901409c439864a21",
+        "type": "mqtt in",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "is_m_2_3576_diagnostic_fault_trigger",
+        "topic": "polipol/6000/pia/pia-pp/pia-pp1/2_3576/diagnostic_fault_trigger",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 220,
+        "wires": [
+            [
+                "9be1bb3c036287a2"
+            ]
+        ]
+    },
+    {
+        "id": "4118cefa30e74187",
+        "type": "inject",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1230,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b2613a888bee4126",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'is_m_2_3576_diagnostic_fault_trigger',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 220,
+        "wires": [
+            [
+                "bc0f4748f8cd49b6"
+            ]
+        ]
+    },
+    {
+        "id": "bc0f4748f8cd49b6",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 220,
+        "wires": [
+            [
+                "32694da438e58647"
+            ]
+        ]
+    },
+    {
+        "id": "2c6396c5fae98bdd",
+        "type": "mqtt in",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "is_m_2_3576_diagnostic_interval",
+        "topic": "polipol/6000/pia/pia-pp/pia-pp1/2_3576/diagnostic_interval",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 140,
+        "wires": [
+            [
+                "609ee1d04e63a960"
+            ]
+        ]
+    },
+    {
+        "id": "408e2ffeb4c54f1d",
+        "type": "mqtt in",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "ofs_he3_11_1786_device_state",
+        "topic": "polipol/6000/pia/pia-cnc/pia-cnc1/11_1786/device_state",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 360,
+        "wires": [
+            [
+                "2749be42709470bd"
+            ]
+        ]
+    },
+    {
+        "id": "611407c50b9d41a8",
+        "type": "inject",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1230,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "da2ff0b34e914868",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'ofs_he3_11_1786_device_state',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 360,
+        "wires": [
+            [
+                "cf76f20f83624797"
+            ]
+        ]
+    },
+    {
+        "id": "cf76f20f83624797",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 360,
+        "wires": [
+            [
+                "be3a598b5dbbcec6"
+            ]
+        ]
+    },
+    {
+        "id": "a4a91e56243e4483",
+        "type": "mqtt in",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "ofs_he3_11_1786_diagnostic_interval",
+        "topic": "polipol/6000/pia/pia-cnc/pia-cnc1/11_1786/diagnostic_interval",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 440,
+        "wires": [
+            [
+                "b60a9fe5a8fe3c40"
+            ]
+        ]
+    },
+    {
+        "id": "9e74b04353404182",
+        "type": "inject",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1230,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "428d89ab2b514c6a",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'ofs_he3_11_1786_diagnostic_interval',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 440,
+        "wires": [
+            [
+                "a945211b9dc24792"
+            ]
+        ]
+    },
+    {
+        "id": "a945211b9dc24792",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 440,
+        "wires": [
+            [
+                "ae66c25b991a3b64"
+            ]
+        ]
+    },
+    {
+        "id": "bd460a1ef46b4456",
+        "type": "mqtt in",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "ofs_he3_11_1786_jobs",
+        "topic": "polipol/6000/pia/pia-cnc/pia-cnc1/11_1786/jobs",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 520,
+        "wires": [
+            [
+                "5cc89f886aa9c0ef"
+            ]
+        ]
+    },
+    {
+        "id": "d26a4c6038184c87",
+        "type": "inject",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1230,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e84bf69019e941df",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'ofs_he3_11_1786_jobs',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 520,
+        "wires": [
+            [
+                "8a936b21e1ae4d72"
+            ]
+        ]
+    },
+    {
+        "id": "8a936b21e1ae4d72",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 520,
+        "wires": [
+            [
+                "5045525a4e61b873"
+            ]
+        ]
+    },
+    {
+        "id": "310e203fa3d54881",
+        "type": "mqtt in",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "ofs_he3_11_1786_knife_cycle",
+        "topic": "polipol/6000/pia/pia-cnc/pia-cnc1/11_1786/knife_cycle",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 600,
+        "wires": [
+            [
+                "84ca8075b432513a"
+            ]
+        ]
+    },
+    {
+        "id": "2b3e5566cf4040b6",
+        "type": "inject",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1230,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "df61685cac7940de",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'ofs_he3_11_1786_knife_cycle',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 600,
+        "wires": [
+            [
+                "abe8b645052e4c5e"
+            ]
+        ]
+    },
+    {
+        "id": "abe8b645052e4c5e",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 600,
+        "wires": [
+            [
+                "9501dbccaf78411f"
+            ]
+        ]
+    },
+    {
+        "id": "da738afe41544106",
+        "type": "mqtt in",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "ofs_vs_12_0384_device_state",
+        "topic": "polipol/6000/pia/pia-pp/pia-pp2/12_0384/device_state",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 740,
+        "wires": [
+            [
+                "dd09b2b726691b38"
+            ]
+        ]
+    },
+    {
+        "id": "4dd263484d7d4d49",
+        "type": "inject",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1220,
+        "y": 780,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "381bf4e21eef419f",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'ofs_vs_12_0384_device_state',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 740,
+        "wires": [
+            [
+                "2426bd5045044e1d"
+            ]
+        ]
+    },
+    {
+        "id": "2426bd5045044e1d",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 740,
+        "wires": [
+            [
+                "4d1f03d14585585a"
+            ]
+        ]
+    },
+    {
+        "id": "b1d824704f954668",
+        "type": "mqtt in",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "ofs_vs_12_0384_diagnostic_interval",
+        "topic": "polipol/6000/pia/pia-pp/pia-pp2/12_0384/diagnostic_interval",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 820,
+        "wires": [
+            [
+                "0aef80dc281e046a"
+            ]
+        ]
+    },
+    {
+        "id": "83f403eeee42467f",
+        "type": "inject",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1220,
+        "y": 860,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c7124778c73242d2",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'ofs_vs_12_0384_diagnostic_interval',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 820,
+        "wires": [
+            [
+                "a3e49673163b404a"
+            ]
+        ]
+    },
+    {
+        "id": "a3e49673163b404a",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 820,
+        "wires": [
+            [
+                "75de831e59613b70"
+            ]
+        ]
+    },
+    {
+        "id": "48615927a7c14948",
+        "type": "mqtt in",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "ofs_vs_12_0384_jobs",
+        "topic": "polipol/6000/pia/pia-pp/pia-pp2/12_0384/jobs",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 900,
+        "wires": [
+            [
+                "c4f9e0b5eea18dd7"
+            ]
+        ]
+    },
+    {
+        "id": "0ded23ec86914200",
+        "type": "inject",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1220,
+        "y": 940,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "40f8f12169ba4525",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'ofs_vs_12_0384_jobs',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 900,
+        "wires": [
+            [
+                "147cd2397e2b4f2a"
+            ]
+        ]
+    },
+    {
+        "id": "147cd2397e2b4f2a",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 900,
+        "wires": [
+            [
+                "e4d47fb2f882360b"
+            ]
+        ]
+    },
+    {
+        "id": "303c1e21e4524dfc",
+        "type": "mqtt in",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "ofs_vs_12_0384_knife_cycle",
+        "topic": "polipol/6000/pia/pia-pp/pia-pp2/12_0384/knife_cycle",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 980,
+        "wires": [
+            [
+                "18445c69c78fb5c8"
+            ]
+        ]
+    },
+    {
+        "id": "0365a460e6004edb",
+        "type": "inject",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1220,
+        "y": 1020,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c95e29b531354160",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'ofs_vs_12_0384_knife_cycle',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 980,
+        "wires": [
+            [
+                "0b8264b5ad474849"
+            ]
+        ]
+    },
+    {
+        "id": "0b8264b5ad474849",
+        "type": "function",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 960,
+        "y": 980,
+        "wires": [
+            [
+                "bdee4c3e3f2f01d5"
+            ]
+        ]
+    },
+    {
+        "id": "dd09b2b726691b38",
+        "type": "rbe",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "",
+        "func": "rbei",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 490,
+        "y": 740,
+        "wires": [
+            [
+                "381bf4e21eef419f"
+            ]
+        ]
+    },
+    {
+        "id": "0aef80dc281e046a",
+        "type": "rbe",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "",
+        "func": "rbei",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 490,
+        "y": 820,
+        "wires": [
+            [
+                "c7124778c73242d2"
+            ]
+        ]
+    },
+    {
+        "id": "c4f9e0b5eea18dd7",
+        "type": "rbe",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "",
+        "func": "rbei",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 490,
+        "y": 900,
+        "wires": [
+            [
+                "40f8f12169ba4525"
+            ]
+        ]
+    },
+    {
+        "id": "18445c69c78fb5c8",
+        "type": "rbe",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "",
+        "func": "rbei",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 490,
+        "y": 980,
+        "wires": [
+            [
+                "c95e29b531354160"
+            ]
+        ]
+    },
+    {
+        "id": "84ca8075b432513a",
+        "type": "rbe",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "",
+        "func": "rbei",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 490,
+        "y": 600,
+        "wires": [
+            [
+                "df61685cac7940de"
+            ]
+        ]
+    },
+    {
+        "id": "5cc89f886aa9c0ef",
+        "type": "rbe",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "",
+        "func": "rbei",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 490,
+        "y": 520,
+        "wires": [
+            [
+                "e84bf69019e941df"
+            ]
+        ]
+    },
+    {
+        "id": "b60a9fe5a8fe3c40",
+        "type": "rbe",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "",
+        "func": "rbei",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 490,
+        "y": 440,
+        "wires": [
+            [
+                "428d89ab2b514c6a"
+            ]
+        ]
+    },
+    {
+        "id": "2749be42709470bd",
+        "type": "rbe",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "",
+        "func": "rbei",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 490,
+        "y": 360,
+        "wires": [
+            [
+                "da2ff0b34e914868"
+            ]
+        ]
+    },
+    {
+        "id": "9be1bb3c036287a2",
+        "type": "rbe",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "",
+        "func": "rbei",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 490,
+        "y": 220,
+        "wires": [
+            [
+                "b2613a888bee4126"
+            ]
+        ]
+    },
+    {
+        "id": "609ee1d04e63a960",
+        "type": "rbe",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "",
+        "func": "rbei",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 490,
+        "y": 140,
+        "wires": [
+            [
+                "0d1ebf02ff8e4e44"
+            ]
+        ]
+    },
+    {
+        "id": "2e8d036176e6501a",
+        "type": "rbe",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "",
+        "func": "rbei",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 490,
+        "y": 60,
+        "wires": [
+            [
+                "1f11046d2f1f4b70"
+            ]
+        ]
+    },
+    {
+        "id": "a5b62bdae6e60cf8",
+        "type": "subflow:76b3786a13d77125",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "",
+        "x": 1500,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "32694da438e58647",
+        "type": "subflow:76b3786a13d77125",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "",
+        "x": 1500,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "be3a598b5dbbcec6",
+        "type": "subflow:76b3786a13d77125",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "",
+        "x": 1500,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "ae66c25b991a3b64",
+        "type": "subflow:76b3786a13d77125",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "",
+        "x": 1500,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "5045525a4e61b873",
+        "type": "subflow:76b3786a13d77125",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "",
+        "x": 1500,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "9501dbccaf78411f",
+        "type": "subflow:76b3786a13d77125",
+        "z": "6f9cc73b79d52fc1",
+        "g": "751cc3be20554e23",
+        "name": "",
+        "x": 1500,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "75de831e59613b70",
+        "type": "subflow:76b3786a13d77125",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "",
+        "x": 1500,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "e4d47fb2f882360b",
+        "type": "subflow:76b3786a13d77125",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "",
+        "x": 1500,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "bdee4c3e3f2f01d5",
+        "type": "subflow:76b3786a13d77125",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "",
+        "x": 1500,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "4d1f03d14585585a",
+        "type": "subflow:76b3786a13d77125",
+        "z": "6f9cc73b79d52fc1",
+        "g": "5f581117d6694636",
+        "name": "",
+        "x": 1500,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "d696da1b3be7e4fd",
+        "type": "subflow:76b3786a13d77125",
+        "z": "6f9cc73b79d52fc1",
+        "g": "6d24dcdf1e53403f",
+        "name": "",
+        "x": 1500,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "f4422e08eba6025f",
+        "type": "mqtt in",
+        "z": "14050e4f3f807d7b",
+        "g": "52cc26489cbeee53",
+        "name": "demolding_diagnostic",
+        "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/demolding/diagnostic",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 80,
+        "wires": [
+            [
+                "3fa983fd535dbde7"
+            ]
+        ]
+    },
+    {
+        "id": "2c856a69f36e5892",
+        "type": "inject",
+        "z": "14050e4f3f807d7b",
+        "g": "52cc26489cbeee53",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1350,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d1d39bf016b74f19",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "52cc26489cbeee53",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"purefloor\"',\n    table: 'demolding_diagnostic',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 80,
+        "wires": [
+            [
+                "2849f27e6a3dfc61"
+            ]
+        ]
+    },
+    {
+        "id": "2849f27e6a3dfc61",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "52cc26489cbeee53",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 80,
+        "wires": [
+            [
+                "b9fc99a5b2574923"
+            ]
+        ]
+    },
+    {
+        "id": "c12b12a6bddf334d",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "52cc26489cbeee53",
+        "name": "FIX: \"device_id\"",
+        "func": "delete msg.payload.device_id\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 80,
+        "wires": [
+            [
+                "d1d39bf016b74f19"
+            ]
+        ]
+    },
+    {
+        "id": "69312ac60164f20f",
+        "type": "mqtt in",
+        "z": "14050e4f3f807d7b",
+        "g": "52cc26489cbeee53",
+        "name": "demolding_state",
+        "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/demolding/state",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 160,
+        "wires": [
+            [
+                "d8ce04e87eece12c"
+            ]
+        ]
+    },
+    {
+        "id": "a31e3c859dcbafd3",
+        "type": "inject",
+        "z": "14050e4f3f807d7b",
+        "g": "52cc26489cbeee53",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1350,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6d1d2deff46ee320",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "52cc26489cbeee53",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"purefloor\"',\n    table: 'demolding_state',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 160,
+        "wires": [
+            [
+                "90e7d113dfb5a712"
+            ]
+        ]
+    },
+    {
+        "id": "56284e0568094c34",
+        "type": "mqtt in",
+        "z": "14050e4f3f807d7b",
+        "g": "6986f5c1b5325368",
+        "name": "ir_cam_diagnostic",
+        "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/ir_cam/diagnostic",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 300,
+        "wires": [
+            [
+                "1f64caecf246f489"
+            ]
+        ]
+    },
+    {
+        "id": "c07e21cd9bdfbf29",
+        "type": "inject",
+        "z": "14050e4f3f807d7b",
+        "g": "6986f5c1b5325368",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1350,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "38c38e3c75ab88b7",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "6986f5c1b5325368",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"purefloor\"',\n    table: 'ir_cam_diagnostic',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 300,
+        "wires": [
+            [
+                "861885df7ba2498b"
+            ]
+        ]
+    },
+    {
+        "id": "1f64caecf246f489",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "6986f5c1b5325368",
+        "name": "FIX: \"device_id\"",
+        "func": "delete msg.payload.device_id\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 300,
+        "wires": [
+            [
+                "38c38e3c75ab88b7"
+            ]
+        ]
+    },
+    {
+        "id": "4a5e365436323e13",
+        "type": "mqtt in",
+        "z": "14050e4f3f807d7b",
+        "g": "6986f5c1b5325368",
+        "name": "ir_cam_state",
+        "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/ir_cam/state",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 380,
+        "wires": [
+            [
+                "d47dffbbe8540327"
+            ]
+        ]
+    },
+    {
+        "id": "ce2cd6dd67bd8bd6",
+        "type": "inject",
+        "z": "14050e4f3f807d7b",
+        "g": "6986f5c1b5325368",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1350,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0a949b8e54bd76ac",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "6986f5c1b5325368",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"purefloor\"',\n    table: 'ir_cam_state',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 380,
+        "wires": [
+            [
+                "6d82088583fe3e0b"
+            ]
+        ]
+    },
+    {
+        "id": "34c6a89110382ee9",
+        "type": "mqtt in",
+        "z": "14050e4f3f807d7b",
+        "g": "5ed95e4d3fb76952",
+        "name": "kran_stete",
+        "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/kran/state",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 520,
+        "wires": [
+            [
+                "01baa6486d1c32f1"
+            ]
+        ]
+    },
+    {
+        "id": "6b26816d4b788d7a",
+        "type": "inject",
+        "z": "14050e4f3f807d7b",
+        "g": "5ed95e4d3fb76952",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1350,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c71e87efbbd2e5f3",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "5ed95e4d3fb76952",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"purefloor\"',\n    table: 'kran_state',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 520,
+        "wires": [
+            [
+                "f7f1ca225c5bd1dd"
+            ]
+        ]
+    },
+    {
+        "id": "3de6874aa445b51f",
+        "type": "mqtt in",
+        "z": "14050e4f3f807d7b",
+        "g": "9d1ef7d846aa07e0",
+        "name": "overall_diagnostic",
+        "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/overall/diagnostic",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 660,
+        "wires": [
+            [
+                "bdadcd183a091371"
+            ]
+        ]
+    },
+    {
+        "id": "59c2d804202c9b44",
+        "type": "inject",
+        "z": "14050e4f3f807d7b",
+        "g": "9d1ef7d846aa07e0",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1350,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e7f9cd3d37399684",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "9d1ef7d846aa07e0",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"purefloor\"',\n    table: 'overall_diagnostic',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 660,
+        "wires": [
+            [
+                "9bce5bca8e1755a2"
+            ]
+        ]
+    },
+    {
+        "id": "18ceec631022cc54",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "9d1ef7d846aa07e0",
+        "name": "FIX: \"device_id\"",
+        "func": "delete msg.payload.device_id\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 660,
+        "wires": [
+            [
+                "e7f9cd3d37399684"
+            ]
+        ]
+    },
+    {
+        "id": "c5b426152a333526",
+        "type": "mqtt in",
+        "z": "14050e4f3f807d7b",
+        "g": "9d1ef7d846aa07e0",
+        "name": "overall_state",
+        "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/overall/state",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 740,
+        "wires": [
+            [
+                "6f9a23cf5cff3fdb"
+            ]
+        ]
+    },
+    {
+        "id": "f444b20a3e0fd9b5",
+        "type": "inject",
+        "z": "14050e4f3f807d7b",
+        "g": "9d1ef7d846aa07e0",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1350,
+        "y": 780,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8213fa0967091874",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "9d1ef7d846aa07e0",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"purefloor\"',\n    table: 'overall_state',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 740,
+        "wires": [
+            [
+                "dba0b019fa4cd500"
+            ]
+        ]
+    },
+    {
+        "id": "e044dc7b15d1f6f4",
+        "type": "mqtt in",
+        "z": "14050e4f3f807d7b",
+        "g": "07c0042f97d4fca1",
+        "name": "pu_application_diagnostic",
+        "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/pu_application/diagnostic",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 880,
+        "wires": [
+            [
+                "2b3239d4cc1d6e44"
+            ]
+        ]
+    },
+    {
+        "id": "bf58ef66071ce2ca",
+        "type": "inject",
+        "z": "14050e4f3f807d7b",
+        "g": "07c0042f97d4fca1",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1350,
+        "y": 920,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bc42c28a6dc4ea0c",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "07c0042f97d4fca1",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"purefloor\"',\n    table: 'pu_application_diagnostic',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 880,
+        "wires": [
+            [
+                "b6488f88c15741b7"
+            ]
+        ]
+    },
+    {
+        "id": "aa1f6ca7f4055b7c",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "07c0042f97d4fca1",
+        "name": "FIX: \"device_id\"",
+        "func": "delete msg.payload.device_id\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 880,
+        "wires": [
+            [
+                "bc42c28a6dc4ea0c"
+            ]
+        ]
+    },
+    {
+        "id": "791953b4cd7a6af9",
+        "type": "mqtt in",
+        "z": "14050e4f3f807d7b",
+        "g": "07c0042f97d4fca1",
+        "name": "pu_application_state",
+        "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/pu_application/state",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 960,
+        "wires": [
+            [
+                "75e881698b4ec724"
+            ]
+        ]
+    },
+    {
+        "id": "7ee0d3dba21c73c6",
+        "type": "inject",
+        "z": "14050e4f3f807d7b",
+        "g": "07c0042f97d4fca1",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1350,
+        "y": 1000,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9d5f60b0d33920a5",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "07c0042f97d4fca1",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"purefloor\"',\n    table: 'pu_application_state',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 960,
+        "wires": [
+            [
+                "faf5598804179edc"
+            ]
+        ]
+    },
+    {
+        "id": "7c7948dbbda187f5",
+        "type": "mqtt in",
+        "z": "14050e4f3f807d7b",
+        "g": "d9d07ea41ada5b3c",
+        "name": "rfid_log",
+        "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/rfid/log",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 1100,
+        "wires": [
+            [
+                "b60683f7c11a0ce6"
+            ]
+        ]
+    },
+    {
+        "id": "076cdb20bbeb5c5d",
+        "type": "inject",
+        "z": "14050e4f3f807d7b",
+        "g": "d9d07ea41ada5b3c",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1350,
+        "y": 1140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c7d7ae895a61b079",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "d9d07ea41ada5b3c",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"purefloor\"',\n    table: 'rfid_log',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 1100,
+        "wires": [
+            [
+                "8944111a56baa7c2"
+            ]
+        ]
+    },
+    {
+        "id": "6683c6bcdc9240bc",
+        "type": "mqtt in",
+        "z": "14050e4f3f807d7b",
+        "g": "7d413cf4368a7ddd",
+        "name": "robot_state",
+        "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/robot/state",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 1380,
+        "wires": [
+            [
+                "093a6ea3742f8114"
+            ]
+        ]
+    },
+    {
+        "id": "0c49c80a1e005468",
+        "type": "inject",
+        "z": "14050e4f3f807d7b",
+        "g": "7d413cf4368a7ddd",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1350,
+        "y": 1420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3074cd1c2eafd540",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "7d413cf4368a7ddd",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"purefloor\"',\n    table: 'robot_state',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 1380,
+        "wires": [
+            [
+                "f685c095e0041882"
+            ]
+        ]
+    },
+    {
+        "id": "ec54ac19bbc3afde",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "52cc26489cbeee53",
+        "name": "FIX: \"device_id\"",
+        "func": "delete msg.payload.device_id\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 160,
+        "wires": [
+            [
+                "6d1d2deff46ee320"
+            ]
+        ]
+    },
+    {
+        "id": "a6209a725dd54607",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "6986f5c1b5325368",
+        "name": "FIX: \"device_id\"",
+        "func": "delete msg.payload.device_id\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 380,
+        "wires": [
+            [
+                "0a949b8e54bd76ac"
+            ]
+        ]
+    },
+    {
+        "id": "f441d9ac6c926096",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "5ed95e4d3fb76952",
+        "name": "FIX: \"device_id\"",
+        "func": "delete msg.payload.device_id\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 520,
+        "wires": [
+            [
+                "c71e87efbbd2e5f3"
+            ]
+        ]
+    },
+    {
+        "id": "f31a1bbcbc6039a8",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "9d1ef7d846aa07e0",
+        "name": "FIX: \"device_id\"",
+        "func": "delete msg.payload.device_id\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 740,
+        "wires": [
+            [
+                "8213fa0967091874"
+            ]
+        ]
+    },
+    {
+        "id": "3b0da952dd12f589",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "07c0042f97d4fca1",
+        "name": "FIX: \"device_id\"",
+        "func": "delete msg.payload.device_id\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 960,
+        "wires": [
+            [
+                "9d5f60b0d33920a5"
+            ]
+        ]
+    },
+    {
+        "id": "6c836d9ec661dad7",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "d9d07ea41ada5b3c",
+        "name": "FIX: \"device_id\"",
+        "func": "delete msg.payload.device_id\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 1100,
+        "wires": [
+            [
+                "c7d7ae895a61b079"
+            ]
+        ]
+    },
+    {
+        "id": "44ca1a03faf1757b",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "7d413cf4368a7ddd",
+        "name": "FIX: \"device_id\"",
+        "func": "delete msg.payload.device_id\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 1380,
+        "wires": [
+            [
+                "3074cd1c2eafd540"
+            ]
+        ]
+    },
+    {
+        "id": "b93a98ee73d11eae",
+        "type": "mqtt in",
+        "z": "14050e4f3f807d7b",
+        "g": "d2ebef2d22d1673e",
+        "name": "orders_array",
+        "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/orders/OrdersArray",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 1640,
+        "wires": [
+            [
+                "5eab0dac1c541253",
+                "f062562b921c30d6"
+            ]
+        ]
+    },
+    {
+        "id": "5eab0dac1c541253",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "d2ebef2d22d1673e",
+        "name": "OrderArray -> change detect -> msg build",
+        "func": "// ============================================================\n// Node-RED Function: OrdersArray Comparator\n// ============================================================\n// Goal of this function:\n// 1. take the current OrdersArray snapshot from OPC UA,\n// 2. compare it with the previous snapshot stored in context,\n// 3. detect two kinds of changes:\n//    - slot / position changes,\n//    - production order attribute changes,\n// 4. convert detected changes into insert-ready messages,\n// 5. return them on 2 outputs:\n//\n// Output 1 -> \"PUReFloor\".production_order_slot_event\n// Output 2 -> \"PUReFloor\".production_order_event\n//\n// General idea:\n// - first message creates a full initial snapshot,\n// - next messages are compared against the previous one,\n// - only detected changes are emitted.\n// ============================================================\n\n\n\n// ============================================================\n// extractRelevantFields\n// ============================================================\n// Input:\n// - one element from OrdersArray, expected in shape: { Order: {...} }\n//\n// What it does:\n// - reads only fields needed for comparison,\n// - ignores fields that are not relevant for change detection.\n//\n// Return:\n// - flat order object with relevant fields only,\n// - or null if the structure is missing / invalid.\n//\n// Why this function exists:\n// - it gives us one normalized shape for comparison logic,\n// - so later code does not need to work on raw OPC UA structure.\n// ============================================================\nfunction extractRelevantFields(orderWrapper) {\n    if (!orderWrapper || !orderWrapper.Order) return null;\n\n    const o = orderWrapper.Order;\n\n    return {\n        productionOrderID: o.productionOrderID,\n        materialNumber: o.materialNumber,\n        Status: o.Status,\n        Actual_Quantity: o.Actual_Quantity,\n        Target_Quantity: o.Target_Quantity,\n        ToolsOnConveyor: o.ToolsOnConveyor,\n        Delete: o.Delete\n    };\n}\n\n\n\n// ============================================================\n// getChangedFields\n// ============================================================\n// Input:\n// - previous flat order object,\n// - current flat order object.\n//\n// What it does:\n// - compares both objects field by field,\n// - collects names of fields whose values differ.\n//\n// Return:\n// - array of changed field names.\n//\n// Why this function exists:\n// - it lets us detect exactly which order attributes changed,\n// - while keeping comparison logic separate from the main flow.\n// ============================================================\nfunction getChangedFields(objA, objB) {\n    const changedKeys = [];\n    const allKeys = new Set([...Object.keys(objA), ...Object.keys(objB)]);\n\n    allKeys.forEach((key) => {\n        if (JSON.stringify(objA[key]) !== JSON.stringify(objB[key])) {\n            changedKeys.push(key);\n        }\n    });\n\n    return changedKeys;\n}\n\n\n\n// ============================================================\n// buildPositionMap\n// ============================================================\n// Input:\n// - full OrdersArray snapshot.\n//\n// What it does:\n// - builds a lookup map: productionOrderID -> array index,\n// - skips empty entries where productionOrderID = 0.\n//\n// Return:\n// - Map that tells us where a given order currently sits in the array.\n//\n// Why this function exists:\n// - it makes position comparison easy,\n// - so we can detect when an order appeared, moved or disappeared.\n// ============================================================\nfunction buildPositionMap(valueArray) {\n    const map = new Map();\n\n    valueArray.forEach((entry, index) => {\n        const id = entry && entry.Order && entry.Order.productionOrderID;\n\n        if (id && id !== 0) {\n            map.set(id, index);\n        }\n    });\n\n    return map;\n}\n\n\n\n// ============================================================\n// MAIN INPUT + VALIDATION\n// ============================================================\n// What this section does:\n// - reads msg.payload,\n// - checks if payload has the expected OrdersArray structure,\n// - loads previous snapshot from context,\n// - stores current snapshot immediately for the next run.\n//\n// Why:\n// - invalid messages should be rejected early,\n// - current snapshot should always become the new baseline.\n// ============================================================\nconst incoming = msg.payload;\n\nif (\n    !incoming ||\n    !Array.isArray(incoming.value) ||\n    typeof incoming.name !== \"string\"\n) {\n    node.warn(\"Unexpected payload structure - message skipped.\");\n    return null;\n}\n\nconst currentArray = incoming.value;\nconst previousArray = context.get(\"previousOrdersArray\") || null;\n\n// Store current array immediately so the next incoming message\n// can compare against it.\ncontext.set(\"previousOrdersArray\", currentArray);\n\n\n\n// ============================================================\n// FIRST MESSAGE HANDLING\n// ============================================================\n// What this section does:\n// - handles the case where there is no previous snapshot yet.\n//\n// Behaviour:\n// - instead of comparing, it builds a full initial snapshot,\n// - emits all slot states,\n// - emits all real production orders.\n//\n// Why:\n// - after restart / reconnect we want DB to receive a usable baseline,\n// - not wait for the first natural change in the machine.\n// ============================================================\nif (previousArray === null) {\n    node.log(\"First message received - baseline stored and full snapshot emitted.\");\n\n    const ts = incoming.ts;\n    const stationId = \"production_order\";\n\n    const slotEventMessages = [];\n    const productionOrderEventMessages = [];\n\n    currentArray.forEach((entry, index) => {\n        const order = entry && entry.Order ? entry.Order : null;\n\n        // Emit full slot snapshot for every slot.\n        slotEventMessages.push({\n            payload: {\n                ts: ts,\n                station_id: stationId,\n                slot_id: index,\n                production_order_id: order ? Number(order.productionOrderID || 0) : 0,\n                production_order_tools: order ? Number(order.ToolsOnConveyor || 0) : 0\n            }\n        });\n\n        // Emit full production order snapshot only for real orders.\n        if (order && Number(order.productionOrderID || 0) !== 0) {\n            productionOrderEventMessages.push({\n                payload: {\n                    ts: ts,\n                    station_id: stationId,\n                    production_order_id: Number(order.productionOrderID || 0),\n                    production_order_mat_id: String(order.materialNumber || \"\"),\n                    production_order_target_q: Number(order.Target_Quantity || 0),\n                    production_order_q: Number(order.Actual_Quantity || 0),\n                    production_order_status: Number(order.Status || 0),\n                    production_order_tools: Number(order.ToolsOnConveyor || 0)\n                }\n            });\n        }\n    });\n\n    node.status({\n        fill: \"yellow\",\n        shape: \"dot\",\n        text: `initial snapshot -> slot: ${slotEventMessages.length}, order: ${productionOrderEventMessages.length}`\n    });\n\n    const msg1 = slotEventMessages.length > 0 ? slotEventMessages : null;\n    const msg2 = productionOrderEventMessages.length > 0 ? productionOrderEventMessages : null;\n\n    return [msg1, msg2];\n}\n\n\n\n// ============================================================\n// INTERNAL CHANGE ACCUMULATORS\n// ============================================================\n// What this section does:\n// - creates arrays that collect detected changes before they are\n//   converted into final DB-ready output messages.\n//\n// Why:\n// - first we detect logical changes,\n// - then later we convert them into output payloads.\n// ============================================================\nconst positionChangeEvents = [];\nconst orderChangeEvents = [];\n\n\n\n// ============================================================\n// 1. ARRAY POSITION CHANGE DETECTION\n// ============================================================\n// What this section does:\n// - compares previous and current order positions in the array.\n//\n// Detects:\n// - order appeared in array,\n// - order moved to another slot,\n// - order disappeared from array.\n//\n// Why:\n// - slot table should reflect actual slot state changes over time.\n// ============================================================\nconst prevPositionMap = buildPositionMap(previousArray);\nconst currPositionMap = buildPositionMap(currentArray);\n\n// Detect orders that are new or moved.\ncurrPositionMap.forEach((currentIndex, productionOrderID) => {\n    const previousIndex = prevPositionMap.get(productionOrderID);\n\n    if (previousIndex === undefined || previousIndex !== currentIndex) {\n        const order = currentArray[currentIndex].Order;\n\n        positionChangeEvents.push({\n            type: \"arrayPositionChange\",\n            previousPosition: previousIndex !== undefined ? previousIndex : null,\n            currentPosition: currentIndex,\n            productionOrderID: order.productionOrderID,\n            ToolsOnConveyor: order.ToolsOnConveyor\n        });\n    }\n});\n\n// Detect orders that disappeared from the array.\nprevPositionMap.forEach((prevIndex, productionOrderID) => {\n    if (!currPositionMap.has(productionOrderID)) {\n        const order = previousArray[prevIndex].Order;\n\n        positionChangeEvents.push({\n            type: \"arrayPositionChange\",\n            previousPosition: prevIndex,\n            currentPosition: null,\n            productionOrderID: order.productionOrderID,\n            ToolsOnConveyor: order.ToolsOnConveyor\n        });\n    }\n});\n\n\n\n// ============================================================\n// 2. PRODUCTION ORDER ATTRIBUTE CHANGE DETECTION\n// ============================================================\n// What this section does:\n// - compares order attributes at the same array index,\n// - works slot-by-slot, not productionOrderID-by-productionOrderID.\n//\n// Detects:\n// - orderAdded   -> slot was empty before, now contains a real order,\n// - orderUpdated -> slot already had an order, but relevant fields changed.\n//\n// Why:\n// - we want to know when the order data itself changed,\n// - not only when the order changed position.\n// ============================================================\ncurrentArray.forEach((currentEntry, index) => {\n    const currentFields = extractRelevantFields(currentEntry);\n\n    // Ignore empty or invalid slots.\n    if (!currentFields || currentFields.productionOrderID === 0) {\n        return;\n    }\n\n    const previousEntry = previousArray[index] || null;\n    const previousFields = extractRelevantFields(previousEntry);\n\n    // Slot was empty before, now contains a real order.\n    if (!previousFields) {\n        orderChangeEvents.push({\n            type: \"productionOrderChange\",\n            changeKind: \"orderAdded\",\n            arrayIndex: index,\n            changedFields: Object.keys(currentFields),\n            previousValues: null,\n            currentValues: currentFields\n        });\n        return;\n    }\n\n    const changedFields = getChangedFields(previousFields, currentFields);\n\n    if (changedFields.length > 0) {\n        const previousValues = {};\n        const currentValues = {};\n\n        changedFields.forEach((key) => {\n            previousValues[key] = previousFields[key];\n            currentValues[key] = currentFields[key];\n        });\n\n        orderChangeEvents.push({\n            type: \"productionOrderChange\",\n            changeKind: \"orderUpdated\",\n            arrayIndex: index,\n            changedFields: changedFields,\n            previousValues: previousValues,\n            currentValues: currentValues\n        });\n    }\n});\n\n\n\n// ============================================================\n// BUILD OUTPUT 1 -> production_order_slot_event\n// ============================================================\n// What this section does:\n// - converts internal position-change events into insert-ready\n//   messages for production_order_slot_event.\n//\n// Important rule:\n// - when an order moves, we emit:\n//   1) new state of the current slot,\n//   2) new state of the previous slot after the move.\n//\n// Why:\n// - table should represent actual slot state after the change,\n// - not only movement metadata.\n// ============================================================\nconst ts = incoming.ts;\nconst stationId = \"production_order\";\n\nconst slotEventMessages = [];\nconst productionOrderEventMessages = [];\n\npositionChangeEvents.forEach((event) => {\n    // Emit current slot state after appearance / move.\n    if (event.currentPosition !== null) {\n        const currentEntry = currentArray[event.currentPosition];\n        const currentOrder = currentEntry && currentEntry.Order ? currentEntry.Order : null;\n\n        slotEventMessages.push({\n            payload: {\n                ts: ts,\n                station_id: stationId,\n                slot_id: event.currentPosition,\n                production_order_id: currentOrder ? Number(currentOrder.productionOrderID || 0) : 0,\n                production_order_tools: currentOrder ? Number(currentOrder.ToolsOnConveyor || 0) : 0\n            }\n        });\n    }\n\n    // Emit previous slot state after disappearance / move.\n    if (event.previousPosition !== null) {\n        const previousSlotNowEntry = currentArray[event.previousPosition];\n        const previousSlotNowOrder = previousSlotNowEntry && previousSlotNowEntry.Order ? previousSlotNowEntry.Order : null;\n\n        slotEventMessages.push({\n            payload: {\n                ts: ts,\n                station_id: stationId,\n                slot_id: event.previousPosition,\n                production_order_id: previousSlotNowOrder ? Number(previousSlotNowOrder.productionOrderID || 0) : 0,\n                production_order_tools: previousSlotNowOrder ? Number(previousSlotNowOrder.ToolsOnConveyor || 0) : 0\n            }\n        });\n    }\n});\n\n\n\n// ============================================================\n// BUILD OUTPUT 2 -> production_order_event\n// ============================================================\n// What this section does:\n// - converts internal order-change events into insert-ready\n//   messages for production_order_event.\n//\n// Important rule:\n// - once comparator confirms a meaningful order change,\n//   we write the FULL current state of that order.\n//\n// Why:\n// - DB table stores state records,\n// - not previous/current diff details.\n// ============================================================\norderChangeEvents.forEach((event) => {\n    const index = event.arrayIndex;\n    const currentEntry = currentArray[index];\n    const currentFields = extractRelevantFields(currentEntry);\n\n    if (!currentFields || currentFields.productionOrderID === 0) {\n        return;\n    }\n\n    productionOrderEventMessages.push({\n        payload: {\n            ts: ts,\n            station_id: stationId,\n            production_order_id: Number(currentFields.productionOrderID || 0),\n            production_order_mat_id: String(currentFields.materialNumber || \"\"),\n            production_order_target_q: Number(currentFields.Target_Quantity || 0),\n            production_order_q: Number(currentFields.Actual_Quantity || 0),\n            production_order_status: Number(currentFields.Status || 0),\n            production_order_tools: Number(currentFields.ToolsOnConveyor || 0)\n        }\n    });\n});\n\n\n\n// ============================================================\n// FINAL OUTPUT\n// ============================================================\n// What this section does:\n// - applies Node-RED multi-output convention,\n// - suppresses empty outputs by returning null,\n// - updates node status with emitted message counts.\n//\n// Return:\n// - output 1 = slot events,\n// - output 2 = production order events.\n// ============================================================\nconst msg1 = slotEventMessages.length > 0 ? slotEventMessages : null;\nconst msg2 = productionOrderEventMessages.length > 0 ? productionOrderEventMessages : null;\n\nnode.status({\n    fill: \"green\",\n    shape: \"dot\",\n    text: `slot: ${slotEventMessages.length}, order: ${productionOrderEventMessages.length}`\n});\n\nreturn [msg1, msg2];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 1640,
+        "wires": [
+            [
+                "07b3caaeef072638"
+            ],
+            [
+                "2bd02234e262c569"
+            ]
+        ]
+    },
+    {
+        "id": "07b3caaeef072638",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "31694e5d2eaa0a23",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nvar table_name = '';\nmsg.sql = {\n    schema: '\"purefloor\"',\n    table: 'production_order_slot_event',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 860,
+        "y": 1560,
+        "wires": [
+            [
+                "f58dbaf34d1718ca"
+            ]
+        ]
+    },
+    {
+        "id": "f58dbaf34d1718ca",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "31694e5d2eaa0a23",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1040,
+        "y": 1560,
+        "wires": [
+            [
+                "6fbea0bc861e8d8f"
+            ]
+        ]
+    },
+    {
+        "id": "61a64b67cc7ba3cc",
+        "type": "inject",
+        "z": "14050e4f3f807d7b",
+        "g": "31694e5d2eaa0a23",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1310,
+        "y": 1600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2bd02234e262c569",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "a044fcd0938f0e49",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nvar table_name = '';\nmsg.sql = {\n    schema: '\"purefloor\"',\n    table: 'production_order_event',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 860,
+        "y": 1720,
+        "wires": [
+            [
+                "f5d2de8fc72c55b1"
+            ]
+        ]
+    },
+    {
+        "id": "f5d2de8fc72c55b1",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "a044fcd0938f0e49",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1040,
+        "y": 1720,
+        "wires": [
+            [
+                "a7a424d57c1c375d"
+            ]
+        ]
+    },
+    {
+        "id": "ea78c38ebacda826",
+        "type": "inject",
+        "z": "14050e4f3f807d7b",
+        "g": "a044fcd0938f0e49",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1270,
+        "y": 1760,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f062562b921c30d6",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "d2ebef2d22d1673e",
+        "name": "Detect duplicate productionOrderID in multiple slots",
+        "func": "// Detect duplicate productionOrderID values inside one OrdersArray snapshot.\n// This node is only for observation:\n// - it updates duplicate counter in flow context\n// - it stores timestamp of the last detected duplicate\n// - it shows node status\n// - it does not send messages further\n\nconst incoming = msg.payload;\n\nif (!incoming || !Array.isArray(incoming.value)) {\n    node.status({\n        fill: \"red\",\n        shape: \"ring\",\n        text: \"invalid payload\"\n    });\n    return null;\n}\n\nconst valueArray = incoming.value;\nconst seenIds = new Set();\nconst duplicateIds = new Set();\n\n// scan current OrdersArray and detect duplicated non-zero productionOrderID values\nvalueArray.forEach((entry) => {\n    const order = entry && entry.Order ? entry.Order : null;\n    const orderId = order ? Number(order.productionOrderID || 0) : 0;\n\n    if (orderId === 0) {\n        return;\n    }\n\n    if (seenIds.has(orderId)) {\n        duplicateIds.add(orderId);\n    } else {\n        seenIds.add(orderId);\n    }\n});\n\n// load current duplicate stats from flow\nconst duplicateStats = flow.get(\"duplicate_order_id_stats\") || {\n    duplicate_count_total: 0,\n    last_duplicate_ts: null\n};\n\n// update stats only if duplicates exist in current message\nif (duplicateIds.size > 0) {\n    duplicateStats.duplicate_count_total += 1;\n    duplicateStats.last_duplicate_ts = incoming.ts || null;\n\n    flow.set(\"duplicate_order_id_stats\", duplicateStats);\n\n    node.status({\n        fill: \"yellow\",\n        shape: \"ring\",\n        text: `duplicates detected | total: ${duplicateStats.duplicate_count_total} | last: ${duplicateStats.last_duplicate_ts}`\n    });\n\n    return null;\n}\n\n// no duplicates detected in current message\nnode.status({\n    fill: \"green\",\n    shape: \"dot\",\n    text: \"no duplicates detected\"\n});\n\nreturn null;",
+        "outputs": 0,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 1740,
+        "wires": []
+    },
+    {
+        "id": "3fa983fd535dbde7",
+        "type": "rbe",
+        "z": "14050e4f3f807d7b",
+        "g": "52cc26489cbeee53",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 370,
+        "y": 80,
+        "wires": [
+            [
+                "c12b12a6bddf334d"
+            ]
+        ]
+    },
+    {
+        "id": "d8ce04e87eece12c",
+        "type": "rbe",
+        "z": "14050e4f3f807d7b",
+        "g": "52cc26489cbeee53",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 370,
+        "y": 160,
+        "wires": [
+            [
+                "ec54ac19bbc3afde"
+            ]
+        ]
+    },
+    {
+        "id": "fd78aa66b66b1570",
+        "type": "rbe",
+        "z": "14050e4f3f807d7b",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 372.6666564941406,
+        "y": 300.6666564941406,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d47dffbbe8540327",
+        "type": "rbe",
+        "z": "14050e4f3f807d7b",
+        "g": "6986f5c1b5325368",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 370,
+        "y": 380,
+        "wires": [
+            [
+                "a6209a725dd54607"
+            ]
+        ]
+    },
+    {
+        "id": "01baa6486d1c32f1",
+        "type": "rbe",
+        "z": "14050e4f3f807d7b",
+        "g": "5ed95e4d3fb76952",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 370,
+        "y": 520,
+        "wires": [
+            [
+                "f441d9ac6c926096"
+            ]
+        ]
+    },
+    {
+        "id": "bdadcd183a091371",
+        "type": "rbe",
+        "z": "14050e4f3f807d7b",
+        "g": "9d1ef7d846aa07e0",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 370,
+        "y": 660,
+        "wires": [
+            [
+                "18ceec631022cc54"
+            ]
+        ]
+    },
+    {
+        "id": "6f9a23cf5cff3fdb",
+        "type": "rbe",
+        "z": "14050e4f3f807d7b",
+        "g": "9d1ef7d846aa07e0",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 370,
+        "y": 740,
+        "wires": [
+            [
+                "f31a1bbcbc6039a8"
+            ]
+        ]
+    },
+    {
+        "id": "2b3239d4cc1d6e44",
+        "type": "rbe",
+        "z": "14050e4f3f807d7b",
+        "g": "07c0042f97d4fca1",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 370,
+        "y": 880,
+        "wires": [
+            [
+                "aa1f6ca7f4055b7c"
+            ]
+        ]
+    },
+    {
+        "id": "75e881698b4ec724",
+        "type": "rbe",
+        "z": "14050e4f3f807d7b",
+        "g": "07c0042f97d4fca1",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 370,
+        "y": 960,
+        "wires": [
+            [
+                "3b0da952dd12f589"
+            ]
+        ]
+    },
+    {
+        "id": "b60683f7c11a0ce6",
+        "type": "rbe",
+        "z": "14050e4f3f807d7b",
+        "g": "d9d07ea41ada5b3c",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 370,
+        "y": 1100,
+        "wires": [
+            [
+                "6c836d9ec661dad7"
+            ]
+        ]
+    },
+    {
+        "id": "093a6ea3742f8114",
+        "type": "rbe",
+        "z": "14050e4f3f807d7b",
+        "g": "7d413cf4368a7ddd",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 370,
+        "y": 1380,
+        "wires": [
+            [
+                "44ca1a03faf1757b"
+            ]
+        ]
+    },
+    {
+        "id": "214279bbe0840ee2",
+        "type": "mqtt in",
+        "z": "14050e4f3f807d7b",
+        "g": "2251baf7612c3971",
+        "name": "rfid_rstation_log",
+        "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/rfid_rstation/log",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "4e714f14d7af13f4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 1240,
+        "wires": [
+            [
+                "e6afa424aadda1c6"
+            ]
+        ]
+    },
+    {
+        "id": "6c549d7a42dfd3bc",
+        "type": "inject",
+        "z": "14050e4f3f807d7b",
+        "g": "2251baf7612c3971",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "control",
+        "payload": "drop",
+        "payloadType": "str",
+        "x": 1350,
+        "y": 1280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2e6244d69c461f40",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "2251baf7612c3971",
+        "name": "prepare output",
+        "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"purefloor\"',\n    table: 'rfid_rstation_log',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 1240,
+        "wires": [
+            [
+                "9a7fc81291647480"
+            ]
+        ]
+    },
+    {
+        "id": "32e6ba58bf3457b8",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "2251baf7612c3971",
+        "name": "FIX: \"device_id\"",
+        "func": "delete msg.payload.device_id\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 1240,
+        "wires": [
+            [
+                "2e6244d69c461f40"
+            ]
+        ]
+    },
+    {
+        "id": "e6afa424aadda1c6",
+        "type": "rbe",
+        "z": "14050e4f3f807d7b",
+        "g": "2251baf7612c3971",
+        "name": "",
+        "func": "rbe",
+        "gap": "",
+        "start": "",
+        "inout": "out",
+        "septopics": true,
+        "property": "payload",
+        "topi": "topic",
+        "x": 370,
+        "y": 1240,
+        "wires": [
+            [
+                "32e6ba58bf3457b8"
+            ]
+        ]
+    },
+    {
+        "id": "6fbea0bc861e8d8f",
+        "type": "subflow:76b3786a13d77125",
+        "z": "14050e4f3f807d7b",
+        "g": "31694e5d2eaa0a23",
+        "name": "",
+        "x": 1540,
+        "y": 1560,
+        "wires": []
+    },
+    {
+        "id": "a7a424d57c1c375d",
+        "type": "subflow:76b3786a13d77125",
+        "z": "14050e4f3f807d7b",
+        "g": "a044fcd0938f0e49",
+        "name": "",
+        "x": 1540,
+        "y": 1720,
+        "wires": []
+    },
+    {
+        "id": "90e7d113dfb5a712",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "52cc26489cbeee53",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 160,
+        "wires": [
+            [
+                "4cca2cbf9ce5e81f"
+            ]
+        ]
+    },
+    {
+        "id": "861885df7ba2498b",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "6986f5c1b5325368",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 300,
+        "wires": [
+            [
+                "e6e2e20577adc616"
+            ]
+        ]
+    },
+    {
+        "id": "6d82088583fe3e0b",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "6986f5c1b5325368",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 380,
+        "wires": [
+            [
+                "2bd0b8a49f0473d6"
+            ]
+        ]
+    },
+    {
+        "id": "f7f1ca225c5bd1dd",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "5ed95e4d3fb76952",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 520,
+        "wires": [
+            [
+                "c82a6e0178fad839"
+            ]
+        ]
+    },
+    {
+        "id": "9bce5bca8e1755a2",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "9d1ef7d846aa07e0",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 660,
+        "wires": [
+            [
+                "ba4ee1cbf73f64d8"
+            ]
+        ]
+    },
+    {
+        "id": "dba0b019fa4cd500",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "9d1ef7d846aa07e0",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 740,
+        "wires": [
+            [
+                "8a998a459aa89000"
+            ]
+        ]
+    },
+    {
+        "id": "b6488f88c15741b7",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "07c0042f97d4fca1",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 880,
+        "wires": [
+            [
+                "ca109a7646642987"
+            ]
+        ]
+    },
+    {
+        "id": "faf5598804179edc",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "07c0042f97d4fca1",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 960,
+        "wires": [
+            [
+                "ce8d32af33f743a4"
+            ]
+        ]
+    },
+    {
+        "id": "8944111a56baa7c2",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "d9d07ea41ada5b3c",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 1100,
+        "wires": [
+            [
+                "874e1073fee63164"
+            ]
+        ]
+    },
+    {
+        "id": "9a7fc81291647480",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "2251baf7612c3971",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 1240,
+        "wires": [
+            [
+                "9f394674b047e54f"
+            ]
+        ]
+    },
+    {
+        "id": "f685c095e0041882",
+        "type": "function",
+        "z": "14050e4f3f807d7b",
+        "g": "7d413cf4368a7ddd",
+        "name": "Transform",
+        "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 1380,
+        "wires": [
+            [
+                "fabb087693fc81a7"
+            ]
+        ]
+    },
+    {
+        "id": "b9fc99a5b2574923",
+        "type": "subflow:76b3786a13d77125",
+        "z": "14050e4f3f807d7b",
+        "g": "52cc26489cbeee53",
+        "name": "",
+        "x": 1560,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "e6e2e20577adc616",
+        "type": "subflow:76b3786a13d77125",
+        "z": "14050e4f3f807d7b",
+        "g": "6986f5c1b5325368",
+        "name": "",
+        "x": 1560,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "2bd0b8a49f0473d6",
+        "type": "subflow:76b3786a13d77125",
+        "z": "14050e4f3f807d7b",
+        "g": "6986f5c1b5325368",
+        "name": "",
+        "x": 1560,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "c82a6e0178fad839",
+        "type": "subflow:76b3786a13d77125",
+        "z": "14050e4f3f807d7b",
+        "g": "5ed95e4d3fb76952",
+        "name": "",
+        "x": 1560,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "ba4ee1cbf73f64d8",
+        "type": "subflow:76b3786a13d77125",
+        "z": "14050e4f3f807d7b",
+        "g": "9d1ef7d846aa07e0",
+        "name": "",
+        "x": 1560,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "8a998a459aa89000",
+        "type": "subflow:76b3786a13d77125",
+        "z": "14050e4f3f807d7b",
+        "g": "9d1ef7d846aa07e0",
+        "name": "",
+        "x": 1560,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "ca109a7646642987",
+        "type": "subflow:76b3786a13d77125",
+        "z": "14050e4f3f807d7b",
+        "g": "07c0042f97d4fca1",
+        "name": "",
+        "x": 1560,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "ce8d32af33f743a4",
+        "type": "subflow:76b3786a13d77125",
+        "z": "14050e4f3f807d7b",
+        "g": "07c0042f97d4fca1",
+        "name": "",
+        "x": 1560,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "874e1073fee63164",
+        "type": "subflow:76b3786a13d77125",
+        "z": "14050e4f3f807d7b",
+        "g": "d9d07ea41ada5b3c",
+        "name": "",
+        "x": 1560,
+        "y": 1100,
+        "wires": []
+    },
+    {
+        "id": "9f394674b047e54f",
+        "type": "subflow:76b3786a13d77125",
+        "z": "14050e4f3f807d7b",
+        "g": "2251baf7612c3971",
+        "name": "",
+        "x": 1560,
+        "y": 1240,
+        "wires": []
+    },
+    {
+        "id": "fabb087693fc81a7",
+        "type": "subflow:76b3786a13d77125",
+        "z": "14050e4f3f807d7b",
+        "g": "7d413cf4368a7ddd",
+        "name": "",
+        "x": 1560,
+        "y": 1380,
+        "wires": []
+    },
+    {
+        "id": "4cca2cbf9ce5e81f",
+        "type": "subflow:76b3786a13d77125",
+        "z": "14050e4f3f807d7b",
+        "g": "52cc26489cbeee53",
+        "name": "",
+        "x": 1560,
+        "y": 160,
+        "wires": []
+    }
+]

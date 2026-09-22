@@ -1,0 +1,6 @@
+{
+  "name": "node-red-cho-test",
+  "description": "Palette for cho-test",
+  "private": true,
+  "dependencies": {}
+}

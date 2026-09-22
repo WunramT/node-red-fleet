@@ -1,0 +1,361 @@
+[
+    {
+        "id": "d598a81c83957fc4",
+        "type": "tab",
+        "label": "Extruder abfrage",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e4259e10e4567da1",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "a01e8aa09521f824",
+        "type": "OpcUa-Endpoint",
+        "endpoint": "opc.tcp://10.65.33.2:4842",
+        "secpol": "None",
+        "secmode": "None",
+        "none": true,
+        "login": false,
+        "usercert": false,
+        "usercertificate": "",
+        "userprivatekey": ""
+    },
+    {
+        "id": "2d7a2bc013d3f539",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "client.crt",
+        "keyname": "client.key",
+        "caname": "ca.crt",
+        "servername": "",
+        "verifyservercert": true,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "893b283917e01492",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "dpn-svr-iot",
+        "port": "8883",
+        "tls": "2d7a2bc013d3f539",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "5",
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "d010032bb6fbc4e0",
+        "type": "OpcUa-Endpoint",
+        "endpoint": "opc.tcp://10.60.33.216:53881",
+        "secpol": "None",
+        "secmode": "None",
+        "none": true,
+        "login": false,
+        "usercert": false,
+        "usercertificate": "",
+        "userprivatekey": ""
+    },
+    {
+        "id": "d67ef8ed3b2b96e5",
+        "type": "OpcUa-Endpoint",
+        "endpoint": "opc.tcp://10.20.33.53:48030",
+        "secpol": "None",
+        "secmode": "None",
+        "none": false,
+        "login": true,
+        "usercert": false,
+        "usercertificate": "",
+        "userprivatekey": ""
+    },
+    {
+        "id": "c143a0db461deb35",
+        "type": "inject",
+        "z": "d598a81c83957fc4",
+        "name": "Start",
+        "props": [],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 70,
+        "y": 280,
+        "wires": [
+            [
+                "546f422922438c67"
+            ]
+        ]
+    },
+    {
+        "id": "546f422922438c67",
+        "type": "function",
+        "z": "d598a81c83957fc4",
+        "name": "Prepare Messages",
+        "func": "// Define all NodeIDs from configuration\nconst nodeIds = [\n    'Ext1.BarrelZone[1].Temp.Set',\n    'Ext1.BarrelZone[1].Temp.Act',\n    'Ext1.BarrelZone[2].Temp.Set',\n    'Ext1.BarrelZone[2].Temp.Act',\n    'Ext1.BarrelZone[3].Temp.Set',\n    'Ext1.BarrelZone[3].Temp.Act',\n    'Ext1.BarrelZone[4].Temp.Set',\n    'Ext1.BarrelZone[4].Temp.Act',\n    'Ext1.BarrelZone[5].Temp.Set',\n    'Ext1.BarrelZone[5].Temp.Act',\n    'Die1.DieZone[1].Temp.Set',\n    'Die1.DieZone[1].Temp.Act',\n    'Die1.DieZone[2].Temp.Set',\n    'Die1.DieZone[2].Temp.Act',\n    'Die1.DieZone[3].Temp.Set',\n    'Die1.DieZone[3].Temp.Act',\n    'Die1.DieZone[4].Temp.Set',\n    'Die1.DieZone[4].Temp.Act',\n    'Ext1.Global.MeltPress[1].Act',\n    'Ext1.Global.MeltTemp[1].Act',\n    'Cal1.DcWater.Press.Set',\n    'Cal1.DcWater.Press.Act',\n    'Cal1.WcWater.Press.Set',\n    'Cal1.WcWater.Press.Act',\n    'Ext1.Feed[1].ScrewSpeed.Set',\n    'Ext1.Feed[1].ScrewSpeed.Act',\n    'Ext1.Feed[1].Throughput.Calc',\n    'Ext1.Feed[2].ScrewSpeed.Set',\n    'Ext1.Feed[2].ScrewSpeed.Act',\n    'Ext1.Feed[2].Throughput.Calc',\n    'Cal1.Recipe.Name'\n];\n\nconst messages = [];\nconst identifierPrefix = 'ns=1;s=Memory.OpcUaLine.';\n\n// Erste Message: clearitems um die liste im CLient zu leeren. Leert sich nicht von selbst! Man könnte die liste einmal füllen und dann einfach immer abfragen.\nmessages.push({\n    topic: 'clearitems',\n    payload: ''\n});\n\n// Alle NodeIDs hinzufügen\nfor (let index = 0; index < nodeIds.length; index++) {\n    messages.push({\n        topic: identifierPrefix + nodeIds[index],\n        payload: 'Integer'\n    });\n}\n\n// Letzte Message: readmultiple. Nur diese message ohne clear auch möglich\nmessages.push({\n    topic: 'readmultiple',\n    payload: 'ALL'\n});\n\n// Für Split Node\nmsg.payload = messages;\nreturn [messages];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 280,
+        "wires": [
+            [
+                "dc73bfe639233576"
+            ]
+        ]
+    },
+    {
+        "id": "f5cf41a002a0673f",
+        "type": "function",
+        "z": "d598a81c83957fc4",
+        "name": "Process Response",
+        "func": "// Wenn ALL gelesen wurden ( alle oin einem payload) wird das paket verarbeitet\nif (msg.topic === 'ALL' && Array.isArray(msg.payload) && Array.isArray(msg.items)) {\n    const timestamp = new Date().toISOString();\n    const processedData = {};\n    \n    msg.payload.forEach((valueItem, index) => {\n        if (msg.items[index] && valueItem.value !== undefined) {\n            const nodeId = String(msg.items[index].nodeId);\n\n            const originalParamName = nodeId.replace('ns=1;s=Memory.OpcUaLine.', '');\n\n            processedData[originalParamName] = valueItem.value.value;\n        }\n    });\n\n    const mqttMessage = {\n        device_id: \"5023996\",\n        timestamp: timestamp,\n        ...processedData\n    };\n\n    return [\n        {\n            topic: \"polipol/8900/pla/pla-wyt/pla-wyt1/5023996/output_nr\",\n            payload: mqttMessage,\n            qos: 1,\n            retain: false\n        },\n        {\n            topic: \"debug_data\",\n            payload: {\n                originalStructure: processedData,\n                finalMessage: mqttMessage\n            }\n        }\n    ];\n}\n\nreturn null;\n",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 300,
+        "wires": [
+            [
+                "30c4b97c76e5c373"
+            ],
+            [
+                "ecbf57e328930308"
+            ]
+        ]
+    },
+    {
+        "id": "30c4b97c76e5c373",
+        "type": "mqtt out",
+        "z": "d598a81c83957fc4",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "893b283917e01492",
+        "x": 890,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "ecbf57e328930308",
+        "type": "debug",
+        "z": "d598a81c83957fc4",
+        "name": "Process Data Debug",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "dc73bfe639233576",
+        "type": "OpcUa-Client",
+        "z": "d598a81c83957fc4",
+        "endpoint": "a01e8aa09521f824",
+        "action": "readmultiple",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": "",
+        "localfile": "",
+        "localkeyfile": "",
+        "useTransport": false,
+        "maxChunkCount": "",
+        "maxMessageSize": "",
+        "receiveBufferSize": "",
+        "sendBufferSize": "",
+        "setstatusandtime": false,
+        "keepsessionalive": false,
+        "name": "OPC UA Read Multiple Client",
+        "x": 460,
+        "y": 420,
+        "wires": [
+            [
+                "f5cf41a002a0673f"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "73f66fe5bb410727",
+        "type": "OpcUa-Browser",
+        "z": "e4259e10e4567da1",
+        "endpoint": "d010032bb6fbc4e0",
+        "item": "",
+        "datatype": "",
+        "topic": "ns=2;s=Model",
+        "items": [],
+        "name": "",
+        "x": 370,
+        "y": 220,
+        "wires": [
+            [
+                "ee4c972c7a3196e4"
+            ]
+        ]
+    },
+    {
+        "id": "7817b085abdbb568",
+        "type": "inject",
+        "z": "e4259e10e4567da1",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 280,
+        "wires": [
+            [
+                "73f66fe5bb410727",
+                "abe3b94b04300f92"
+            ]
+        ]
+    },
+    {
+        "id": "ee4c972c7a3196e4",
+        "type": "debug",
+        "z": "e4259e10e4567da1",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "e042d933d341783c",
+        "type": "OpcUa-Client",
+        "z": "e4259e10e4567da1",
+        "endpoint": "d010032bb6fbc4e0",
+        "action": "readmultiple",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "useTransport": false,
+        "maxChunkCount": 1,
+        "maxMessageSize": 8192,
+        "receiveBufferSize": 8192,
+        "sendBufferSize": 8192,
+        "setstatusandtime": false,
+        "keepsessionalive": false,
+        "name": "",
+        "x": 380,
+        "y": 340,
+        "wires": [
+            [
+                "b04915900d2eb0e7"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "abe3b94b04300f92",
+        "type": "function",
+        "z": "e4259e10e4567da1",
+        "name": "Prepare Messages",
+        "func": "// Define all NodeIDs from configuration\nconst nodeIds = [\n    'Status_Hmi',\n    'Material_height'\n];\n\nconst messages = [];\nconst identifierPrefix = 'ns=2;s=Model.';\n\n// Erste Message: clearitems um die liste im CLient zu leeren. Leert sich nicht von selbst! Man könnte die liste einmal füllen und dann einfach immer abfragen.\nmessages.push({\n    topic: 'clearitems',\n    payload: ''\n});\n\n// Alle NodeIDs hinzufügen\nfor (let index = 0; index < nodeIds.length; index++) {\n    messages.push({\n        topic: identifierPrefix + nodeIds[index],\n        payload: 'Integer'\n    });\n}\n\n// Letzte Message: readmultiple. Nur diese message ohne clear auch möglich\nmessages.push({\n    topic: 'readmultiple',\n    payload: 'ALL'\n});\n\n// Für Split Node\nmsg.payload = messages;\nreturn [messages];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 190,
+        "y": 480,
+        "wires": [
+            [
+                "e042d933d341783c"
+            ]
+        ]
+    },
+    {
+        "id": "b04915900d2eb0e7",
+        "type": "debug",
+        "z": "e4259e10e4567da1",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 320,
+        "wires": []
+    }
+]
