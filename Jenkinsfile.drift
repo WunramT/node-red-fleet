@@ -18,7 +18,15 @@ import groovy.transform.Field
 @Field def REGISTRY = null
 @Field def VISITED = []
 @Field def RESULTS = []
-@Field def FAILED_HOSTS = [:]
+@Field def NOT_SWEPT = []
+// Host name -> that host's instances, plus the names in registry order. The
+// two together replace groupBy(): this runs in the Groovy sandbox, where every
+// GDK collection method is a separate approval an administrator has to click.
+// The deploy job next door uses findAll, collect, join, any and each, and
+// nothing else — so this one stays inside that vocabulary and needs no
+// approval at all.
+@Field def BY_HOST = [:]
+@Field def HOST_NAMES = []
 
 pipeline {
     agent any
@@ -58,9 +66,21 @@ pipeline {
                     REGISTRY = readYaml file: 'registry.yml'
                     writeJSON file: 'registry.json', json: REGISTRY, pretty: 2
 
-                    def byHost = REGISTRY.instances.findAll { it.app }.groupBy { it.host }
-                    echo "Sweeping ${byHost.values().sum { it.size() }} instances on ${byHost.size()} hosts"
-                    byHost.each { host, list -> echo "  ${host}: ${list.collect { it.name }.join(', ')}" }
+                    def total = 0
+                    for (inst in REGISTRY.instances) {
+                        if (!inst.app) { continue }
+                        if (!BY_HOST.containsKey(inst.host)) {
+                            BY_HOST.put(inst.host, [])
+                            HOST_NAMES << inst.host
+                        }
+                        BY_HOST.get(inst.host) << inst
+                        total++
+                    }
+
+                    echo "Sweeping ${total} instances on ${HOST_NAMES.size()} hosts"
+                    for (host in HOST_NAMES) {
+                        echo "  ${host}: ${BY_HOST.get(host).collect { it.name }.join(', ')}"
+                    }
                 }
             }
         }
@@ -83,7 +103,8 @@ pipeline {
                         'dpn-svr-iot'   : mkHost('dpn-svr-iot',    '192.168.48.240'),
                     ]
 
-                    REGISTRY.instances.findAll { it.app }.groupBy { it.host }.each { host, list ->
+                    for (host in HOST_NAMES) {
+                        def list = BY_HOST.get(host)
                         // One unreachable host must not end the sweep. The page is
                         // more useful with nine hosts and a named gap than with an
                         // aborted build and no page at all.
@@ -91,8 +112,8 @@ pipeline {
                             sweepHost(HOSTS[host], host, list)
                         } catch (err) {
                             echo "!! ${host}: ${err}"
-                            FAILED_HOSTS[host] = err.toString()
-                            list.each { inst ->
+                            NOT_SWEPT << host
+                            for (inst in list) {
                                 RESULTS << [instance: inst.name, host: host, app: inst.app,
                                             image_tag: inst.image_tag, state: 'unreachable',
                                             detail: "host not swept: ${err}"]
@@ -109,18 +130,24 @@ pipeline {
                     writeJSON file: 'drift.json', json: RESULTS, pretty: 2
                     sh 'python3 scripts/render-drift.py drift.json -o public/index.html'
 
-                    def counts = RESULTS.countBy { it.state }
-                    echo "clean ${counts.clean ?: 0}, drifted ${counts.drifted ?: 0}, " +
-                         "unreachable ${counts.unreachable ?: 0}"
+                    def nClean = 0
+                    def nDrifted = 0
+                    def nUnreachable = 0
+                    for (row in RESULTS) {
+                        if (row.state == 'clean') { nClean++ }
+                        else if (row.state == 'drifted') { nDrifted++ }
+                        else if (row.state == 'unreachable') { nUnreachable++ }
+                    }
+                    echo "clean ${nClean}, drifted ${nDrifted}, unreachable ${nUnreachable}"
 
                     // Amber, not red: drift is somebody's browser edit waiting to be
                     // captured, which is information (decision 9). A host this job
                     // could not reach at all is the thing worth a colour.
-                    if (FAILED_HOSTS) {
+                    if (NOT_SWEPT) {
                         currentBuild.result = 'UNSTABLE'
-                        currentBuild.description = "not swept: ${FAILED_HOSTS.keySet().join(', ')}"
-                    } else if (counts.drifted) {
-                        currentBuild.description = "${counts.drifted} drifted"
+                        currentBuild.description = "not swept: ${NOT_SWEPT.join(', ')}"
+                    } else if (nDrifted) {
+                        currentBuild.description = "${nDrifted} drifted"
                     }
                 }
             }
@@ -130,7 +157,11 @@ pipeline {
             when { expression { params.PUBLISH_PAGE } }
             steps {
                 script {
-                    def remote = VISITED.find { it.name == params.PAGE_HOST }
+                    // A loop, not find(): every GDK collection method is its own
+                    // approval in the sandbox, and this job is meant to run without
+                    // an administrator clicking anything.
+                    def remote = null
+                    for (r in VISITED) { if (r.name == params.PAGE_HOST) { remote = r } }
                     if (!remote) {
                         // Not an error: the page is archived either way, and a
                         // host that was not reached in this run is already the
@@ -158,11 +189,13 @@ pipeline {
             when { expression { params.PUBLISH_TO_WORKBENCH } }
             steps {
                 script {
-                    def watcher = REGISTRY.instances.find { it.name == params.WATCHER_INSTANCE }
+                    def watcher = null
+                    for (i in REGISTRY.instances) { if (i.name == params.WATCHER_INSTANCE) { watcher = i } }
                     if (!watcher) {
                         error("No instance named '${params.WATCHER_INSTANCE}' in registry.yml")
                     }
-                    def remote = VISITED.find { it.name == watcher.host }
+                    def remote = null
+                    for (r in VISITED) { if (r.name == watcher.host) { remote = r } }
                     if (!remote) {
                         error("${watcher.host} was not reached in this run, so there is nowhere to publish")
                     }
@@ -189,7 +222,7 @@ pipeline {
             archiveArtifacts artifacts: 'drift.json, public/index.html', allowEmptyArchive: true
             script {
                 sh 'rm -f registry.json sweep.env || true'
-                VISITED.each { remote ->
+                for (remote in VISITED) {
                     sshCommand remote: remote, failOnError: false,
                                command: "rm -rf ${REMOTE_DIR}"
                 }
@@ -206,12 +239,17 @@ void sweepHost(Map hostConfig, String host, List list) {
     }
 
     // Every instance on this host in one binding, so the sweep is one SSH
-    // session per host rather than one per instance.
+    // session per host rather than one per instance. The variables are named
+    // after the credential id, which is also the stem deploy.py reads on the
+    // other side — so the env file can be written by the shell from its own
+    // environment, and no password is ever assigned to a Groovy variable.
     def bindings = [usernamePassword(credentialsId: hostConfig.credId,
                                      usernameVariable: 'REMOTE_USR', passwordVariable: 'REMOTE_PSW')]
-    list.eachWithIndex { inst, i ->
+    for (inst in list) {
+        def stem = inst.auth_credential_id.replaceAll(/[^A-Za-z0-9]/, '_').toUpperCase()
         bindings << usernamePassword(credentialsId: inst.auth_credential_id,
-                                     usernameVariable: "NR_USR_${i}", passwordVariable: "NR_PSW_${i}")
+                                     usernameVariable: "${stem}_USR",
+                                     passwordVariable: "${stem}_PSW")
     }
 
     withCredentials(bindings) {
@@ -222,19 +260,18 @@ void sweepHost(Map hostConfig, String host, List list) {
         ]
         if (!VISITED.any { it.host == remote.host }) { VISITED << remote }
 
-        // The same stem deploy.py reads, one pair per instance. The file is
-        // sourced and deleted in the same shell, so no password rests on the
-        // host between steps and none reaches the build log.
-        // Not named `env`: that is the global holding the bindings this loop
-        // reads, and shadowing it here would have made every credential resolve
-        // against a StringBuilder.
-        def envFile = new StringBuilder()
-        list.eachWithIndex { inst, i ->
+        // The env file is written BY the shell, from the variables withCredentials
+        // put in its environment — the values never pass through Groovy, so they
+        // cannot end up in a stack trace or a serialized pipeline state. It is
+        // sourced and deleted on the far side in one shell, so no password rests
+        // on the host between steps either.
+        def lines = ['set +x', 'umask 077', ': > sweep.env']
+        for (inst in list) {
             def stem = inst.auth_credential_id.replaceAll(/[^A-Za-z0-9]/, '_').toUpperCase()
-            envFile << "export ${stem}_USR='" << env."NR_USR_${i}" << "'\n"
-            envFile << "export ${stem}_PSW='" << env."NR_PSW_${i}" << "'\n"
+            lines << "echo \"export ${stem}_USR='\$${stem}_USR'\" >> sweep.env"
+            lines << "echo \"export ${stem}_PSW='\$${stem}_PSW'\" >> sweep.env"
         }
-        writeFile file: 'sweep.env', text: envFile.toString()
+        sh lines.join('\n')
 
         sshCommand remote: remote, command: "mkdir -p ${REMOTE_DIR}/scripts " +
                    list.collect { "${REMOTE_DIR}/apps/${it.app}" }.join(' ')
@@ -243,7 +280,7 @@ void sweepHost(Map hostConfig, String host, List list) {
         sshPut remote: remote, from: 'scripts/normalize.py',   into: "${REMOTE_DIR}/scripts/"
         sshPut remote: remote, from: 'registry.json',          into: "${REMOTE_DIR}/"
         sshPut remote: remote, from: 'sweep.env',              into: "${REMOTE_DIR}/"
-        list.each { inst ->
+        for (inst in list) {
             sshPut remote: remote, from: "apps/${inst.app}/flows.json",
                    into: "${REMOTE_DIR}/apps/${inst.app}/"
         }
