@@ -54,8 +54,11 @@ pipeline {
     parameters {
         string(name: 'RENDER_HOST', defaultValue: 'dpn-svr-iot',
             description: 'Host that renders the page. It needs python3, which the controller has not; nothing is left there — the run deletes its own directory.')
+        // Exactly one instance, once, with every instance's row in it. Not one
+        // POST per instance and not one flow per instance: drift.json is the
+        // whole estate, and whoever receives it sees all 18 at once.
         string(name: 'WEBHOOK_INSTANCE', defaultValue: 'dpn-test',
-            description: 'Node-RED instance to POST the result to, resolved through registry.yml. Empty switches the webhook off.')
+            description: 'The ONE Node-RED instance that receives the whole sweep, resolved through registry.yml. One POST, every instance in it. Empty switches the webhook off.')
         string(name: 'WEBHOOK_PATH', defaultValue: '/drift',
             description: 'The http in endpoint on that instance. Under httpNodeRoot, not the admin root.')
         string(name: 'WEBHOOK_TOKEN_CREDENTIAL', defaultValue: '',
