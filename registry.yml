@@ -52,7 +52,7 @@ instances:
     compose_service: node-red-prod
     compose_file: /home/itadmin/energy/docker-compose.yml
     app: gor-prod
-    admin_root: ""
+    admin_root: /node-red-prod
     auth_credential_id: nodered-gor-prod-auth
     credential_secret_id: nodered-gor-prod-credsecret
     dns_search: []
@@ -64,7 +64,7 @@ instances:
     compose_service: node-red-test
     compose_file: /home/itadmin/energy/docker-compose.yml
     app: gor-test
-    admin_root: ""
+    admin_root: /node-red-test
     auth_credential_id: nodered-gor-test-auth
     credential_secret_id: nodered-gor-test-credsecret
     dns_search: []
@@ -77,7 +77,7 @@ instances:
     compose_service: node-red-prod
     compose_file: /home/administrator/code/node-red/docker-compose.yml
     app: jan-prod
-    admin_root: ""
+    admin_root: /node-red-prod
     auth_credential_id: nodered-jan-prod-auth
     credential_secret_id: nodered-jan-prod-credsecret
     dns_search: [rah.polipol.intra]
@@ -89,7 +89,7 @@ instances:
     compose_service: node-red-test
     compose_file: /home/administrator/code/node-red/docker-compose.yml
     app: jan-test
-    admin_root: ""
+    admin_root: /node-red-test
     auth_credential_id: nodered-jan-test-auth
     credential_secret_id: nodered-jan-test-credsecret
     dns_search: [rah.polipol.intra]
