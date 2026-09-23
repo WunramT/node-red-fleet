@@ -172,8 +172,21 @@ pipeline {
                         """
                         // Back for the archive, so a build keeps its own page even
                         // when publishing is off or the directory moves later.
-                        sshGet remote: remote, from: "${REMOTE_DIR}/index.html",
-                               into: 'public/index.html', override: true
+                        //
+                        // The directory first: SFTP does not create the parent of its
+                        // destination, and the failure it returns says only "Failed
+                        // SFTP GET" with both paths, which reads like the source is
+                        // missing rather than the target.
+                        sh 'mkdir -p public'
+                        try {
+                            sshGet remote: remote, from: "${REMOTE_DIR}/index.html",
+                                   into: 'public/index.html', override: true
+                        } catch (err) {
+                            // The page itself is published in the next stage, from the
+                            // copy that is already on the host. Losing the archived one
+                            // is worth a line, not a failed sweep.
+                            echo "!! could not fetch the rendered page for the archive: ${err}"
+                        }
                     }
                 }
             }

@@ -22,6 +22,9 @@ scripts/*.local.py
 hosts.local.json
 # Base URLs and Admin API logins for scripts/nr.py.
 nr.local.json
+# The rendered drift page. Built by the sweep, on a host and in the agent's
+# workspace — never something a working tree should carry.
+public/
 inventory/
 registry.draft.yml
 # Generated from registry.yml by validate-registry.py --emit-json, for hosts
