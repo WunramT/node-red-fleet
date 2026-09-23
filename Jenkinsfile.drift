@@ -128,7 +128,6 @@ pipeline {
             steps {
                 script {
                     writeJSON file: 'drift.json', json: RESULTS, pretty: 2
-                    sh 'python3 scripts/render-drift.py drift.json -o public/index.html'
 
                     def nClean = 0
                     def nDrifted = 0
@@ -149,6 +148,33 @@ pipeline {
                     } else if (nDrifted) {
                         currentBuild.description = "${nDrifted} drifted"
                     }
+
+                    // Rendered on a target host, not here. The Jenkins controller
+                    // has no python3 — `python3: not found` is what the first run
+                    // said — and every site host does, because that is where
+                    // deploy.py and drift-check.py run (decision 10). So the one
+                    // machine the pipeline may not assume anything about is the one
+                    // it now needs nothing from: this stage builds the JSON, and the
+                    // page is made where the rest of the work already happens.
+                    def remote = null
+                    for (r in VISITED) { if (r.name == params.PAGE_HOST) { remote = r } }
+                    if (!remote) {
+                        echo "!! ${params.PAGE_HOST} was not reached in this run — no page rendered"
+                        currentBuild.result = 'UNSTABLE'
+                    } else {
+                        sshPut remote: remote, from: 'drift.json', into: "${REMOTE_DIR}/"
+                        sshPut remote: remote, from: 'scripts/render-drift.py',
+                               into: "${REMOTE_DIR}/scripts/"
+                        sshCommand remote: remote, command: """
+                            set -e
+                            cd ${REMOTE_DIR}
+                            python3 scripts/render-drift.py drift.json -o index.html
+                        """
+                        // Back for the archive, so a build keeps its own page even
+                        // when publishing is off or the directory moves later.
+                        sshGet remote: remote, from: "${REMOTE_DIR}/index.html",
+                               into: 'public/index.html', override: true
+                    }
                 }
             }
         }
@@ -163,23 +189,25 @@ pipeline {
                     def remote = null
                     for (r in VISITED) { if (r.name == params.PAGE_HOST) { remote = r } }
                     if (!remote) {
-                        // Not an error: the page is archived either way, and a
-                        // host that was not reached in this run is already the
-                        // more interesting news.
-                        echo "!! ${params.PAGE_HOST} was not reached in this run — page not published"
-                        currentBuild.result = 'UNSTABLE'
+                        // Render already said so and already went amber; saying it
+                        // twice in one build reads like two faults.
                         return
                     }
                     // Onto the host, not into the nginx container: a `docker cp`
                     // lives in that container's write layer and is gone the next
                     // time it is recreated. The directory is bind-mounted, so the
                     // page survives a pull, a restart and a compose up.
-                    sshCommand remote: remote, command: "mkdir -p ${params.PAGE_DIR}"
-                    sshPut remote: remote, from: 'public/index.html', into: "${params.PAGE_DIR}/"
-                    // The raw sweep beside the page: whoever wants to graph it or
-                    // diff two days does not have to scrape HTML for it.
-                    sshPut remote: remote, from: 'drift.json', into: "${params.PAGE_DIR}/"
-                    sshCommand remote: remote, command: "chmod 644 ${params.PAGE_DIR}/index.html ${params.PAGE_DIR}/drift.json"
+                    //
+                    // Both files are already on this host — the page was rendered
+                    // here — so this moves them into place rather than uploading them
+                    // again. The raw sweep goes beside the page: whoever wants to
+                    // graph it or diff two days should not have to scrape HTML.
+                    sshCommand remote: remote, command: """
+                        set -e
+                        mkdir -p ${params.PAGE_DIR}
+                        cp ${REMOTE_DIR}/index.html ${REMOTE_DIR}/drift.json ${params.PAGE_DIR}/
+                        chmod 644 ${params.PAGE_DIR}/index.html ${params.PAGE_DIR}/drift.json
+                    """
                     echo "page: http://${params.PAGE_HOST}/drift/"
                 }
             }

@@ -137,8 +137,8 @@ Instanz — er liest, rendert und legt das Ergebnis ab.
 cron('H 6 * * *')
    └─ je Host eine SSH-Sitzung: drift-check.py --host <host> --json
         └─ Fragmente einsammeln  →  drift.json
-             ├─ render-drift.py  →  public/index.html
-             │     └─ auf den Host  →  nginx  →  http://<host>/drift/
+             ├─ render-drift.py  auf PAGE_HOST  →  index.html
+             │     └─ ins Verzeichnis  →  nginx  →  http://<host>/drift/
              ├─ Jenkins-Artefakt (beides, als Verlauf)
              └─ docker cp        →  /data/drift/drift.json in dpn-test
 ```
@@ -181,6 +181,12 @@ Compose-Änderung, keine Rechte-Rätsel.
 Die gerenderte Seite ist ein Build-Artefakt — erreichbar, aber nur mit
 Jenkins-Login, und das ist nicht „ohne CLI nachsehen können". Sie bekommt
 deshalb eine feste Adresse auf dem nginx, der auf diesen Hosts ohnehin läuft.
+
+**Gerendert wird auf `PAGE_HOST`, nicht auf dem Jenkins-Agent.** Der Controller
+hat kein `python3` — das war der zweite Fehlschlag des ersten Laufs —, jeder
+Site-Host hat eins, weil dort `deploy.py` und `drift-check.py` laufen. Die eine
+Maschine, über die die Pipeline nichts annehmen darf, braucht damit auch nichts:
+Jenkins baut die JSON, den Rest macht der Host.
 
 **Ein Verzeichnis auf dem Host, hineingemountet:** der Job legt die Dateien auf
 den Host, nicht in den nginx-Container. Ein `docker cp` dorthin lebt in dessen

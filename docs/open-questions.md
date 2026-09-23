@@ -60,11 +60,9 @@ The estate is live; these are what the plan that got it there had not finished.
   result into one static page; both land as build artifacts. What is left is a
   place to put `public/index.html` where the team reaches it without opening
   Jenkins — GitLab Pages, or the nginx that already runs on these hosts. The
-  job also needs `python3` on the Jenkins agent, which is the one thing about
-  it that is not standard-library-only by construction. The publishing step
-  exists — `PAGE_HOST` and `PAGE_DIR` copy it to a directory an nginx serves —
-  so what is left is one bind mount on whichever host should carry the URL
-  (`betrieb.md`, "Die Seite veröffentlichen").
+  The publishing step exists — `PAGE_HOST` and `PAGE_DIR` put it in a directory
+  an nginx serves — so what is left is one bind mount on whichever host should
+  carry the URL (`betrieb.md`, "Die Seite veröffentlichen").
 - **The palette path has never run for real.** Flow deploys are proven daily;
   the second transport — image rebuild plus `DEPLOY_PALETTE=true` — has not been
   exercised end to end. Do it once on a workbench, outside core hours, because
