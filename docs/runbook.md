@@ -664,30 +664,38 @@ Read-only: `GET /flows`, normalize, diff against Git, report. It never writes to
 
 Exit 0 when clean, 1 when an instance is unreachable, and 3 only with `--fail-on-drift` — for a scheduled check that should go red. Without the flag drift is reported and the exit stays 0, because drift is information, not a failure.
 
-An unreachable instance does not stop the sweep; it is one row in the report. `--json` writes the full report, diffs included, which is what the visibility page renders (decision 11).
+An unreachable instance does not stop the sweep; it is one row in the report. `--json` writes the full report, diffs included, which is what the daily job collects and sends on (decision 11).
 
 ## The drift job
 
 `Jenkinsfile.drift`, cron `H 6 * * *`. One `drift.json` over the whole estate,
-one page rendered from it — both stay in Jenkins — and a POST to a Node-RED
-endpoint where one flow decides what happens next.
+kept in Jenkins, and one POST to a Node-RED endpoint where a flow decides what
+happens next.
 
 ```
 cron('H 6 * * *')
    └─ one SSH session per host: drift-check.py --host <host> --json
         └─ collect the fragments  →  drift.json
-             ├─ render-drift.py on RENDER_HOST  →  index.html
-             ├─ Jenkins artifacts: drift.json + index.html  (the history)
-             └─ POST to http://<container>:1880/drift  →  the flow on dpn-test
+             ├─ Jenkins artifact: drift.json  (the history)
+             └─ POST to http://<container>:1880/node-red-test/drift
+                                              →  the flow on dpn-test
 ```
 
-**Nothing is left on any host.** Sweep and render run in a directory under
-`/tmp` that the `post` block removes again; the result lives in Jenkins. An
-earlier version put the page in an nginx directory and the JSON into an
-instance's `/data`. The first of those is ordinary — every pipeline publishes a
-static page — the second is not: it couples CI to the data directory of a
-running application, and it put the watchdog inside one of the things it
-watches.
+**Nothing is left on any host.** The sweep runs in a directory under `/tmp` that
+the `post` block removes again; the result lives in Jenkins. An earlier version
+put a rendered page in an nginx directory and the JSON into an instance's
+`/data`. The first of those is ordinary — every pipeline publishes a static page
+— the second is not: it couples CI to the data directory of a running
+application, and it put the watchdog inside one of the things it watches.
+
+**There is no page any more, and no `RENDER_HOST`.** Rendering needed `python3`,
+which the Jenkins controller has not and every site host has, so the job named
+one host and rendered there. That made a single named machine a dependency of
+every sweep — for an artifact nobody could open without logging into Jenkins
+anyway. `drift.json` is the record now, and the flow behind the webhook is the
+presentation. Every host in the run has exactly one job: answer the sweep.
+`scripts/render-drift.py` is still in the repository for anyone who wants a page
+out of a downloaded `drift.json`; nothing calls it.
 
 **Why per host and not centrally:** `drift-check` reaches a runtime through
 Docker on the machine it runs on (decision 10). Called centrally, `--all`
@@ -697,24 +705,18 @@ inside the job, not an operator step: ten SSH sessions, ten fragments, one file.
 **Why drift does not turn the run red:** drift is somebody's browser edit that
 is not in Git yet — information, not a failure (decision 9). The job goes
 UNSTABLE when a **host was unreachable** or the **webhook was not accepted**;
-the build description then names what is missing, and the page shows the gap
-instead of omitting it.
-
-**Rendering happens on `RENDER_HOST`, not on the Jenkins agent.** The controller
-has no `python3`; every site host has one, because `deploy.py` and
-`drift-check.py` run there. The one machine the pipeline must not install
-anything on therefore needs nothing.
+the build description then names what is missing, and the unreachable host is a
+row in `drift.json` rather than a gap in it.
 
 ### The webhook
 
-Four parameters drive it:
+Three parameters drive it:
 
 | Parameter | Meaning |
 |---|---|
-| `WEBHOOK_INSTANCE` | target instance from `registry.yml`. Empty switches the webhook off |
-| `WEBHOOK_PATH` | the `http in` endpoint, default `/drift` |
+| `WEBHOOK_INSTANCE` | target instance from `registry.yml`, default `dpn-test`. Empty switches the webhook off |
+| `WEBHOOK_PATH` | the endpoint as the runtime serves it, default `/node-red-test/drift` |
 | `WEBHOOK_TOKEN_CREDENTIAL` | optional Jenkins credential (secret text), sent as `X-Drift-Token` |
-| `RENDER_HOST` | where the page is built |
 
 The POST goes **from the instance's own host**, the same way `deploy.py` reaches
 it: the container address is resolved there, so no published port, no proxy
@@ -725,9 +727,9 @@ One instance receives the result for all 18 — the payload is the whole
 
 `http in` sits under `httpNodeRoot`, **not** under `admin_root`. Measured on
 `dpn-test`: an `http in` node with URL `/drift` answers on
-**`/node-red-test/drift`**. That is why `WEBHOOK_PATH` is a parameter and is not
-derived from the registry — it must carry the full path the runtime actually
-serves.
+**`/node-red-test/drift`** — which is why that, and not `/drift`, is the
+default. `WEBHOOK_PATH` is sent exactly as given: it carries the full path the
+runtime serves, and there is nothing in the registry to derive it from.
 
 If the instance does not answer `2xx` the build goes UNSTABLE: the numbers are
 archived, nobody heard them.

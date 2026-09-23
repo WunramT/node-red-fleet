@@ -106,7 +106,7 @@ container.
 | `normalize.py --write <flow>` | Canonicalize a flow so it diffs readably. Before every commit. |
 | `validate-registry.py` | Registry against the schema and the rules around it. |
 | `drift-check.py --all --json <out>` | Read-only fleet sweep. `--host <h>` for the instances of one host, which is what the scheduled job runs. |
-| `render-drift.py <json> -o <html>` | That sweep as one static page — state per instance, no button. |
+| `render-drift.py <json> -o <html>` | A downloaded `drift.json` as one static page. Optional and local — no pipeline runs it. |
 | `bump-node-red.py --to <version>` | Move instances to another Node-RED version. |
 | `gen-image-pipeline.py` | Regenerate the build jobs after adding an instance. |
 | `collect-inventory.py` | Re-read the hosts over SSH. Reports that a secret exists, never its value. |

@@ -1,19 +1,26 @@
 // Scheduled drift sweep: what is each instance running, and is it what Git says?
 //
-// Nothing of this run survives on any host. The sweep and the rendering happen
-// in a directory under /tmp that post{} removes, the result is kept in Jenkins
-// as drift.json and index.html, and the one thing that leaves the pipeline is a
-// POST to a Node-RED endpoint — where a flow decides what to do with it. An
-// earlier version copied the page into an nginx directory and the JSON into an
-// instance's /data; publishing a static page that way is ordinary, but writing
-// into a running application's data directory is not, and the watchdog then
-// lived inside one of the things it watches.
+// Nothing of this run survives on any host. The sweep happens in a directory
+// under /tmp that post{} removes, the result is kept in Jenkins as drift.json,
+// and the one thing that leaves the pipeline is a POST to a Node-RED endpoint —
+// where a flow decides what to do with it. An earlier version copied a rendered
+// page into an nginx directory and the JSON into an instance's /data; publishing
+// a static page that way is ordinary, but writing into a running application's
+// data directory is not, and the watchdog then lived inside one of the things it
+// watches.
 //
-// This job never writes to an instance. It reads, renders and publishes —
-// decision 9 (drift-check is read-only) and decision 11 (the visibility layer
-// is a report, not a control plane). There is no deploy parameter here on
-// purpose: deploys are reviewed commits, and the Jenkinsfile beside this one is
-// where they happen.
+// The page is gone with it. It was rendered on a site host, because the Jenkins
+// controller has no python3, and that made one named host a dependency of every
+// sweep for an artifact nobody could open without logging into Jenkins anyway.
+// The webhook is the presentation now: drift.json is the record, and the flow
+// that receives it decides who hears about what. Any host that answers the
+// sweep is enough — no host has a second role.
+//
+// This job never writes to an instance. It reads and reports — decision 9
+// (drift-check is read-only) and decision 11 (the visibility layer is a report,
+// not a control plane). There is no deploy parameter here on purpose: deploys
+// are reviewed commits, and the Jenkinsfile beside this one is where they
+// happen.
 //
 // The sweep runs ON EACH HOST, one call per host (decision 10). A central run
 // cannot do it: drift-check reaches a runtime through Docker on the machine it
@@ -52,15 +59,17 @@ pipeline {
     }
 
     parameters {
-        string(name: 'RENDER_HOST', defaultValue: 'dpn-svr-iot',
-            description: 'Host that renders the page. It needs python3, which the controller has not; nothing is left there — the run deletes its own directory.')
         // Exactly one instance, once, with every instance's row in it. Not one
         // POST per instance and not one flow per instance: drift.json is the
         // whole estate, and whoever receives it sees all 18 at once.
         string(name: 'WEBHOOK_INSTANCE', defaultValue: 'dpn-test',
             description: 'The ONE Node-RED instance that receives the whole sweep, resolved through registry.yml. One POST, every instance in it. Empty switches the webhook off.')
-        string(name: 'WEBHOOK_PATH', defaultValue: '/drift',
-            description: 'The http in endpoint on that instance. Under httpNodeRoot, not the admin root.')
+        // The FULL path the runtime serves, not the URL typed into the http in
+        // node. Measured on dpn-test: an `http in` on /drift answers at
+        // /node-red-test/drift, because httpNodeRoot is not the root there — and
+        // it is not admin_root either, so the registry cannot supply it.
+        string(name: 'WEBHOOK_PATH', defaultValue: '/node-red-test/drift',
+            description: 'The http in endpoint on that instance, as the runtime serves it: httpNodeRoot + the node URL. Not the admin root.')
         string(name: 'WEBHOOK_TOKEN_CREDENTIAL', defaultValue: '',
             description: 'Optional Jenkins secret-text credential, sent as X-Drift-Token so the flow can reject anything else. Empty means no header.')
     }
@@ -134,7 +143,7 @@ pipeline {
             }
         }
 
-        stage('Render') {
+        stage('Report') {
             steps {
                 script {
                     writeJSON file: 'drift.json', json: RESULTS, pretty: 2
@@ -159,45 +168,11 @@ pipeline {
                         currentBuild.description = "${nDrifted} drifted"
                     }
 
-                    // Rendered on a target host, not here. The Jenkins controller
-                    // has no python3 — `python3: not found` is what the first run
-                    // said — and every site host does, because that is where
-                    // deploy.py and drift-check.py run (decision 10). So the one
-                    // machine the pipeline may not assume anything about is the one
-                    // it now needs nothing from: this stage builds the JSON, and the
-                    // page is made where the rest of the work already happens.
-                    def remote = null
-                    for (r in VISITED) { if (r.name == params.RENDER_HOST) { remote = r } }
-                    if (!remote) {
-                        echo "!! ${params.RENDER_HOST} was not reached in this run — no page rendered"
-                        currentBuild.result = 'UNSTABLE'
-                    } else {
-                        sshPut remote: remote, from: 'drift.json', into: "${REMOTE_DIR}/"
-                        sshPut remote: remote, from: 'scripts/render-drift.py',
-                               into: "${REMOTE_DIR}/scripts/"
-                        sshCommand remote: remote, command: """
-                            set -e
-                            cd ${REMOTE_DIR}
-                            python3 scripts/render-drift.py drift.json -o index.html
-                        """
-                        // Back for the archive, so a build keeps its own page even
-                        // when publishing is off or the directory moves later.
-                        //
-                        // The directory first: SFTP does not create the parent of its
-                        // destination, and the failure it returns says only "Failed
-                        // SFTP GET" with both paths, which reads like the source is
-                        // missing rather than the target.
-                        sh 'mkdir -p public'
-                        try {
-                            sshGet remote: remote, from: "${REMOTE_DIR}/index.html",
-                                   into: 'public/index.html', override: true
-                        } catch (err) {
-                            // The page itself is published in the next stage, from the
-                            // copy that is already on the host. Losing the archived one
-                            // is worth a line, not a failed sweep.
-                            echo "!! could not fetch the rendered page for the archive: ${err}"
-                        }
-                    }
+                    // drift.json is the whole output of this stage. There is no
+                    // rendering step and therefore no host that has to be up for
+                    // reasons of its own: the numbers are archived here, and the
+                    // flow on the far side of the webhook is what turns them into
+                    // something a person reads.
                 }
             }
         }
@@ -247,7 +222,7 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'drift.json, public/index.html', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'drift.json', allowEmptyArchive: true
             script {
                 sh 'rm -f registry.json sweep.env || true'
                 for (remote in VISITED) {
@@ -262,9 +237,9 @@ pipeline {
 // ---------------------------------------------------------------------------
 
 void postDrift(Map remote, Map target, String header) {
-    // Node-RED serves `http in` under httpNodeRoot, which is not admin_root: the
-    // admin API may live under /node-red-test while the endpoint answers at the
-    // root. So the path is a parameter and not derived from the registry.
+    // WEBHOOK_PATH is used exactly as given: Node-RED serves `http in` under
+    // httpNodeRoot, which is neither admin_root nor necessarily the root, so
+    // there is nothing here to derive it from and nothing to prepend.
     def url = "http://\$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${target.compose_service}):1880${params.WEBHOOK_PATH}"
     // sshCommand returns the command's stdout — there is no returnStdout on
     // this step, and passing one is a parameter the plugin rejects.
