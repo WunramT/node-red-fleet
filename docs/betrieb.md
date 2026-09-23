@@ -127,21 +127,25 @@ Kontrolle, ohne einen Wert zu zeigen:
 ## Drift-Überwachung: der tägliche Lauf
 
 **In einem Satz:** ein Job, einmal täglich, eine `drift.json` über die ganze
-Estate, eine Seite daraus — und **ein** Flow auf **einer** Instanz, der diese
-eine Datei liest.
-
-`Jenkinsfile.drift` ist ein eigener, zeitgesteuerter Job. Er schreibt auf keine
-Instanz — er liest, rendert und legt das Ergebnis ab.
+Estate, eine Seite daraus — beides bleibt in Jenkins — und ein POST an einen
+Node-RED-Endpunkt, wo **ein** Flow entscheidet, was damit geschieht.
 
 ```
 cron('H 6 * * *')
    └─ je Host eine SSH-Sitzung: drift-check.py --host <host> --json
         └─ Fragmente einsammeln  →  drift.json
-             ├─ render-drift.py  auf PAGE_HOST  →  index.html
-             │     └─ ins Verzeichnis  →  nginx  →  http://<host>/drift/
-             ├─ Jenkins-Artefakt (beides, als Verlauf)
-             └─ docker cp        →  /data/drift/drift.json in dpn-test
+             ├─ render-drift.py auf RENDER_HOST  →  index.html
+             ├─ Jenkins-Artefakt: drift.json + index.html  (der Verlauf)
+             └─ POST an http://<container>:1880/drift  →  Flow auf dpn-test
 ```
+
+**Auf keinem Host bleibt etwas liegen.** Sweep und Rendern laufen in einem
+Verzeichnis unter `/tmp`, das der `post`-Block wieder entfernt; das Ergebnis
+lebt in Jenkins. Eine frühere Fassung legte die Seite in ein nginx-Verzeichnis
+und die JSON in das `/data` einer Instanz. Das Erste ist gewöhnlich — eine
+statische Seite zu veröffentlichen tut jede Pipeline —, das Zweite nicht: es
+koppelt das CI-System an das Datenverzeichnis einer laufenden Anwendung, und der
+Wächter wohnte damit in einem der Dinge, die er bewacht.
 
 **Warum je Host und nicht zentral:** `drift-check` erreicht eine Runtime über
 Docker auf der Maschine, auf der es läuft (Decision 10). Zentral aufgerufen
@@ -149,112 +153,55 @@ meldet `--all` jede Instanz als `unreachable`. Dafür gibt es `--host`.
 
 Das ist eine Schleife **innerhalb** des Jobs, keine Bedienhandlung: zehn
 SSH-Sitzungen, zehn Fragmente, eine Datei. Von außen ist es ein Knopf und ein
-Ergebnis. Die Alternative — ein zentraler Lauf über die Proxy-Pfade, mit
-`NODE_RED_BASE_URL_<INSTANZ>` für alle 18 — wäre ein Aufruf statt zehn, brächte
-aber eine zweite Quelle für Adressen neben `registry.yml` mit, und genau die
-vermeidet Decision 10.
+Ergebnis.
 
 **Warum der Lauf nicht rot wird, wenn etwas driftet:** Drift ist die
 Browser-Änderung von jemandem, die noch nicht in Git ist — Information, kein
-Fehler (Decision 9). Rot wird der Job, wenn ein **Host nicht erreichbar** war;
-dann steht in der Build-Beschreibung, welcher, und die Seite zeigt die Lücke,
-statt zu fehlen.
+Fehler (Decision 9). Gelb wird der Job, wenn ein **Host nicht erreichbar** war
+oder der **Webhook nicht angenommen** wurde; dann steht in der
+Build-Beschreibung, was fehlt, und die Seite zeigt die Lücke, statt zu fehlen.
 
-### Wie das Ergebnis zu Node-RED kommt
+**Gerendert wird auf `RENDER_HOST`, nicht auf dem Jenkins-Agent.** Der
+Controller hat kein `python3`, jeder Site-Host hat eins, weil dort `deploy.py`
+und `drift-check.py` laufen. Die eine Maschine, über die die Pipeline nichts
+annehmen darf, braucht damit auch nichts.
 
-Drei Wege waren denkbar, und der Unterschied ist Latenz gegen Eingriff:
+### Der Webhook
 
-| Weg | Dafür | Dagegen |
-|---|---|---|
-| **Datei nach `/data/drift/`** (gewählt) | kein Compose-Eingriff, kein Endpunkt, keine Zugangsdaten; die Datei überlebt einen Neustart, der Flow liest sie beim Start | der Flow pollt, also bis zu einem Pollintervall Verzögerung |
-| `http in` auf der Instanz, Jenkins pusht | sofort, kein Polling | ein Endpunkt mehr, der abgesichert sein will; nach einem Neustart weiß der Flow nichts, bis der nächste Lauf kommt |
-| MQTT/NATS mit `retain` | entkoppelt, überlebt ebenfalls | ein weiteres bewegliches Teil für einen Statusbericht |
+Vier Parameter steuern ihn:
 
-Bei einem Lauf pro Tag ist die Verzögerung eines Pollintervalls belanglos,
-deshalb die Datei. Sie geht per `docker cp` **in den Container**, nicht über den
-Bind-Mount: `/data` gehört der uid der Runtime, der SSH-Login ist eine andere,
-und `docker cp` schreibt als root von innen — kein `sudo`, keine
-Compose-Änderung, keine Rechte-Rätsel.
+| Parameter | Bedeutung |
+|---|---|
+| `WEBHOOK_INSTANCE` | Zielinstanz aus `registry.yml`. Leer schaltet den Webhook ab |
+| `WEBHOOK_PATH` | der `http in`-Endpunkt, Standard `/drift` |
+| `WEBHOOK_TOKEN_CREDENTIAL` | optionale Jenkins-Credential (Secret Text), geht als `X-Drift-Token` mit |
+| `RENDER_HOST` | wo die Seite gebaut wird |
 
-### Die Seite veröffentlichen
+Der POST geht **vom Host der Instanz aus**, so wie `deploy.py` sie erreicht: die
+Container-Adresse wird dort aufgelöst, also braucht es keinen veröffentlichten
+Port, keinen Proxy-Pfad und keine Netzroute, die Jenkins nicht ohnehin hat.
 
-Die gerenderte Seite ist ein Build-Artefakt — erreichbar, aber nur mit
-Jenkins-Login, und das ist nicht „ohne CLI nachsehen können". Sie bekommt
-deshalb eine feste Adresse auf dem nginx, der auf diesen Hosts ohnehin läuft.
+`http in` liegt unter `httpNodeRoot`, **nicht** unter `admin_root` — die Admin-API
+kann auf `/node-red-test` liegen, während der Endpunkt an der Wurzel antwortet.
+Deshalb ist der Pfad ein Parameter und wird nicht aus der Registry abgeleitet.
 
-**Gerendert wird auf `PAGE_HOST`, nicht auf dem Jenkins-Agent.** Der Controller
-hat kein `python3` — das war der zweite Fehlschlag des ersten Laufs —, jeder
-Site-Host hat eins, weil dort `deploy.py` und `drift-check.py` laufen. Die eine
-Maschine, über die die Pipeline nichts annehmen darf, braucht damit auch nichts:
-Jenkins baut die JSON, den Rest macht der Host.
-
-**Ein Verzeichnis auf dem Host, hineingemountet:** der Job legt die Dateien auf
-den Host, nicht in den nginx-Container. Ein `docker cp` dorthin lebt in dessen
-Schreibschicht und ist beim nächsten Recreate weg.
-
-```yaml
-  # im Service des nginx, auf dem Host, der die Seite ausliefern soll
-  nginx:
-    volumes:
-      - ./drift:/usr/share/nginx/html/drift:ro
-```
-
-Danach `docker compose -f <datei> up -d nginx` — das recycelt **nur** den nginx.
-
-**Der nginx-Eintrag ist wahrscheinlich keiner.** Die Standardkonfiguration des
-Images liefert `location /` aus `/usr/share/nginx/html`, also ist
-`http://<host>/drift/` damit schon bedient. Einen eigenen Block braucht es erst
-für eine Sache, die hier aber zählt: die Seite wird täglich neu geschrieben, und
-ein Browser, der sie einen Tag cached, zeigt den Zustand von gestern. Dann in den
-`server`-Block der bestehenden `default.conf` — **nicht** als eigene Datei in
-`conf.d/`, ein `location` ohne umgebenden `server` lässt nginx nicht starten:
-
-```nginx
-    location /drift/ {
-        alias /usr/share/nginx/html/drift/;
-        index index.html;
-        autoindex off;
-
-        # Einmal täglich neu. Ohne das zeigt ein Browser die Seite von gestern
-        # und niemand merkt, dass der Sweep längst weitergelaufen ist.
-        add_header Cache-Control "no-cache, must-revalidate";
-    }
-```
-
-Ändert man die `default.conf`, muss auch sie gemountet sein, sonst ist sie nach
-dem nächsten Recreate wieder die des Images:
-
-```yaml
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-```
-
-Prüfen, bevor neu geladen wird — eine kaputte Konfiguration nimmt den ganzen
-nginx mit, und auf diesen Hosts hängen andere Dienste daran:
-
-```bash
-docker exec nginx nginx -t && docker exec nginx nginx -s reload
-```
-
-Im Job steuern das drei Parameter: `PUBLISH_PAGE`, `PAGE_HOST` und `PAGE_DIR`.
-Neben `index.html` landet `drift.json` im selben Verzeichnis — wer die Zahlen
-weiterverarbeiten will, muss dann kein HTML auseinandernehmen.
+Antwortet die Instanz nicht mit `2xx`, wird der Build gelb: die Zahlen sind
+archiviert, nur gehört hat sie niemand.
 
 ### Der Flow, der darauf reagiert
 
 **Ein Flow für die ganze Estate**, nicht einer je Instanz: die `drift.json`
 enthält alle 18 Zeilen, der Flow vergleicht sie am Stück. Er läuft auf
-`dpn-test`, weil eine Workbench genau dafür da ist — jede andere Instanz täte es
-auch, es muss nur eine sein.
+`dpn-test`, weil eine Workbench genau dafür da ist.
 
 Gebaut wie jeder andere Tab — `nr.py edit dpn-test`, normalisieren, committen,
-deployen. Fünf Nodes reichen:
+deployen. Fünf Nodes:
 
-1. **`inject`**, alle 5 Minuten, zusätzlich „einmal nach 0,1 s" — damit der Flow
-   nach einem Neustart sofort den letzten Stand kennt.
-2. **`file in`**, `/data/drift/drift.json`, Ausgabe „a single utf8 string".
-3. **`json`**, zu einem Array geparst.
-4. **`function`**, die den vorigen Stand vergleicht und nur dann weiterreicht,
-   wenn sich etwas geändert hat:
+1. **`http in`**, Methode `POST`, URL `/drift`.
+2. **`http response`**, Statuscode 204 — **direkt an den `http in` gehängt**.
+   Ohne Antwort wartet `curl` bis in den Timeout und der Job wird grundlos gelb.
+3. **`function`**, die den vorigen Stand vergleicht und nur bei Änderung
+   weiterreicht:
 
    ```javascript
    const now = {};
@@ -283,20 +230,29 @@ deployen. Fünf Nodes reichen:
    return msg;
    ```
 
-5. **Die Benachrichtigung** — `e-mail` (im Image von `dpn-test` vorhanden), ein
+4. **Die Benachrichtigung** — `e-mail` (im Image von `dpn-test` vorhanden), ein
    `mqtt out` auf ein Topic, das ohnehin jemand liest, oder zum Ausprobieren
    erst einmal ein `debug`-Node.
 
-Zum Testen ohne auf den nächsten Jenkins-Lauf zu warten: die Datei von Hand
-verändern (`docker exec -u 0 node-red-test sh -c 'sed -i s/clean/drifted/
-/data/drift/drift.json'`) und den `inject` drücken. Beim nächsten echten Lauf
-überschreibt Jenkins sie wieder.
+`flow.get`/`flow.set` liegen im Speicher: nach einem Neustart der Instanz ist der
+Vergleichsstand leer und die erste Nachricht danach entfällt. Wer das nicht will,
+stellt in `settings.js` `contextStorage` auf eine Datei um — das ist eine
+`settings.js`-Änderung und damit ein Container-Neustart.
+
+Zum Testen ohne auf den nächsten Jenkins-Lauf zu warten: den Job von Hand starten,
+oder mit `curl` gegen denselben Endpunkt eine veränderte Datei schicken.
 
 **Die Instanz, die überwacht, wird selbst mit überwacht.** `dpn-test` steht in
 derselben `drift.json`, und sobald dort ein Tab läuft, meldet der Sweep die
 Instanz als `drifted`, bis der Flow in Git steht. Das ist kein Sonderfall — es
 ist dieselbe Schleife wie für jeden anderen Tab, und der erste echte Durchlauf
 davon.
+
+**Und der Melder ist bewusst nicht die einzige Meldung.** Fällt die Instanz aus,
+die den Webhook empfängt, sagt niemand Bescheid — genau der Ausfallmodus, den
+eine Überwachung nicht haben darf. Das Gegenmittel ist der Build-Status: der Job
+wird gelb, wenn der POST nicht ankommt, und Jenkins' eigene Benachrichtigung
+hängt daran. Der Flow ist die flexible Auswertung, nicht die Aufsicht.
 
 ## Was bewusst nicht geht
 

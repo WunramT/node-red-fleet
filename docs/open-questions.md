@@ -60,9 +60,10 @@ The estate is live; these are what the plan that got it there had not finished.
   result into one static page; both land as build artifacts. What is left is a
   place to put `public/index.html` where the team reaches it without opening
   Jenkins — GitLab Pages, or the nginx that already runs on these hosts. The
-  The publishing step exists — `PAGE_HOST` and `PAGE_DIR` put it in a directory
-  an nginx serves — so what is left is one bind mount on whichever host should
-  carry the URL (`betrieb.md`, "Die Seite veröffentlichen").
+  It is kept as a Jenkins artifact per build, which is a history but needs a
+  login. Giving it a URL anyone can open is what is left, and deliberately not
+  done by writing into a host: publishing a static page that way is ordinary,
+  but this job writes nothing that outlives it (`betrieb.md`).
 - **The palette path has never run for real.** Flow deploys are proven daily;
   the second transport — image rebuild plus `DEPLOY_PALETTE=true` — has not been
   exercised end to end. Do it once on a workbench, outside core hours, because

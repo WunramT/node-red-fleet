@@ -1,5 +1,14 @@
 // Scheduled drift sweep: what is each instance running, and is it what Git says?
 //
+// Nothing of this run survives on any host. The sweep and the rendering happen
+// in a directory under /tmp that post{} removes, the result is kept in Jenkins
+// as drift.json and index.html, and the one thing that leaves the pipeline is a
+// POST to a Node-RED endpoint — where a flow decides what to do with it. An
+// earlier version copied the page into an nginx directory and the JSON into an
+// instance's /data; publishing a static page that way is ordinary, but writing
+// into a running application's data directory is not, and the watchdog then
+// lived inside one of the things it watches.
+//
 // This job never writes to an instance. It reads, renders and publishes —
 // decision 9 (drift-check is read-only) and decision 11 (the visibility layer
 // is a report, not a control plane). There is no deploy parameter here on
@@ -43,16 +52,14 @@ pipeline {
     }
 
     parameters {
-        booleanParam(name: 'PUBLISH_TO_WORKBENCH', defaultValue: true,
-            description: 'Also drop drift.json into the workbench instance that watches it (dpn-test).')
-        string(name: 'WATCHER_INSTANCE', defaultValue: 'dpn-test',
-            description: 'The instance whose /data receives drift.json. Its flow decides what to do with it.')
-        booleanParam(name: 'PUBLISH_PAGE', defaultValue: true,
-            description: 'Also copy the rendered page to a directory an nginx serves.')
-        string(name: 'PAGE_HOST', defaultValue: 'dpn-svr-iot',
-            description: 'Host whose nginx serves the page. Must be in the host map below.')
-        string(name: 'PAGE_DIR', defaultValue: '/home/iot/Base_Container/drift',
-            description: 'Directory on that host, bind-mounted into its nginx as /usr/share/nginx/html/drift.')
+        string(name: 'RENDER_HOST', defaultValue: 'dpn-svr-iot',
+            description: 'Host that renders the page. It needs python3, which the controller has not; nothing is left there — the run deletes its own directory.')
+        string(name: 'WEBHOOK_INSTANCE', defaultValue: 'dpn-test',
+            description: 'Node-RED instance to POST the result to, resolved through registry.yml. Empty switches the webhook off.')
+        string(name: 'WEBHOOK_PATH', defaultValue: '/drift',
+            description: 'The http in endpoint on that instance. Under httpNodeRoot, not the admin root.')
+        string(name: 'WEBHOOK_TOKEN_CREDENTIAL', defaultValue: '',
+            description: 'Optional Jenkins secret-text credential, sent as X-Drift-Token so the flow can reject anything else. Empty means no header.')
     }
 
     environment {
@@ -157,9 +164,9 @@ pipeline {
                     // it now needs nothing from: this stage builds the JSON, and the
                     // page is made where the rest of the work already happens.
                     def remote = null
-                    for (r in VISITED) { if (r.name == params.PAGE_HOST) { remote = r } }
+                    for (r in VISITED) { if (r.name == params.RENDER_HOST) { remote = r } }
                     if (!remote) {
-                        echo "!! ${params.PAGE_HOST} was not reached in this run — no page rendered"
+                        echo "!! ${params.RENDER_HOST} was not reached in this run — no page rendered"
                         currentBuild.result = 'UNSTABLE'
                     } else {
                         sshPut remote: remote, from: 'drift.json', into: "${REMOTE_DIR}/"
@@ -192,67 +199,44 @@ pipeline {
             }
         }
 
-        stage('Publish the page') {
-            when { expression { params.PUBLISH_PAGE } }
+        stage('Notify Node-RED') {
+            when { expression { params.WEBHOOK_INSTANCE?.trim() } }
             steps {
                 script {
-                    // A loop, not find(): every GDK collection method is its own
-                    // approval in the sandbox, and this job is meant to run without
-                    // an administrator clicking anything.
+                    def target = null
+                    for (i in REGISTRY.instances) {
+                        if (i.name == params.WEBHOOK_INSTANCE) { target = i }
+                    }
+                    if (!target) {
+                        error("No instance named '${params.WEBHOOK_INSTANCE}' in registry.yml")
+                    }
+
                     def remote = null
-                    for (r in VISITED) { if (r.name == params.PAGE_HOST) { remote = r } }
+                    for (r in VISITED) { if (r.name == target.host) { remote = r } }
                     if (!remote) {
-                        // Render already said so and already went amber; saying it
-                        // twice in one build reads like two faults.
+                        echo "!! ${target.host} was not reached in this run — no webhook sent"
+                        currentBuild.result = 'UNSTABLE'
                         return
                     }
-                    // Onto the host, not into the nginx container: a `docker cp`
-                    // lives in that container's write layer and is gone the next
-                    // time it is recreated. The directory is bind-mounted, so the
-                    // page survives a pull, a restart and a compose up.
-                    //
-                    // Both files are already on this host — the page was rendered
-                    // here — so this moves them into place rather than uploading them
-                    // again. The raw sweep goes beside the page: whoever wants to
-                    // graph it or diff two days should not have to scrape HTML.
-                    sshCommand remote: remote, command: """
-                        set -e
-                        mkdir -p ${params.PAGE_DIR}
-                        cp ${REMOTE_DIR}/index.html ${REMOTE_DIR}/drift.json ${params.PAGE_DIR}/
-                        chmod 644 ${params.PAGE_DIR}/index.html ${params.PAGE_DIR}/drift.json
-                    """
-                    echo "page: http://${params.PAGE_HOST}/drift/"
-                }
-            }
-        }
 
-        stage('Publish to the watcher') {
-            when { expression { params.PUBLISH_TO_WORKBENCH } }
-            steps {
-                script {
-                    def watcher = null
-                    for (i in REGISTRY.instances) { if (i.name == params.WATCHER_INSTANCE) { watcher = i } }
-                    if (!watcher) {
-                        error("No instance named '${params.WATCHER_INSTANCE}' in registry.yml")
-                    }
-                    def remote = null
-                    for (r in VISITED) { if (r.name == watcher.host) { remote = r } }
-                    if (!remote) {
-                        error("${watcher.host} was not reached in this run, so there is nowhere to publish")
-                    }
-
+                    // POSTed from the instance's own host, the way deploy.py reaches
+                    // it (decision 10): the container address is resolved there, so
+                    // this needs no published port, no proxy path and no network
+                    // route Jenkins does not already have. The file goes into the
+                    // run's own directory under /tmp, which post{} deletes — nothing
+                    // is left on the host.
                     sshPut remote: remote, from: 'drift.json', into: "${REMOTE_DIR}/"
-                    // Into the container rather than onto the bind mount: /data
-                    // belongs to the runtime's uid and the SSH login is not it, so a
-                    // plain copy would need sudo. `docker cp` writes as root inside,
-                    // the mode comes across, and the flow reads it as any other file.
-                    sshCommand remote: remote, command: """
-                        set -e
-                        chmod 644 ${REMOTE_DIR}/drift.json
-                        docker exec -u 0 ${watcher.compose_service} mkdir -p /data/drift
-                        docker cp ${REMOTE_DIR}/drift.json ${watcher.compose_service}:/data/drift/drift.json
-                    """
-                    echo "drift.json is at /data/drift/drift.json in ${watcher.name}"
+
+                    def header = ''
+                    if (params.WEBHOOK_TOKEN_CREDENTIAL?.trim()) {
+                        withCredentials([string(credentialsId: params.WEBHOOK_TOKEN_CREDENTIAL,
+                                                variable: 'DRIFT_TOKEN')]) {
+                            header = "-H 'X-Drift-Token: ${DRIFT_TOKEN}'"
+                            postDrift(remote, target, header)
+                        }
+                    } else {
+                        postDrift(remote, target, header)
+                    }
                 }
             }
         }
@@ -273,6 +257,35 @@ pipeline {
 }
 
 // ---------------------------------------------------------------------------
+
+void postDrift(Map remote, Map target, String header) {
+    // Node-RED serves `http in` under httpNodeRoot, which is not admin_root: the
+    // admin API may live under /node-red-test while the endpoint answers at the
+    // root. So the path is a parameter and not derived from the registry.
+    def url = "http://\$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${target.compose_service}):1880${params.WEBHOOK_PATH}"
+    // sshCommand returns the command's stdout — there is no returnStdout on
+    // this step, and passing one is a parameter the plugin rejects.
+    //
+    // failOnError plus `|| echo 000`, because a refused connection is exactly
+    // the case this reports: with `set -e` and no fallback the step would
+    // throw, and an instance that is simply not listening would fail a sweep
+    // whose own numbers are already complete.
+    def code = sshCommand remote: remote, failOnError: false, command: """
+        cd ${REMOTE_DIR}
+        curl -sS -o /dev/null -w '%{http_code}' -X POST \\
+             -H 'Content-Type: application/json' ${header} \\
+             --data-binary @drift.json "${url}" || echo 000
+    """
+    code = (code ?: '000').trim()
+    echo "webhook ${target.name}${params.WEBHOOK_PATH} -> ${code}"
+    if (!code.startsWith('2')) {
+        // Not a failed sweep: the numbers are archived and the page is rendered.
+        // A flow that did not hear about them is worth a colour, not a red build.
+        currentBuild.result = 'UNSTABLE'
+        echo "!! the instance did not accept the webhook. Is there an `http in` node on " +
+             "${params.WEBHOOK_PATH}, and is the flow deployed?"
+    }
+}
 
 void sweepHost(Map hostConfig, String host, List list) {
     if (!hostConfig) {
