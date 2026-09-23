@@ -45,7 +45,7 @@ That holds under decision 15 too: a `*-test` instance is a workbench with its ow
 
 ## Variable resolution
 
-`global_variables`, then `variables` on top. The merged map describes what an instance's environment should hold — **no tool writes it into a container**. What the container gets is what its service in the host's compose file names, by hand (`betrieb.md`, "Passwörter, die der Flow aus der Umgebung liest"). Secrets never go here in any case: this file is committed.
+`global_variables`, then `variables` on top. The merged map describes what an instance's environment should hold — **no tool writes it into a container**. What the container gets is what its service in the host's compose file names, by hand (`runbook.md`, "Passwords a flow reads from the environment"). Secrets never go here in any case: this file is committed.
 
 It reaches the flow one way only: **Node-RED's own `${ENV}` substitution**, which resolves whole property values inside the running instance. A committed flow containing `${MQTT_BROKER_HOST}` therefore still opens in the editor.
 

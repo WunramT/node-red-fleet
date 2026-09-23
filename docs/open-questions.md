@@ -63,7 +63,7 @@ The estate is live; these are what the plan that got it there had not finished.
   It is kept as a Jenkins artifact per build, which is a history but needs a
   login. Giving it a URL anyone can open is what is left, and deliberately not
   done by writing into a host: publishing a static page that way is ordinary,
-  but this job writes nothing that outlives it (`betrieb.md`).
+  but this job writes nothing that outlives it (`runbook.md`, "The drift job").
 - **The palette path has never run for real.** Flow deploys are proven daily;
   the second transport — image rebuild plus `DEPLOY_PALETTE=true` — has not been
   exercised end to end. Do it once on a workbench, outside core hours, because
@@ -90,6 +90,6 @@ is what the team sees, the third is a proof.
 | `wag-svr-lin01` or `wag-svr-lin01n`? | `wag-svr-lin01`, rebuilt the week before the inventory — current baseline | [`architecture.md`](architecture.md) |
 | Does this repo become the scaffold? | Yes; the template stack has been removed | [`architecture.md`](architecture.md) |
 | Would a UI help? | Yes, as a static read-only drift report — not a control plane | decision 11 |
-| srem-test authenticates but does not serve its flow? | The reading was wrong, not the runtime: it was measured from a dev container, where MTU 1500 over a smaller tunnel lets the token exchange through (a few hundred bytes) and drops the flow. `srem-test` is in Git and deploys like the rest | `betrieb.md`, "Vom Arbeitsplatz aus" |
-| Which FlowFuse-only nodes do the two flows use? | None that survive the move: no `project link` in either, so nothing routed through FlowFuse's broker and nothing had to be rebuilt on NATS or MQTT. Both are cut over and run from Git | `betrieb.md` |
+| srem-test authenticates but does not serve its flow? | The reading was wrong, not the runtime: it was measured from a dev container, where MTU 1500 over a smaller tunnel lets the token exchange through (a few hundred bytes) and drops the flow. `srem-test` is in Git and deploys like the rest | `runbook.md`, "Reaching an instance from a workstation" |
+| Which FlowFuse-only nodes do the two flows use? | None that survive the move: no `project link` in either, so nothing routed through FlowFuse's broker and nothing had to be rebuilt on NATS or MQTT. Both are cut over and run from Git | [`architecture.md`](architecture.md), "FlowFuse, and why it is gone" |
 | The Jenkins credentials? | Created for the 16 instances that were migrated; `slu-prod` and `slu-test` are the four ids still owed, since they only recently gained an app | question 4 above |
