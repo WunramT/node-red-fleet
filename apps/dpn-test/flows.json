@@ -1,1 +1,76 @@
-[]
+[
+  {
+    "id": "390b40e6225d9e8c",
+    "type": "tab",
+    "label": "Flow 1",
+    "info": "",
+    "disabled": false,
+    "env": []
+  },
+  {
+    "id": "1db4abe9f1209839",
+    "type": "http response",
+    "z": "390b40e6225d9e8c",
+    "name": "",
+    "headers": {},
+    "statusCode": "204",
+    "x": 740,
+    "y": 160,
+    "wires": []
+  },
+  {
+    "id": "9e2eafcc8c48ac6b",
+    "type": "debug",
+    "z": "390b40e6225d9e8c",
+    "name": "debug 1",
+    "active": true,
+    "complete": "true",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "targetType": "full",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 860,
+    "y": 420,
+    "wires": []
+  },
+  {
+    "id": "cfb34dcf0237af33",
+    "type": "http in",
+    "z": "390b40e6225d9e8c",
+    "name": "",
+    "method": "post",
+    "swaggerDoc": "",
+    "upload": false,
+    "url": "/drift",
+    "x": 360,
+    "y": 160,
+    "wires": [
+      [
+        "1db4abe9f1209839",
+        "ef92131525a49c8f"
+      ]
+    ]
+  },
+  {
+    "id": "ef92131525a49c8f",
+    "type": "function",
+    "z": "390b40e6225d9e8c",
+    "name": "function 1",
+    "finalize": "",
+    "func": "const now = {};\nfor (const row of msg.payload) {\n    // Der Vergleichsschlüssel ist Zustand plus Umfang: aus \"clean\" wird\n    // \"drifted\", und aus 4 geänderten Zeilen werden 40 — beides ist eine\n    // Änderung, eine unveränderte Drift ist keine.\n    now[row.instance] = row.state === \"drifted\"\n        ? `drifted:${row.changed_lines}`\n        : row.state;\n}\nconst before = flow.get(\"driftState\") || {};\nflow.set(\"driftState\", now);\n\n// Beim allerersten Lauf ist alles \"neu\" — das ist kein Ereignis, sondern\n// der Anfang der Messung.\nif (!Object.keys(before).length) return null;\n\nconst changed = Object.keys(now)\n    .filter(k => now[k] !== before[k])\n    .map(k => `${k}: ${before[k] || \"unbekannt\"} → ${now[k]}`);\n\nif (!changed.length) return null;\nmsg.payload = changed.join(\"\\n\");\nmsg.topic = `Node-RED Drift: ${changed.length} Änderung(en)`;\nreturn msg;\n",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 580,
+    "y": 320,
+    "wires": [
+      [
+        "9e2eafcc8c48ac6b"
+      ]
+    ]
+  }
+]
