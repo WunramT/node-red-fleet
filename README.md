@@ -135,7 +135,7 @@ container `nr.py` stops with that exact command instead of failing in compose.
 | `registry.yml` | What runs where. Every tool reads it; nothing hard-codes an instance. |
 | `apps/<app>/` | `flows.json` as deployed, `package.json` as the palette, its `Dockerfile`. |
 | `scripts/nodered.py` | The shared library: instance list, addresses, Admin API, image tags. |
-| `docs/betrieb.md` | Was mit dem laufenden System möglich ist, auf Deutsch — Einstieg für den Alltag. |
+| `docs/handover.md` | What the system does and how to run it, on one page — the overview to hand to someone new. |
 | `docs/runbook.md` | Operating it: backup gate, deploys, `409` recovery, moving an instance. |
 | `docs/architecture.md` | The system and the measured facts about the estate. |
 | `docs/decisions.md` | Why it is built this way. Read before proposing otherwise. |

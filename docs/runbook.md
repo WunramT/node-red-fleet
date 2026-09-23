@@ -281,7 +281,7 @@ That is where they answer, not a promise that the answer arrives. Measured
 host itself returned immediately. The container bridge sits at MTU 1500 over a
 smaller tunnel, so anything past one segment is dropped and nothing says so.
 It reads as a fleet of wedged runtimes and is not one: the VPN adapter is 1350
-and the container 1500 — `betrieb.md`, "Vom Arbeitsplatz aus". `.devcontainer/` now
+and the container 1500 — "Reaching an instance from a workstation" below. `.devcontainer/` now
 lowers the interface at start, so a rebuilt dev container sweeps normally;
 `check`, `capture` and `status` need no engine at all, so they also just run
 outside it.
@@ -627,6 +627,29 @@ destination config nodes alone.
 
 Note that `*-prod` and `*-test` on one host are **different applications**, not two stages of one — separate flow files, separate config nodes, separate brokers. They are connected only where someone connects them deliberately, one tab at a time, through `promote` (above). A change does not flow from test to prod on its own.
 
+## Passwords a flow reads from the environment
+
+Some nodes — `node-red-contrib-postgresql` first among them — keep their
+password in the flow rather than in the credential store. Those fields are set
+to `env`: the flow carries only the **name** of the variable, and the value
+comes from the container's environment.
+
+Which means: **the variable has to be in the compose service before the flow is
+deployed.** If it is missing, Node-RED connects with an empty password, the
+deploy still reports success, and the database is simply unreachable. And
+because the process environment is built at start, changing a variable is a
+container restart, not a flow deploy.
+
+Check without revealing a value:
+
+```bash
+docker exec <service> printenv | cut -d= -f1 | sort
+```
+
+`registry.yml: variables` describes what an instance's environment should hold.
+No tool writes it into a container — the host's compose file does, by hand
+(`registry.md`).
+
 ## Drift check
 
 ```
@@ -642,3 +665,177 @@ Read-only: `GET /flows`, normalize, diff against Git, report. It never writes to
 Exit 0 when clean, 1 when an instance is unreachable, and 3 only with `--fail-on-drift` — for a scheduled check that should go red. Without the flag drift is reported and the exit stays 0, because drift is information, not a failure.
 
 An unreachable instance does not stop the sweep; it is one row in the report. `--json` writes the full report, diffs included, which is what the visibility page renders (decision 11).
+
+## The drift job
+
+`Jenkinsfile.drift`, cron `H 6 * * *`. One `drift.json` over the whole estate,
+one page rendered from it — both stay in Jenkins — and a POST to a Node-RED
+endpoint where one flow decides what happens next.
+
+```
+cron('H 6 * * *')
+   └─ one SSH session per host: drift-check.py --host <host> --json
+        └─ collect the fragments  →  drift.json
+             ├─ render-drift.py on RENDER_HOST  →  index.html
+             ├─ Jenkins artifacts: drift.json + index.html  (the history)
+             └─ POST to http://<container>:1880/drift  →  the flow on dpn-test
+```
+
+**Nothing is left on any host.** Sweep and render run in a directory under
+`/tmp` that the `post` block removes again; the result lives in Jenkins. An
+earlier version put the page in an nginx directory and the JSON into an
+instance's `/data`. The first of those is ordinary — every pipeline publishes a
+static page — the second is not: it couples CI to the data directory of a
+running application, and it put the watchdog inside one of the things it
+watches.
+
+**Why per host and not centrally:** `drift-check` reaches a runtime through
+Docker on the machine it runs on (decision 10). Called centrally, `--all`
+reports every instance `unreachable`. That is what `--host` is for. The loop is
+inside the job, not an operator step: ten SSH sessions, ten fragments, one file.
+
+**Why drift does not turn the run red:** drift is somebody's browser edit that
+is not in Git yet — information, not a failure (decision 9). The job goes
+UNSTABLE when a **host was unreachable** or the **webhook was not accepted**;
+the build description then names what is missing, and the page shows the gap
+instead of omitting it.
+
+**Rendering happens on `RENDER_HOST`, not on the Jenkins agent.** The controller
+has no `python3`; every site host has one, because `deploy.py` and
+`drift-check.py` run there. The one machine the pipeline must not install
+anything on therefore needs nothing.
+
+### The webhook
+
+Four parameters drive it:
+
+| Parameter | Meaning |
+|---|---|
+| `WEBHOOK_INSTANCE` | target instance from `registry.yml`. Empty switches the webhook off |
+| `WEBHOOK_PATH` | the `http in` endpoint, default `/drift` |
+| `WEBHOOK_TOKEN_CREDENTIAL` | optional Jenkins credential (secret text), sent as `X-Drift-Token` |
+| `RENDER_HOST` | where the page is built |
+
+The POST goes **from the instance's own host**, the same way `deploy.py` reaches
+it: the container address is resolved there, so no published port, no proxy
+path and no network route Jenkins does not already have.
+
+One instance receives the result for all 18 — the payload is the whole
+`drift.json`, not one row.
+
+`http in` sits under `httpNodeRoot`, **not** under `admin_root`. Measured on
+`dpn-test`: an `http in` node with URL `/drift` answers on
+**`/node-red-test/drift`**. That is why `WEBHOOK_PATH` is a parameter and is not
+derived from the registry — it must carry the full path the runtime actually
+serves.
+
+If the instance does not answer `2xx` the build goes UNSTABLE: the numbers are
+archived, nobody heard them.
+
+### The flow that reacts to it
+
+**One flow for the whole estate**, not one per instance. It runs on `dpn-test`,
+because that is what a workbench is for, and it is built like any other tab —
+`nr.py edit dpn-test`, normalize, commit, deploy. Five nodes:
+
+1. **`http in`**, method `POST`, URL `/drift`.
+2. **`http response`**, status 204 — wired **straight off the `http in`**.
+   Without a reply `curl` waits out its timeout and the job goes yellow for
+   nothing.
+3. **`function`**, which compares against the previous picture and only passes
+   on a change. `node.status` is not decoration: on "nothing changed" the node
+   deliberately emits nothing, and without a status line that is
+   indistinguishable from broken.
+
+   ```javascript
+   const rows = Array.isArray(msg.payload) ? msg.payload : [];
+   const now = {};
+   let drifted = 0;
+   for (const row of rows) {
+       // The comparison key is state plus extent: "clean" becoming "drifted" is
+       // a change, and so is 4 changed lines becoming 40. Unchanged drift is not.
+       now[row.instance] = row.state === "drifted"
+           ? `drifted:${row.changed_lines}`
+           : row.state;
+       if (row.state === "drifted") { drifted++; }
+   }
+
+   const before = flow.get("driftState") || {};
+   flow.set("driftState", now);
+
+   const stamp = new Date().toTimeString().slice(0, 5);
+   const seen = `${stamp} · ${rows.length} instances, ${drifted} drifted`;
+
+   // On the very first run everything is "new" — that is the start of the
+   // measurement, not an event. Same after a restart: the context lives in
+   // memory, so the measurement starts over there.
+   if (!Object.keys(before).length) {
+       node.status({ fill: "grey", shape: "ring", text: `${seen} · baseline` });
+       return null;
+   }
+
+   const changed = Object.keys(now)
+       .filter(k => now[k] !== before[k])
+       .map(k => `${k}: ${before[k] || "unknown"} → ${now[k]}`);
+
+   if (!changed.length) {
+       node.status({ fill: "green", shape: "dot", text: `${seen} · unchanged` });
+       return null;
+   }
+
+   node.status({ fill: "yellow", shape: "dot", text: `${seen} · ${changed.length} change(s)` });
+   msg.payload = changed.join("\n");
+   msg.topic = `Node-RED drift: ${changed.length} change(s)`;
+   return msg;
+   ```
+
+4. **The notification** — `e-mail` (present in the `dpn-test` image), an
+   `mqtt out` onto a topic somebody already reads, or a `debug` node to start
+   with.
+
+`flow.get`/`flow.set` live in memory: after a restart the comparison state is
+empty and the first message after it is skipped. To keep it across restarts,
+point `contextStorage` at a file in `settings.js` — which is a `settings.js`
+change, and therefore a container restart.
+
+### Seeing that it works
+
+Two POSTs with a difference between them — the first sets the baseline, the
+second reports:
+
+```bash
+ssh dpn-svr-iot
+IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' node-red-test)
+U=http://$IP:1880/node-red-test/drift
+
+curl -sS -X POST -H 'Content-Type: application/json' \
+     -d '[{"instance":"wag-prod","state":"clean"},{"instance":"cho-prod","state":"clean"}]' $U
+
+curl -sS -X POST -H 'Content-Type: application/json' \
+     -d '[{"instance":"wag-prod","state":"drifted","changed_lines":7},{"instance":"cho-prod","state":"clean"}]' $U
+```
+
+The second call yields `wag-prod: clean → drifted:7`. The next real sweep puts
+the state back to reality.
+
+**If it stays silent, check three things, in this order:**
+
+1. Is there a status line under the `function` node? Then it is working, and
+   nothing changed.
+2. Was it the first POST after a deploy or a restart? A flow deploy resets the
+   context of the tabs it changed, and the context is in memory — the
+   measurement starts over.
+3. Is the `http response` node wired **to the `http in`** rather than behind the
+   function? Behind it, it never gets a message on "nothing changed", the
+   request stays open, and `curl` runs into its timeout.
+
+**The watching instance is watched too.** `dpn-test` is a row in the same
+`drift.json`, and as soon as a tab runs there the sweep reports it `drifted`
+until the flow is in Git. That is not a special case — it is the same loop as
+for any other tab, and the first real pass through it.
+
+**The flow is deliberately not the only alarm.** If the instance receiving the
+webhook is down, nobody would be told — exactly the failure mode a monitor must
+not have. The counterweight is the build status: the job goes UNSTABLE when the
+POST does not arrive, and Jenkins' own notification hangs off that. The flow is
+the flexible evaluation, not the supervision.

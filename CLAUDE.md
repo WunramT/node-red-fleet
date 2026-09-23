@@ -9,7 +9,7 @@ anything non-obvious:
 - [`docs/decisions.md`](docs/decisions.md) holds closed decisions. Read it before proposing a different approach.
 - [`docs/open-questions.md`](docs/open-questions.md) names what is unknown and the command that answers it.
 - [`docs/registry.md`](docs/registry.md) is the `registry.yml` field reference.
-- [`docs/betrieb.md`](docs/betrieb.md) is what can be done with the running system, in German — the day-to-day view, and the procedure for taking on a new instance.
+- [`docs/handover.md`](docs/handover.md) is the one-page overview of what the running system does and how to run it — the handover and Confluence source.
 - [`docs/runbook.md`](docs/runbook.md) is how it is operated.
 
 ## Constraints
