@@ -241,11 +241,11 @@ The return direction is what keeps this from decaying. A pipeline that only push
 
 ## Visibility
 
-Every instance now runs its flow out of Git, and there is still no single place to *see* that — 18 runtimes across 10 servers, and the answer lives in a CLI. That gap is real and worth closing — as a **report**, not a control plane. It is the one piece of this architecture that is designed and not yet built (`open-questions.md`).
+Every instance now runs its flow out of Git, and there is still no single place to *see* that — 18 runtimes across 10 servers, and the answer lives in a CLI. That gap is being closed as a **report**, not a control plane. The daily half of it runs; a browsable current picture does not (`open-questions.md`).
 
-`drift-check.py` sweeps every instance, normalizes what it gets, diffs against Git, and emits JSON. CI renders that JSON into a static HTML page and publishes it. It answers the questions that matter — which instances match Git, which drifted, which flow version and image tag each one runs, when it was last deployed — and it answers them from Git plus a read-only sweep.
+`drift-check.py` sweeps every instance, normalizes what it gets, diffs against Git, and emits JSON. `Jenkinsfile.drift` does that across the estate every morning, keeps the merged `drift.json` as the build artifact, and POSTs it to one Node-RED flow, which reports what changed since the last run. It answers the questions that matter — which instances match Git, which drifted, which flow version and image tag each one runs — from Git plus a read-only sweep, and it answers them without anything to host.
 
-What it deliberately does not do is offer a button. Deploys go through the pipeline, where they are reviewed and recorded. A UI that writes is decision 1 rebuilt in a browser, and it brings back the database, the backend and the auth layer that the static page needs none of. See decision 11 in [`decisions.md`](decisions.md).
+What it deliberately does not do is offer a button. Deploys go through the pipeline, where they are reviewed and recorded. A UI that writes is decision 1 rebuilt in a browser, and it brings back the database, the backend and the auth layer that a JSON file and a flow need none of. See decision 11 in [`decisions.md`](decisions.md).
 
 ## Inherited from the project template
 

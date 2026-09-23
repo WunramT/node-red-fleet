@@ -95,10 +95,10 @@ it, anything that changed the instance in between stops the write.
 ## Watching it
 
 `Jenkinsfile.drift` runs every morning: one SSH session per host, `drift-check`
-on each, the results merged into one `drift.json` and rendered into a static
-page. Both are kept as build artifacts, and the result is POSTed to a Node-RED
-endpoint where one flow decides what to do with it — today, a message when the
-picture changes.
+on each, the results merged into one `drift.json`. That file is kept as the
+build artifact, and POSTed to a Node-RED endpoint where one flow decides what to
+do with it — today, a message when the picture changes. The flow is the
+presentation; there is no page to host and no host with a second job.
 
 The job writes nothing that outlives it: no file on any host, no change to any
 instance. Drift does not make it red, because drift is somebody's browser edit
@@ -155,8 +155,9 @@ Three things, none of which stop anything running — the current list is in
 1. **Eight database passwords are switched to environment variables but not
    rotated.** The values are out of the flows and in the hosts, but the old ones
    are still live.
-2. **The drift page has no URL.** It is a build artifact per run, so reading it
-   means opening Jenkins. Giving it an address is deliberately not done by
+2. **There is no drift page.** The sweep's `drift.json` is a build artifact per
+   run and the flow reports the changes; nobody can browse the current picture
+   without opening Jenkins. Giving it an address is deliberately not done by
    writing onto a host.
 3. **The palette path has never run end to end.** Flow deploys are proven daily;
    the image rebuild plus restart has not been exercised once.

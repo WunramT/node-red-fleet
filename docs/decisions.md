@@ -73,6 +73,8 @@ The pull toward a real web application is understandable — the current state i
 
 Deploys stay in the pipeline, where they are reviewed and recorded. The page shows state.
 
+**How it was carried out:** as the daily sweep in `Jenkinsfile.drift`, whose `drift.json` is the build artifact and the payload of one POST to a Node-RED flow. The static page was built for a while and then dropped: rendering it needed `python3`, which the Jenkins controller has not, so the job named one site host and rendered there — a single machine every sweep then depended on, for an artifact that still needed a Jenkins login to open. The decision is unchanged and unbought: read-only, no button, no backend. What is still missing is an address for it, which is question 2 in [`open-questions.md`](open-questions.md).
+
 ## 12. FlowFuse is a migration source, not a deploy target — Closed, and carried out
 
 The two FlowFuse-managed servers are exported once into `apps/`, brought up as plain containers, and then deployed like every other instance. FlowFuse gets no transport, no `registry.yml` entry, no pipeline stage.

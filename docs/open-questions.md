@@ -55,15 +55,18 @@ The estate is live; these are what the plan that got it there had not finished.
   still in the history of any clone made before this repository was recreated.
   Rotating is one round of service edits per secret — the tool's output says
   which instances each one touches.
-- **The drift page is built and not published** (decision 11).
-  `Jenkinsfile.drift` sweeps every host daily and `render-drift.py` turns the
-  result into one static page; both land as build artifacts. What is left is a
-  place to put `public/index.html` where the team reaches it without opening
-  Jenkins — GitLab Pages, or the nginx that already runs on these hosts. The
-  It is kept as a Jenkins artifact per build, which is a history but needs a
-  login. Giving it a URL anyone can open is what is left, and deliberately not
-  done by writing into a host: publishing a static page that way is ordinary,
-  but this job writes nothing that outlives it (`runbook.md`, "The drift job").
+- **Nobody can browse the current picture without Jenkins** (decision 11).
+  `Jenkinsfile.drift` sweeps every host daily, keeps `drift.json` as the build
+  artifact, and POSTs it to the flow on `dpn-test`, which reports what changed.
+  That covers the change; it does not cover the question "what does the estate
+  look like right now", which still means opening the last build. The job
+  rendered a page for a while, on a named host because the Jenkins controller
+  has no `python3`; that traded one dependency for another and has been removed
+  (`runbook.md`, "The drift job"). A URL anyone can open is what is left, and it
+  will not be bought by writing onto a host — publishing a static page that way
+  is ordinary, but this job writes nothing that outlives it.
+  `scripts/render-drift.py` still turns a downloaded `drift.json` into that page
+  when somebody wants one.
 - **The palette path has never run for real.** Flow deploys are proven daily;
   the second transport — image rebuild plus `DEPLOY_PALETTE=true` — has not been
   exercised end to end. Do it once on a workbench, outside core hours, because
