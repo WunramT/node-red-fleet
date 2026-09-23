@@ -201,30 +201,48 @@ deployen. Fünf Nodes:
 2. **`http response`**, Statuscode 204 — **direkt an den `http in` gehängt**.
    Ohne Antwort wartet `curl` bis in den Timeout und der Job wird grundlos gelb.
 3. **`function`**, die den vorigen Stand vergleicht und nur bei Änderung
-   weiterreicht:
+   weiterreicht. `node.status` ist kein Beiwerk: der Node gibt bei „nichts
+   geändert" absichtlich nichts aus, und ohne Statuszeile ist das von „kaputt"
+   nicht zu unterscheiden.
 
    ```javascript
+   const rows = Array.isArray(msg.payload) ? msg.payload : [];
    const now = {};
-   for (const row of msg.payload) {
+   let drifted = 0;
+   for (const row of rows) {
        // Der Vergleichsschlüssel ist Zustand plus Umfang: aus "clean" wird
        // "drifted", und aus 4 geänderten Zeilen werden 40 — beides ist eine
        // Änderung, eine unveränderte Drift ist keine.
        now[row.instance] = row.state === "drifted"
            ? `drifted:${row.changed_lines}`
            : row.state;
+       if (row.state === "drifted") { drifted++; }
    }
+
    const before = flow.get("driftState") || {};
    flow.set("driftState", now);
 
-   // Beim allerersten Lauf ist alles "neu" — das ist kein Ereignis, sondern
-   // der Anfang der Messung.
-   if (!Object.keys(before).length) return null;
+   const stamp = new Date().toTimeString().slice(0, 5);
+   const seen = `${stamp} · ${rows.length} Instanzen, ${drifted} drifted`;
+
+   // Beim allerersten Lauf ist alles "neu" — das ist der Anfang der Messung,
+   // kein Ereignis. Dasselbe nach einem Neustart: der Kontext liegt im
+   // Speicher, also beginnt die Messung dort von vorn.
+   if (!Object.keys(before).length) {
+       node.status({ fill: "grey", shape: "ring", text: `${seen} · Startwert` });
+       return null;
+   }
 
    const changed = Object.keys(now)
        .filter(k => now[k] !== before[k])
        .map(k => `${k}: ${before[k] || "unbekannt"} → ${now[k]}`);
 
-   if (!changed.length) return null;
+   if (!changed.length) {
+       node.status({ fill: "green", shape: "dot", text: `${seen} · unverändert` });
+       return null;
+   }
+
+   node.status({ fill: "yellow", shape: "dot", text: `${seen} · ${changed.length} Änderung(en)` });
    msg.payload = changed.join("\n");
    msg.topic = `Node-RED Drift: ${changed.length} Änderung(en)`;
    return msg;
@@ -239,8 +257,43 @@ Vergleichsstand leer und die erste Nachricht danach entfällt. Wer das nicht wil
 stellt in `settings.js` `contextStorage` auf eine Datei um — das ist eine
 `settings.js`-Änderung und damit ein Container-Neustart.
 
-Zum Testen ohne auf den nächsten Jenkins-Lauf zu warten: den Job von Hand starten,
-oder mit `curl` gegen denselben Endpunkt eine veränderte Datei schicken.
+### Der Endpunkt liegt unter `httpNodeRoot`
+
+Gemessen auf `dpn-test`: der `http in`-Node mit der URL `/drift` antwortet auf
+**`/node-red-test/drift`** — `httpNodeRoot` ist dort nicht die Wurzel. Deshalb
+ist `WEBHOOK_PATH` ein Parameter und wird nicht aus `admin_root` abgeleitet; er
+muss den vollen Pfad enthalten, den die Runtime tatsächlich bedient.
+
+### Sehen, dass es funktioniert
+
+Zwei POSTs mit einem Unterschied dazwischen — der erste setzt den Startwert, der
+zweite meldet:
+
+```bash
+ssh dpn-svr-iot
+IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' node-red-test)
+U=http://$IP:1880/node-red-test/drift
+
+curl -sS -X POST -H 'Content-Type: application/json' \
+     -d '[{"instance":"wag-prod","state":"clean"},{"instance":"cho-prod","state":"clean"}]' $U
+
+curl -sS -X POST -H 'Content-Type: application/json' \
+     -d '[{"instance":"wag-prod","state":"drifted","changed_lines":7},{"instance":"cho-prod","state":"clean"}]' $U
+```
+
+Der zweite Aufruf ergibt `wag-prod: clean → drifted:7`. Danach setzt der echte
+Sweep den Stand wieder auf die Wirklichkeit.
+
+**Bleibt es still, sind drei Dinge zu prüfen**, in dieser Reihenfolge:
+
+1. Steht unter dem `function`-Node eine Statuszeile? Dann arbeitet er, und es
+   hat sich schlicht nichts geändert.
+2. War es der erste POST nach einem Deploy oder einem Neustart? Ein Flow-Deploy
+   setzt den Kontext der geänderten Tabs zurück, und der Kontext liegt im
+   Speicher — die Messung beginnt dann von vorn.
+3. Hängt der `http response`-Node **am `http in`** und nicht hinter der
+   Funktion? Hinter ihr bekommt er bei „nichts geändert" nie eine Nachricht,
+   die Anfrage bleibt offen, und `curl` läuft in den Timeout.
 
 **Die Instanz, die überwacht, wird selbst mit überwacht.** `dpn-test` steht in
 derselben `drift.json`, und sobald dort ein Tab läuft, meldet der Sweep die
