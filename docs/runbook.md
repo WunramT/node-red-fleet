@@ -374,6 +374,29 @@ Removing a module is therefore a manual edit of `apps/<app>/package.json`.
    new container starts on the flow that was just written, with the palette it
    needs. This restarts the container; the ingest gap is expected here.
 
+**Nothing is edited on the host.** The compose services take their image from an
+environment variable whose fallback is the tag pinned at the time:
+
+```yaml
+node-red-prod:
+  image: ${IMAGE_NODE_RED_PROD:-harbor.aks-infra.polipol-service.de/dap-node-red/wag-prod:5.0.1-1}
+```
+
+so the pipeline passes the tag from `registry.yml` into the `up -d` call, and
+`registry.yml` stays the only place a version is written. The variable name comes
+from the service: `node-red-prod` → `IMAGE_NODE_RED_PROD`.
+
+The fallback is why the pipeline checks afterwards what the container actually
+runs. If a host spells the variable differently, nothing fails — compose uses the
+baked-in tag, `up -d` reports success, and the instance comes back on the old
+palette, which surfaces much later as `Unrecognised node type` in a flow that
+deployed cleanly. The check turns that into a failed build naming both tags. To
+see what a host expects:
+
+```bash
+ssh <host> "grep -n 'image:' <compose_file>"
+```
+
 To see the new nodes in the local editor, `nr.py edit <inst> --baked` — but only
 after step 3, because `--baked` runs whatever `image_tag` names.
 

@@ -216,12 +216,36 @@ void deployInstance(Map inst, Map hosts) {
         """
 
         if (params.DEPLOY_PALETTE && !params.DRY_RUN) {
+            // The host compose files take the image from an environment
+            // variable with the currently pinned tag as the fallback:
+            //
+            //     image: ${IMAGE_NODE_RED_PROD:-harbor.../wag-prod:5.0.1-1}
+            //
+            // so the tag registry.yml names is passed in here, and nobody edits
+            // YAML on a host to change a version. The name is derived from the
+            // service: node-red-prod -> IMAGE_NODE_RED_PROD.
+            def imageVar = 'IMAGE_' + inst.compose_service.toUpperCase().replaceAll(/[^A-Z0-9]/, '_')
+
+            // That fallback is also why the result is checked. A host whose
+            // variable is spelled differently does not fail: compose quietly
+            // uses the baked-in tag, `up -d` reports success, and the instance
+            // comes back on the old palette — which then shows up as
+            // `Unrecognised node type` in a flow that deployed cleanly.
+            //
             // Named service, always. The compose file may hold others, and a
             // bare `docker compose up -d` would recreate them too.
             sshCommand remote: remote, command: """
                 set -e
                 docker pull ${inst.image_tag}
-                docker compose -f ${inst.compose_file} up -d ${inst.compose_service}
+                ${imageVar}='${inst.image_tag}' docker compose -f ${inst.compose_file} up -d ${inst.compose_service}
+                running=\$(docker inspect -f '{{.Config.Image}}' ${inst.compose_service})
+                if [ "\$running" != "${inst.image_tag}" ]; then
+                    echo "!! ${inst.compose_service} runs \$running"
+                    echo "!! expected ${inst.image_tag}"
+                    echo "!! does its compose service read ${imageVar}?"
+                    exit 1
+                fi
+                echo "${inst.compose_service} runs \$running"
             """
         }
     }
