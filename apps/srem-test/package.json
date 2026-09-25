@@ -5,6 +5,7 @@
   "dependencies": {
     "@flowfuse/nr-assistant": "~0.3.0",
     "@martip/node-red-xlsx": "~1.0.2",
+    "node-red-contrib-modbus": "5.60.2",
     "node-red-contrib-postgresql": "~0.14.2",
     "node-red-contrib-queue-gate": "~1.5.5",
     "node-red-contrib-ui-upload": "~0.8.1",
