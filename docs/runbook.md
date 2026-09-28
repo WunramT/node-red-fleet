@@ -352,8 +352,9 @@ Removing a module is therefore a manual edit of `apps/<app>/package.json`.
 
 1. Have the dependency in `apps/<app>/package.json` with an exact version —
    from the editor session, or written by hand. The editor session also raises
-   the palette-build suffix of that instance's `image_tag` in `registry.yml`,
-   because the two belong in one commit: CI pushes the tag it finds there, so
+   the palette-build suffix of that instance's `image_tag` in `registry.yml`
+   and regenerates `apps/build-image-pipeline.yml`, which embeds that tag twice
+   and which CI checks for staleness. All three belong in one commit: CI pushes the tag it finds there, so
    a palette change with an unchanged tag replaces the image the instance runs
    instead of building a new one. `validate-registry.py --changed-since <ref>`
    fails on exactly that. CI compares against the **default branch** — a merge
