@@ -644,6 +644,20 @@ def act(action: str, inst: dict | None, cfg: dict, baked: bool = False,
                         print(f"  image_tag: {nodered.tag_short(bumped[0])} -> "
                               f"{nodered.tag_short(bumped[1])} in registry.yml, so CI builds a\n"
                               f"  new tag instead of replacing the one this instance runs.")
+                        # The generated build pipeline carries that tag in two
+                        # places, and CI fails on a stale one. Raising the tag
+                        # without regenerating turns a finished palette change
+                        # into a red pipeline at the next push, which is a poor
+                        # way to learn about a file you did not know existed.
+                        gen = subprocess.run([PY, "scripts/gen-image-pipeline.py"],
+                                             cwd=ROOT, capture_output=True, text=True)
+                        if gen.returncode == 0:
+                            print("  apps/build-image-pipeline.yml regenerated for the new tag.")
+                        else:
+                            print(f"  apps/build-image-pipeline.yml could NOT be regenerated:\n"
+                                  f"  {gen.stderr.strip() or gen.stdout.strip()}\n"
+                                  f"  Run it before pushing, or CI stops on a stale pipeline:\n"
+                                  f"    python3 scripts/gen-image-pipeline.py")
                     else:
                         print(f"  image_tag for {inst['name']} does not end in -<number>, so the\n"
                               f"  palette build could not be raised. Do it by hand before pushing:\n"
