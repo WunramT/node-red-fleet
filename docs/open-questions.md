@@ -80,16 +80,16 @@ is what the team sees, the third is a proof.
 | Question | Answer | Recorded in |
 |---|---|---|
 | The palette versions? | Collected from the running instances; all 12 apps carry a `package.json` and a `Dockerfile` | `apps/` |
-| Harbor project for the images? | `dap-node-red` exists. Tags are `<registry>/dap-node-red/<app>:<node-red-version>-<palette build>`, filled in for all 13 | `registry.yml` |
+| Harbor project for the images? | `dap-node-red` exists. Tags are `<registry>/dap-node-red/<app>:<node-red-version>-<palette build>`, filled in for every instance | `registry.yml` |
 | The two settings.js deviations? | Both normalized to what the others do — `wfm-prod` gets `adminAuth`, `cho-prod` goes back to `level: "info"`. One settings.js in the repo | decision 13 |
-| What is every instance's admin root? | Probed on all 13: 8 on `/node-red-prod` or `/node-red-test`, 5 on plain `/`. All in `registry.yml` | [`architecture.md`](architecture.md) |
+| What is every instance's admin root? | Probed, not derived from a browser. Today 14 serve a prefix and 4 serve plain `/` — `gor-prod`, `gor-test`, `jan-prod`, `jan-test`. All in `registry.yml` | [`architecture.md`](architecture.md) |
 | Which Node-RED versions are running? | Three — 4.0.5, 4.0.9, 5.0.1. Pin each instance to its current version first; converging is a separate upgrade | [`architecture.md`](architecture.md) |
 | Are the settings.js files the same file? | Yes — one template plus env overrides is viable. The literal text differs by whitespace, comment state and settings.js vintage; the real config differences are three, listed below | [`architecture.md`](architecture.md) |
 | Which instances share logic? | None. No two flows match, so every instance gets its own `apps/` directory | [`architecture.md`](architecture.md) |
 | Where does the FlowFuse flow live? | Inside the agent container at `/opt/flowfuse-device/project/flows.json` — `docker cp` from a running agent, not a platform export | [`architecture.md`](architecture.md) |
 | Can the FlowFuse credentials come across? | Yes — `credentialSecret` in `device.yml`, with no `_credentialSecret` in either agent's `.config.runtime.json` | [`architecture.md`](architecture.md) |
 | How does the deploying agent reach the Admin API? | Jenkins ships `deploy.py` over SSH and runs it on the target host, reaching the container by IP on `app_network` | decision 10 |
-| How many servers and instances? | 16 runtimes on 10 servers: 14 plain, 2 FlowFuse. 12 carry a flow — `slu-prod` and `slu-test` are empty, and `wfm-test` was added rather than found | [`architecture.md`](architecture.md) |
+| How many servers and instances? | At the inventory: 16 runtimes on 10 servers, 14 plain and 2 under FlowFuse. Today `registry.yml` holds **18 instances on 9 servers**, every one with an app; the tenth server runs no Node-RED | [`architecture.md`](architecture.md) |
 | `wag-svr-lin01` or `wag-svr-lin01n`? | `wag-svr-lin01`, rebuilt the week before the inventory — current baseline | [`architecture.md`](architecture.md) |
 | Does this repo become the scaffold? | Yes; the template stack has been removed | [`architecture.md`](architecture.md) |
 | Would a UI help? | Yes, as a static read-only drift report — not a control plane | decision 11 |

@@ -35,7 +35,7 @@ npm modules cannot be installed through the Admin API. Palette changes rebuild `
 
 ## 5. Exact image tags — Closed
 
-`nodered/node-red:latest` with `restart: always` means each host silently runs whatever it last pulled. Every image reference is pinned to an exact tag, in `base/Dockerfile` and in `registry.yml`.
+`nodered/node-red:latest` with `restart: always` means each host silently runs whatever it last pulled. Every image reference is pinned to an exact tag, in each app's `Dockerfile` and in `registry.yml`. (A shared `base/Dockerfile` was the original plan; the estate's three Node-RED versions ended that — see "Version spread" in `architecture.md`.)
 
 ## 6. Flows in the repo stay editor-valid — Closed
 

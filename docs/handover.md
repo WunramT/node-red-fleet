@@ -6,7 +6,7 @@ to the code it describes, and is linked rather than repeated.
 
 ## What this is
 
-18 Node-RED instances across 10 servers, each one its own application — no two
+18 Node-RED instances across 9 servers, each one its own application — no two
 share a flow. **Git holds the flows, CI builds the images, Jenkins deploys.**
 Nothing is edited on a production instance by hand, and every change is a commit
 somebody can read, review and revert.
@@ -14,7 +14,7 @@ somebody can read, review and revert.
 | | |
 |---|---|
 | Instances | 18, of which 16 carry a flow (`slu-prod` and `slu-test` are empty but ready) |
-| Servers | 10 |
+| Servers | 9 that run Node-RED. A tenth, `foi-svr-lnx01`, runs none |
 | Source of truth | `apps/<app>/flows.json`, normalized, opens unchanged in the editor |
 | Images | Harbor, `dap-node-red/<app>:<node-red-version>-<palette build>`, exact tags only |
 | What runs where | `registry.yml` — every tool reads it, nothing hard-codes an instance |
@@ -49,7 +49,7 @@ change flow logic is the wrong design.**
 | See which tabs must move together | `cutover-plan.py apps/<app>/flows.json` | none |
 | Find plaintext secrets in a flow | `secrets-to-env.py apps/<app>/flows.json` | none |
 | Open a local editor on a copy | `nr.py edit <inst>`, `--baked` for palette nodes | none, the instance is untouched |
-| Take on a new instance | seven steps, in `runbook.md` | one restart |
+| Take on a new instance | "Standing up a new service" in `runbook.md` | one restart |
 
 Not sure which of those you are doing? `python3 scripts/nr.py` asks, then walks
 you through it and shows every command before running it.
@@ -65,7 +65,6 @@ python3 scripts/nr.py promote wfm-prod wfm-test "Flow 1" --copy   # arrives DISA
 git commit -am "promote(wfm-test): Flow 1 onto the workbench" && git push
 
 python3 scripts/nr.py edit wfm-test        # enable that one tab, change it, Deploy, Ctrl-C
-python3 scripts/normalize.py --write apps/wfm-test/flows.json
 git diff apps/wfm-test/flows.json
 git commit -am "flows(wfm-test): ..." && git push
 # deploy wfm-test, try it on the instance
@@ -91,6 +90,10 @@ Jenkins writes. Two runs, and the second is pinned to what the first showed you:
 
 Without `EXPECT_REV` the deploy overwrites whatever it finds, and says so. With
 it, anything that changed the instance in between stops the write.
+
+A palette deploy is the same two runs with `DEPLOY_PALETTE=true` on the second.
+It writes the flow first and recreates the container after, so the `rev`
+handshake still applies and a `409` stops it before anything is pulled.
 
 ## Watching it
 
@@ -121,7 +124,10 @@ waiting to be captured, not a failure. A host it could not reach does.
   files hold other teams' services too.
 - **Some flows read their database password from the environment.** The variable
   has to be in the compose service *before* the flow is deployed, or Node-RED
-  connects with an empty password and the deploy still looks successful.
+  connects with an empty password and the deploy still looks successful. For the
+  local editor the same values go in `.env` at the repository root, copied from
+  `.env.example`. Never into a tab's environment in the editor — that is stored
+  in `flows.json`, which is committed.
 
 ## Where things live
 

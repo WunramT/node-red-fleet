@@ -212,22 +212,24 @@ Three sets, all **Global** scope. The id must match `registry.yml` exactly; it i
 | `nodered-<instance>-auth` | Username with password | that instance's `adminAuth` user and password |
 | `nodered-<instance>-credsecret` | **Secret text** | that instance's `credentialSecret` — one value, no username |
 
-**Host logins.** Ten, one per server. Eight already exist from the inherited pipeline; `wfm-svr-lin01_pw` and `dpn-svr-iot_pw` are new, because those two hosts were missing from the old map.
+**Host logins.** Nine, one per server that runs Node-RED. The Jenkins host map also lists `foi-svr-lnx01`, which runs none — no sweep and no deploy ever reaches it.
 
-**Admin API logins.** Twelve, not fourteen: `slu-prod` and `slu-test` carry `app: null`, so the pipeline never deploys to them and never asks for their credential.
+**Admin API logins.** One per instance, so eighteen. `registry.yml` names the id for each; Jenkins fails on an id that does not exist, which is how the first fleet-wide run died.
 
 ```
-nodered-cho-prod-auth    nodered-jan-prod-auth    nodered-wag-prod-auth
-nodered-cho-test-auth    nodered-jan-test-auth    nodered-wag-test-auth
-nodered-gor-prod-auth    nodered-srem-prod-auth   nodered-wfm-prod-auth
-nodered-gor-test-auth    nodered-srem-test-auth   nodered-wfm-test-auth
+nodered-cho-prod-auth    nodered-jan-prod-auth    nodered-slu-prod-auth
+nodered-cho-test-auth    nodered-jan-test-auth    nodered-slu-test-auth
+nodered-gor-prod-auth    nodered-srem-prod-auth   nodered-wag-prod-auth
+nodered-gor-test-auth    nodered-srem-test-auth   nodered-wag-test-auth
+nodered-pod-prod-auth    nodered-dpn-prod-auth    nodered-wfm-prod-auth
+nodered-pod-test-auth    nodered-dpn-test-auth    nodered-wfm-test-auth
 ```
 
-`nodered-wfm-prod-auth` cannot be created usefully yet: `wfm-prod` has `adminAuth` switched off. Jenkins fails on a credential id that does not exist — that is how the first fleet-wide run died — so switch `adminAuth` on first (decision 13), then create the credential with the same user and password. `wfm-test` is new, so its `adminAuth` is set up from the start and its credential can be created straight away.
+`slu-prod` and `slu-test` are the four ids still owed — theirs and their credential secrets. They gained an app late, so a fleet run reaches them now and finds no credential.
 
-The two FlowFuse servers need no credential at all yet, and neither does `pod-svr-lin01_pw` or `dpn-svr-iot_pw`. Those instances are not in `registry.yml` (decision 12), so the pipeline never resolves a credential for them. They enter after the migration, in this order: copy the flow, start the plain container, **unenroll the device**, retire the agent. Unenrolling last would let the agent overwrite the flow from the platform.
+`wfm-prod` had `adminAuth` switched off at the inventory; decision 13 closed that, and its credential is created like any other. The four instances on `pod-svr-lin01` and `dpn-svr-iot` are ordinary registry entries since the FlowFuse cutover (decision 12) and need their host logins and Admin API credentials like the rest.
 
-**Credential secrets.** Fourteen, created during the backup gate from the value each instance **already** has — except `wfm-test`, which is new, so its value is generated once rather than pinned. No script reads them today — they are the copy of the key that lives off the server, and the key itself stays in `settings.js` on the host. A freshly invented value re-encrypts every stored credential into garbage.
+**Credential secrets.** One per instance, created during the backup gate from the value each instance **already** has — except the ones that were new, whose value is generated once rather than pinned. No script reads them today: they are the copy of the key that lives off the server, and the key itself stays in `settings.js` on the host. A freshly invented value re-encrypts every stored credential into garbage.
 
 ## Flow deploy
 
@@ -242,7 +244,7 @@ Sequence and the `rev` handshake: [`architecture.md`](architecture.md).
 
 **A `404` from `POST <admin_root>/auth/token` is one of two things**, and both are in the instance's own `settings.js`:
 
-- `admin_root` does not match the runtime. The deploy runs on the host and calls the container directly, so `admin_root` has to be the value of `httpAdminRoot` **in that runtime** — not the path the instance answers on in a browser. A reverse proxy in front of the host can add a prefix the runtime does not have, or strip one it does, and both were found here: `wag-prod` serves `/node-red-prod` itself and the proxy passes it through, while `wfm-prod` is reached in a browser as `http://wfm-svr-lin01/node-red-prod` but serves the API at `/` on the container, because nginx strips the prefix. So a `curl` that works from a workstation is not evidence about `admin_root`.
+- `admin_root` does not match the runtime. The deploy runs on the host and calls the container directly, so `admin_root` has to be the value of `httpAdminRoot` **in that runtime** — not the path the instance answers on in a browser. A reverse proxy in front of the host can add a prefix the runtime does not have, or strip one it does, so a `curl` that works from a workstation is not evidence about `admin_root`. Across this estate the two happen to match — each runtime serves its own prefix, and four serve none at all (`gor-prod`, `gor-test`, `jan-prod`, `jan-test`). `wfm-prod` was believed to be the exception until it was measured: it answered `401` on `/node-red-prod` while two deploys failed with `404` on `/`, which is the runtime saying the prefix is its own. `registry.yml` carries the measured value; do not re-derive it from a browser.
 - `adminAuth` is not configured. Node-RED registers `/auth/token` only when it is, so every login attempt answers `404` rather than `401`.
 
 One probe separates them, and it needs no password:
@@ -268,11 +270,14 @@ docker exec <compose_service> grep -nE 'httpAdminRoot|adminAuth' /data/settings.
 
 The pipeline runs `deploy.py` on the target host, where every instance is at `http://<container-ip>:1880` and the script finds it through Docker. From a workstation there is no single answer, which is why decision 10 exists — but during bring-up it is useful, so set `NODE_RED_BASE_URL` to the **host only**. The script appends `admin_root` from `registry.yml`; passing the URL you have open in the browser doubles it.
 
-**From a workstation, go through `nr.py`.** It reads `nr.local.json` and sets those variables per instance before calling the same scripts — `nr.py status` for the fleet, `nr.py check <inst>` for one. Calling `drift-check.py` or `capture.py` directly there falls through to `docker inspect` on the local engine, which has none of these containers: the run reports `no such object` (or, on Windows, `FileNotFoundError` because `docker` is not on the PATH of that process) for every instance, and both mean "no base URL was supplied", not "the instance is down". `nr.py status` does not prompt for passwords — it cannot ask sixteen times — so a full sweep needs them stored in `nr.local.json`; without one, `adminAuth` answers `401` and that instance reads as unreachable.
+**From a workstation, go through `nr.py`.** It reads `nr.local.json` and sets those variables per instance before calling the same scripts — `nr.py status` for the fleet, `nr.py check <inst>` for one. Calling `drift-check.py` or `capture.py` directly there falls through to `docker inspect` on the local engine, which has none of these containers: the run reports `no such object` (or, on Windows, `FileNotFoundError` because `docker` is not on the PATH of that process) for every instance, and both mean "no base URL was supplied", not "the instance is down". `nr.py status` does not prompt for passwords — it cannot ask eighteen times — so a full sweep needs them stored in `nr.local.json`; without one, `adminAuth` answers `401` and that instance reads as unreachable.
 
 | Instance | From a workstation |
 |---|---|
-| all 14 | `http://<host>/node-red-prod` and `http://<host>/node-red-test` |
+| most | `http://<host>/node-red-prod` and `http://<host>/node-red-test` |
+| `pod-*`, `dpn-*` | the same paths with `:1880`, because nothing routes them on those hosts yet |
+
+`nr.local.example.json` carries the address for every instance; copy it rather than deriving it.
 
 That is where they answer, not a promise that the answer arrives. Measured
 2026-09-21 from a dev container: the token call succeeded on every instance and
@@ -281,7 +286,7 @@ That is where they answer, not a promise that the answer arrives. Measured
 host itself returned immediately. The container bridge sits at MTU 1500 over a
 smaller tunnel, so anything past one segment is dropped and nothing says so.
 It reads as a fleet of wedged runtimes and is not one: the VPN adapter is 1350
-and the container 1500 — "Reaching an instance from a workstation" below. `.devcontainer/` now
+and the container 1500. `.devcontainer/` now
 lowers the interface at start, so a rebuilt dev container sweeps normally;
 `check`, `capture` and `status` need no engine at all, so they also just run
 outside it.
@@ -292,7 +297,7 @@ The proxy routes by path on every host, which is why `srem-prod`, `srem-test` an
 
 Where a port is published it still answers directly, and that is the shorter path when the proxy is what you are debugging: `cho` on 1880/1881, `jan` on 1880/1881, `gor` on **1881/1880** — prod and test reversed against what the names suggest — `slu-test` on 1882, `wfm-prod` on 1880 and `wfm-test` on 1881. `wag`, `srem` and `slu-prod` publish nothing.
 
-**The proxy path is not `admin_root`.** Both end up in the same request from a workstation, so it is easy to conclude they are the same value, and they are not: the proxy path is what the browser uses, `admin_root` is what the runtime serves on the container, and the deploy uses only the second. Where the two overlap the tools strip the duplicate and print a note; where they differ — `wfm-prod` is reached as `/node-red-prod` and serves at `/` — copying one into the other makes every Jenkins call `404`.
+**The proxy path is not `admin_root`.** Both end up in the same request from a workstation, so it is easy to conclude they are the same value, and they are not: the proxy path is what the browser uses, `admin_root` is what the runtime serves on the container, and the deploy uses only the second. Where the two overlap the tools strip the duplicate and print a note; where they differ, copying one into the other makes every Jenkins call `404`. Nothing in the estate differs today, which is exactly why the habit is worth keeping: the next instance behind a rewriting proxy will, and nothing will say so.
 
 Both lists are snapshots; `collect-inventory.py` re-derives them, and only the host-side path is what the pipeline depends on.
 
@@ -325,11 +330,38 @@ A refused connection means the opposite: nothing is listening, so the instance o
 
 **On `409`:** the running flow diverged from Git. Someone edited in the browser. Recover the edit rather than discarding it:
 
-1. `GET <admin_root>/flows` and save the running flow.
-2. Run it through `scripts/normalize.py`.
-3. Diff against the committed `flows.json`.
-4. Commit it, or discard it deliberately.
-5. Deploy again.
+```bash
+python3 scripts/nr.py capture <inst>          # 1. the running flow into apps/, normalized
+git diff apps/<app>/flows.json                # 2. what somebody changed in the browser
+git commit -am "capture(<inst>): recover browser edit" && git push   # 3. or discard it deliberately
+```
+
+Then deploy again. `capture` does the `GET` and the normalize in one step — by hand it is the same three operations against `<admin_root>/flows`, which is what to fall back on if the wrapper cannot reach the instance.
+
+## Rolling back a flow deploy
+
+A flow deploy is a commit, so backing one out is a commit too. There is no
+undo button and no "previous version" on the instance — Node-RED keeps none.
+
+```bash
+git revert <sha>                  # or: git checkout <sha>~1 -- apps/<app>/flows.json
+git diff apps/<app>/flows.json    # what goes back
+git commit -am "revert(<inst>): back out <what>" && git push
+```
+
+Then the same two Jenkins runs as any deploy: `DRY_RUN=true`, read the diff and
+the `rev`, then `DRY_RUN=false` with that `rev`.
+
+Two things that make a rollback different from a deploy:
+
+- **A `409` here is more likely, not less.** Something went wrong, so somebody
+  may already be in the browser fixing it. The `409` is then correct and the
+  answer is the same as ever: `nr.py capture`, look at what they did, decide
+  between their fix and your revert. Never both at once.
+- **A palette rollback is the other transport.** Reverting `package.json`
+  changes no running container until the image is rebuilt and the service
+  recreated. Reverting the flow alone is usually what you want: the old flow
+  does not use the new nodes, and an unused module in the image harms nothing.
 
 ## Palette change
 
@@ -374,12 +406,19 @@ Removing a module is therefore a manual edit of `apps/<app>/package.json`.
    push the same pinned tag with different content. The tag is
    `<node-red-version>-<palette build>`, so raise the suffix in `registry.yml`
    in the same commit: `wfm-test:4.0.9-1` becomes `wfm-test:4.0.9-2`.
-3. Update `image_tag` in `registry.yml` to that exact tag. `latest` fails
-   validation (decision 5).
+3. Nothing to do if the editor session raised the tag — it is already the exact
+   tag CI just built. Check it rather than setting it again: a second commit
+   that moves `image_tag` after the build is what step 1 warns against. `latest`
+   fails validation in any case (decision 5).
 4. Jenkins with `DEPLOY_PALETTE=true`, `DRY_RUN=false`. It deploys the flow
    first and recreates the service after, which is the order that works: the
    new container starts on the flow that was just written, with the palette it
    needs. This restarts the container; the ingest gap is expected here.
+
+   The flow half is an ordinary deploy, so it takes the same two runs and the
+   same `EXPECT_REV` as any other: look with `DRY_RUN=true` first, then write
+   with the `rev` it printed and `DEPLOY_PALETTE=true`. A `409` aborts before
+   anything is pulled or recreated.
 
 **Nothing is edited on the host.** The compose services take their image from an
 environment variable whose fallback is the tag pinned at the time:
@@ -404,8 +443,15 @@ see what a host expects:
 ssh <host> "grep -n 'image:' <compose_file>"
 ```
 
+**A palette does not travel with a promotion.** `package.json` is per app, and
+`*-prod` and `*-test` are different applications — `promote` moves a tab and its
+node closure, never a dependency. So a tab developed on the workbench with a new
+module needs this whole procedure a second time, on the prod app, before that tab
+is promoted. Otherwise the promote and the flow deploy both succeed and the
+instance logs `Unrecognised node type` for a node nobody can see in any diff.
+
 To see the new nodes in the local editor, `nr.py edit <inst> --baked` — but only
-after step 3, because `--baked` runs whatever `image_tag` names.
+after the image exists, because `--baked` runs whatever `image_tag` names.
 
 ## Node-RED version upgrade
 
@@ -492,7 +538,6 @@ For a production flow, or a new flow. Nothing runs while you work.
 python3 scripts/nr.py check wag-prod                    # 1. confirm Git matches the instance
 python3 scripts/nr.py edit wag-prod                     # 2. editor on http://localhost:1880
                                                         # 3. edit, press Deploy
-python3 scripts/normalize.py --write apps/wag-prod/flows.json
 git diff apps/wag-prod/flows.json                       # 4. review — it should be small
 git commit -am "flows(wag-prod): ..." && git push        # 5.
 ```
@@ -500,6 +545,11 @@ git commit -am "flows(wag-prod): ..." && git push        # 5.
 Then in Jenkins: `INSTANCE=wag-prod`, `DRY_RUN=true` to see the diff the pipeline sees, then `DRY_RUN=false`.
 
 Step 1 is not optional. If the instance has drifted, your local edit is against a stale base and the deploy will hit a `409`.
+
+**If `check` is not clean, stop and capture first.** `nr.py capture <inst>`,
+review the diff, commit or discard it deliberately, then start again at step 1.
+Every loop in this repository opens with that check for the same reason, and
+none of them has a branch for carrying on regardless.
 
 **`nr.py edit` probes for the address and prints what answered.** It starts the
 editor detached, tries every address it could be on, waits until one serves
@@ -649,11 +699,20 @@ destination config nodes alone.
 
 ### Which route for which instance
 
+The routes are about **where you edit** — a local editor or the instance's own
+browser. They do not decide **where you test**: a tab production already runs is
+worked on over on the workbench first (decision 15, "Promoting a change between
+a workbench and prod" above), and the editing inside that loop is Route A.
+
 | | Route |
 |---|---|
 | `*-prod` | A — the instance must not run a half-finished change |
 | `*-test` | B is usually faster; A also works |
 | a brand-new app | A — there is nothing running to conflict with |
+
+Route A straight onto a `*-prod` is for an instance with no workbench twin, or
+for a change small enough that staging it costs more than it protects. Anything
+else goes through the workbench.
 
 Note that `*-prod` and `*-test` on one host are **different applications**, not two stages of one — separate flow files, separate config nodes, separate brokers. They are connected only where someone connects them deliberately, one tab at a time, through `promote` (above). A change does not flow from test to prod on its own.
 
@@ -705,7 +764,7 @@ On the host, or wherever `NODE_RED_BASE_URL_*` is set — the scheduled job in d
 
 Read-only: `GET /flows`, normalize, diff against Git, report. It never writes to an instance and offers no flag that would.
 
-Exit 0 when clean, 1 when an instance is unreachable, and 3 only with `--fail-on-drift` — for a scheduled check that should go red. Without the flag drift is reported and the exit stays 0, because drift is information, not a failure.
+Exit 0 when clean, 1 when an instance is unreachable, and 3 only with `--fail-on-drift` — for a scheduled check that should go red. Without the flag drift is reported and the exit stays 0, because drift is information, not a failure. **The daily job does not pass it**, and tolerates exit 1 as well: an unreachable instance is a row in the report, and the build's colour is decided by whether a whole host answered, not by what the rows say.
 
 An unreachable instance does not stop the sweep; it is one row in the report. `--json` writes the full report, diffs included, which is what the daily job collects and sends on (decision 11).
 
@@ -743,7 +802,7 @@ out of a downloaded `drift.json`; nothing calls it.
 **Why per host and not centrally:** `drift-check` reaches a runtime through
 Docker on the machine it runs on (decision 10). Called centrally, `--all`
 reports every instance `unreachable`. That is what `--host` is for. The loop is
-inside the job, not an operator step: ten SSH sessions, ten fragments, one file.
+inside the job, not an operator step: nine SSH sessions, nine fragments, one file.
 
 **Why drift does not turn the run red:** drift is somebody's browser edit that
 is not in Git yet — information, not a failure (decision 9). The job goes
@@ -781,7 +840,9 @@ archived, nobody heard them.
 
 **One flow for the whole estate**, not one per instance. It runs on `dpn-test`,
 because that is what a workbench is for, and it is built like any other tab —
-`nr.py edit dpn-test`, normalize, commit, deploy. Five nodes:
+`nr.py edit dpn-test`, commit, deploy. The POST arrives there today; what the
+flow does with it is the part that keeps changing, which is the point of putting
+it in Node-RED rather than in the pipeline. Five nodes:
 
 1. **`http in`**, method `POST`, URL `/drift`.
 2. **`http response`**, status 204 — wired **straight off the `http in`**.

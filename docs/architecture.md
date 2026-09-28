@@ -2,11 +2,13 @@
 
 Status: **built and live.** All 18 instances run their flow out of Git through the pipeline described here; the last two came off FlowFuse in September 2026. Rationale and closed decisions: [`decisions.md`](decisions.md). What is still open: [`open-questions.md`](open-questions.md). What to do with it day to day: [`../README.md`](../README.md) and [`runbook.md`](runbook.md).
 
-## The problem
+## The problem, as it stood at the start
 
-16 Node-RED runtimes across 10 servers. Flows are edited in the browser editor and today reach production by hand. There is no history, no review, and no way to tell what is running.
+This section and "Measured environment facts" below are the **before** picture: what `scripts/collect-inventory.py` found when it visited every host, in the past tense it deserves. What runs today is the Status line above and `registry.yml`.
 
-Measured, not assumed — `scripts/collect-inventory.py` visited every host:
+16 Node-RED runtimes across 10 servers. Flows were edited in the browser editor and reached production by hand. There was no history, no review, and no way to tell what was running.
+
+Measured, not assumed:
 
 | | |
 |---|---|
@@ -16,6 +18,8 @@ Measured, not assumed — `scripts/collect-inventory.py` visited every host:
 | 1 server with no Node-RED at all | `foi-svr-lnx01` — NATS, iot-bridges, dashboards |
 
 The Jenkins host map knew 8 of these when the project started and knows all 10 now; `wfm-svr-lin01` and `dpn-svr-iot` were the two it was missing.
+
+**Counting, once, so the rest of the documentation can stop disagreeing with itself:** `registry.yml` holds **18 instances on 9 servers**, every one with an app, a credential id and a credential-secret id. The tenth server, `foi-svr-lnx01`, runs no Node-RED and therefore appears in the Jenkins host map but in no sweep and no deploy. Where a number in this repository contradicts that, `registry.yml` is right and the number is a leftover from the inventory.
 
 Topology is **not a fleet**: no two instances share a flow signature — the collector compared the node type and name multiset of every flow, ignoring ids and layout, and found no match. Every instance is its own application. `wag-svr-lin01` makes the point concretely: `node-red-prod` has 15 nodes and no palette, `node-red-test` has 222 nodes and two palette modules. A template-first system would be wrong, and there are no shared `apps/` directories to factor out.
 
@@ -62,20 +66,24 @@ flowchart LR
 apps/<app-name>/
   flows.json      normalized, editor-valid, no placeholders
   package.json    palette dependencies for this app
-  Dockerfile      FROM base, COPY package.json, npm install
-base/Dockerfile   pinned nodered/node-red:<version> — see Version spread
-compose/          per-instance compose fragments
+  Dockerfile      FROM nodered/node-red:<version>, then this app's palette
+apps/build-image-pipeline.yml  generated from registry.yml — the build and sign jobs
 registry.yml      instance inventory — see registry.md
 schemas/          JSON Schema for registry.yml
-compose/editor.yml  a local editor that writes into the working tree
+compose/editor.yml  the local editor. The only compose file in this repository:
+                  the ones that run the instances live on the hosts
+.env.example      the names the flows read from the environment; copy to .env
 scripts/
+  nr.py           the front door — every command below, with the addresses filled in
+  nodered.py      the shared library: instances, addresses, Admin API, image tags
   normalize.py    canonicalize flows.json
   deploy.py       token → GET /flows → rev → POST /flows
   capture.py      the return path: running flow → apps/<app>/flows.json
   drift-check.py  read-only: running flows vs. Git
 docs/             this directory
-INVENTORY.md      inventory output, secrets stripped
 ```
+
+There is no `base/` image. Each app's Dockerfile names its own `FROM`, because the estate runs three Node-RED versions and one shared base cannot hold three — see "Version spread".
 
 One app, one instance — no two instances share a flow. A flow file in the repo always opens in the editor unchanged, which is what keeps the return path from editor to Git alive.
 
@@ -89,7 +97,7 @@ SSH is a transport for the script, never a path for writing flow files. The `rev
 
 `scripts/deploy.py`, one instance at a time:
 
-1. `POST <admin_root>/auth/token` → Bearer token. `adminAuth` is active on 12 of 14, so nearly every call needs one. `wfm-prod` has it switched off and answers `200` unauthenticated — `deploy.py` skips the token call where `auth_credential_id` has nothing behind it, and that is a gap to close, not a feature.
+1. `POST <admin_root>/auth/token` → Bearer token. Every instance in `registry.yml` carries an `auth_credential_id` today, so every call takes one. At the inventory `adminAuth` was off on `wfm-prod`, which answered `200` unauthenticated; decision 13 closed that. `deploy.py` still skips the token call where `auth_credential_id` has nothing behind it — a path nothing in the estate takes any more.
 2. `GET <admin_root>/flows` → capture `rev`.
 3. `POST <admin_root>/flows` with header `Node-RED-Deployment-Type: flows` and the captured `rev`.
 4. `409` → abort. The running flow diverged from Git; that must surface as a red pipeline, never be flattened.
@@ -141,7 +149,7 @@ The compose file differs per host (`code/node-red/`, `energy/`, `Base_Container/
 | Image tag in use | `nodered/node-red:latest` | must be pinned; `latest` + `restart: always` drifts silently per host |
 | `credentialSecret` | commented out | generated key exists only in `/data/.config.runtime.json`; single copy, in no backup |
 | `flows_cred.json` | present on both | real credentials in use; undecryptable without that key file |
-| `httpAdminRoot` | 8 instances on `/node-red-prod` or `/node-red-test`, 5 on `/` | probed, not parsed; API base path is per-instance and 5 instances have none |
+| `httpAdminRoot` | 8 instances on `/node-red-prod` or `/node-red-test`, 5 on `/` | probed, not parsed. Today: 14 with a prefix, 4 on plain `/` — `gor-prod`, `gor-test`, `jan-prod`, `jan-test`. `wfm-prod` serves `/node-red-prod`, whatever an older sentence elsewhere says |
 | `adminAuth` | active on 12, **off on `wfm-prod`**, not yet set on the new `wfm-test` | token call required before every API call — except `wfm-prod`, which answers 200 and has nothing to authenticate against |
 | published ports | **mixed** | `cho`, `gor`, `jan` publish 1880/1881, `slu-test` 1882, `wfm-prod` 1880 and `wfm-test` 1881; `wag`, `srem` and `slu-prod` publish nothing. Not a uniform property, so the deploy path cannot rely on one |
 | `flowFilePretty` | `true` | flows already multi-line; the normalizer strips and sorts, it does not reformat |
@@ -241,7 +249,7 @@ The return direction is what keeps this from decaying. A pipeline that only push
 
 ## Visibility
 
-Every instance now runs its flow out of Git, and there is still no single place to *see* that — 18 runtimes across 10 servers, and the answer lives in a CLI. That gap is being closed as a **report**, not a control plane. The daily half of it runs; a browsable current picture does not (`open-questions.md`).
+Every instance now runs its flow out of Git, and there is still no single place to *see* that — 18 runtimes across 9 servers, and the answer lives in a CLI. That gap is being closed as a **report**, not a control plane. The daily half of it runs; a browsable current picture does not (`open-questions.md`).
 
 `drift-check.py` sweeps every instance, normalizes what it gets, diffs against Git, and emits JSON. `Jenkinsfile.drift` does that across the estate every morning, keeps the merged `drift.json` as the build artifact, and POSTs it to one Node-RED flow, which reports what changed since the last run. It answers the questions that matter — which instances match Git, which drifted, which flow version and image tag each one runs — from Git plus a read-only sweep, and it answers them without anything to host.
 
@@ -254,4 +262,4 @@ This repository was created from the company web-app template and originally hel
 Kept, because the new pipeline needs them:
 
 - the `ci-cd-catalog` scan-component wiring in `.gitlab-ci.yml`, and the Harbor registry host
-- the `Jenkinsfile`, which still holds the host map, the per-host credential ids and the `sshCommand` deploy pattern. It deploys the template's stack, not this one, and is replaced once the new pipeline exists — removing it earlier would delete the only record of that map.
+- the `Jenkinsfile`'s host map, per-host credential ids and `sshCommand` pattern. The file itself was rewritten around them: it is the deploy pipeline now, and `Jenkinsfile.drift` beside it reuses the same map.
