@@ -56,7 +56,7 @@ include:
     job_name: build:buildah:dpn-test
     dockerfile: apps/dpn-test/Dockerfile
     image_name: dap-node-red/dpn-test
-    image_tag: 4.0.9-1
+    image_tag: 4.0.9-2
     enable_layers_cache: false
 - component: $CI_SERVER_FQDN/infrastructure/ci-cd-catalog/cosign/cosign-sign@~latest
   inputs:
@@ -306,7 +306,7 @@ build:buildah:dpn-test:
     - apps/dpn-test/Dockerfile
 sign:cosign:dpn-test:
   variables:
-    IMAGE_TAG: 4.0.9-1
+    IMAGE_TAG: 4.0.9-2
   needs:
   - job: build:buildah:dpn-test
   rules:
