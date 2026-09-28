@@ -53,12 +53,12 @@
     "password": ""
   },
   "srem-prod": {
-    "url": "http://srem-svr-lin01/node-red-prod",
+    "url": "http://srem-svr-lin01.srem.polipol.intra/node-red-prod",
     "user": "admin",
     "password": ""
   },
   "srem-test": {
-    "url": "http://srem-svr-lin01/node-red-test",
+    "url": "http://srem-svr-lin01.srem.polipol.intra/node-red-test",
     "user": "admin",
     "password": ""
   },
@@ -84,15 +84,13 @@
     "user": "admin",
     "password": ""
   },
-  // dpn-svr-iot is the second FlowFuse host: the agent holds 1880 until the
-  // cutover, and the plain container takes the same port after it.
   "dpn-prod": {
-    "url": "http://dpn-svr-iot:1880/node-red-prod",
+    "url": "http://dpn-svr-iot.rah.polipol.intra/node-red-prod",
     "user": "admin",
     "password": ""
   },
   "dpn-test": {
-    "url": "http://dpn-svr-iot:1880/node-red-test",
+    "url": "http://dpn-svr-iot.rah.polipol.intra/node-red-test",
     "user": "admin",
     "password": ""
   },

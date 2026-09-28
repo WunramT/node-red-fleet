@@ -276,5 +276,5 @@ instances:
     auth_credential_id: nodered-dpn-test-auth
     credential_secret_id: nodered-dpn-test-credsecret
     dns_search: [rah.polipol.intra]
-    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/dpn-test:4.0.9-1  # node-red 4.0.9 and dpn-prod's palette, so a promoted tab opens with its nodes
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/dpn-test:4.0.9-2  # node-red 4.0.9 and dpn-prod's palette, so a promoted tab opens with its nodes
     variables: {}

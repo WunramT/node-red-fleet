@@ -10,6 +10,7 @@
     "node-red-contrib-mssql-plus": "~0.12.2",
     "node-red-contrib-postgresql": "~0.14.2",
     "node-red-contrib-queue-gate": "~1.5.5",
-    "node-red-node-email": "~3.0.1"
+    "node-red-node-email": "~3.0.1",
+    "xlsx": "0.18.5"
   }
 }
