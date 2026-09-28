@@ -356,11 +356,17 @@ Removing a module is therefore a manual edit of `apps/<app>/package.json`.
    because the two belong in one commit: CI pushes the tag it finds there, so
    a palette change with an unchanged tag replaces the image the instance runs
    instead of building a new one. `validate-registry.py --changed-since <ref>`
-   fails on exactly that, and CI runs it against the previous commit. The check
-   needs git and the base commit in the clone, so `validate:registry` runs on
-   `python:3.13` rather than `-slim` and with `GIT_DEPTH: 0`. When it cannot
-   run it says so on stderr and passes — read a "palette-tag check skipped" in
-   a CI log as the guard missing, not as a clean bill.
+   fails on exactly that. CI compares against the **default branch** — a merge
+   request against its own base, the default branch against the push that just
+   landed, any other branch against where it left the default branch. Not
+   against the previous push: on a branch pushed in one go that reaches back to
+   the import, and the guard then fires on every app in the estate. An app that
+   did not exist at the base is skipped, because its tag has never been built
+   and the first build replaces nothing. The check needs git and the base commit
+   in the clone, so `validate:registry` runs on `python:3.13` rather than
+   `-slim` and with `GIT_DEPTH: 0`. When it cannot run it says so on stderr and
+   passes — read a "palette-tag check skipped" in a CI log as the guard missing,
+   not as a clean bill.
 2. Commit to the default branch — GitLab CI builds and signs a new image. It
    builds **only** when that app's `package.json` or `Dockerfile` changed, and
    only on the default branch: a flow commit must not rebuild, because it would

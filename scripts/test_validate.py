@@ -82,6 +82,24 @@ try:
     out = validate("--changed-since", "HEAD")
     check("a flow-only change does not trip the palette guard", out.returncode == 0, out.stderr)
 
+    # A brand-new app is not a palette change. slu-prod arrived this way: it
+    # carried an image_tag while `app: null`, then gained an app — and the tag
+    # it was given is the right one, because nothing was ever built from it.
+    git("-c", "commit.gpgsign=false", "commit", "-qam", "flow")
+    new_app = TMP / "apps" / "new-app"
+    new_app.mkdir()
+    (new_app / "package.json").write_text('{"dependencies": {}}\n', encoding="utf-8")
+    (new_app / "Dockerfile").write_text("FROM docker.io/nodered/node-red:4.0.9\n", encoding="utf-8")
+    (new_app / "flows.json").write_text("[]\n", encoding="utf-8")
+    text = REG.read_text(encoding="utf-8")
+    text = text.replace("app: " + APP, "app: new-app", 1)
+    REG.write_text(text, encoding="utf-8")
+    out = validate("--changed-since", "HEAD")
+    check("an app that did not exist at the base does not trip the guard",
+          out.returncode == 0, out.stderr)
+    git("checkout", "--", "registry.yml")
+    shutil.rmtree(new_app)
+
     # It cannot run: a reference that is not in the clone, and no git at all.
     # Both have to be visible on stderr, because a silent skip in CI reads as a
     # guard that passed.

@@ -102,6 +102,13 @@ def palette_tags_moved(ref: str) -> list[str]:
 
     apps = {Path(line).parts[1] for line in changed.splitlines()
             if re.fullmatch(r"apps/[^/]+/(package\.json|Dockerfile)", line)}
+
+    # An app that did not exist at `ref` has no image to overwrite: CI has never
+    # built this tag, so pushing it now is the first build, not a replacement.
+    # Without this an instance that just gained an app fails the guard on the
+    # tag it was given when it had none — which is the tag that is correct.
+    apps = {app for app in apps
+            if git("cat-file", "-e", f"{ref}:apps/{app}/Dockerfile") is not None}
     if not apps:
         return []
 
