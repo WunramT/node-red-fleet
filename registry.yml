@@ -158,7 +158,7 @@ instances:
     auth_credential_id: nodered-srem-test-auth
     credential_secret_id: nodered-srem-test-credsecret
     dns_search: [rah.polipol.intra]
-    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/srem-test:5.0.6-1  # running node-red 5.0.6, 79 nodes, 7 palette modules
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/srem-test:5.0.6-2  # running node-red 5.0.6, 79 nodes, 7 palette modules
     variables: {}
 
   # --- wag-svr-lin01 --------------------------------------------------------
