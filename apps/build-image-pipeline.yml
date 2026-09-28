@@ -186,7 +186,7 @@ include:
     job_name: build:buildah:srem-test
     dockerfile: apps/srem-test/Dockerfile
     image_name: dap-node-red/srem-test
-    image_tag: 5.0.6-1
+    image_tag: 5.0.6-2
     enable_layers_cache: false
 - component: $CI_SERVER_FQDN/infrastructure/ci-cd-catalog/cosign/cosign-sign@~latest
   inputs:
@@ -476,7 +476,7 @@ build:buildah:srem-test:
     - apps/srem-test/Dockerfile
 sign:cosign:srem-test:
   variables:
-    IMAGE_TAG: 5.0.6-1
+    IMAGE_TAG: 5.0.6-2
   needs:
   - job: build:buildah:srem-test
   rules:

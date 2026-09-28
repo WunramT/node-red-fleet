@@ -108,7 +108,7 @@ check("admin_root read correctly", wag["admin_root"] == "/node-red-prod", wag.ge
 # loader has to keep that as an empty string, because None would make
 # f"{base}{admin_root}/flows" read "None/flows". Which instances those are is
 # registry data and changes with the estate, so this asks the registry rather
-# than naming one: gor and jan are root-served today.
+# than naming one: gor and jan are root-served t
 check("and an empty admin_root stays a string, not None",
       all(isinstance(i["admin_root"], str) for i in known))
 check("credential env naming", env_credentials("nodered-x-auth") is None)
