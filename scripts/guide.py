@@ -27,7 +27,7 @@ PY = sys.executable
 
 Step = tuple
 
-ALLOWED_PROGRAMS = {"nr.py", "normalize.py", "git"}
+ALLOWED_PROGRAMS = {"nr.py", "git"}
 SOURCES = {"prod", "test", "any", "text"}
 
 TASKS: dict[str, dict] = {
@@ -45,8 +45,6 @@ TASKS: dict[str, dict] = {
             ("do", 'commit and push: git commit -am "promote({test}): {tab} onto the workbench" && git push'),
             ("run", ["nr.py", "edit", "{test}"],
              "enable {tab}, change it, Deploy, then Ctrl-C"),
-            ("run", ["normalize.py", "--write", "apps/{test_app}/flows.json"],
-             "canonicalize so the diff reads cleanly"),
             ("run", ["git", "diff", "apps/{test_app}/flows.json"],
              "review what the editor wrote"),
             ("do", 'commit and push: git commit -am "flows({test}): {tab}" && git push'),
@@ -67,8 +65,6 @@ TASKS: dict[str, dict] = {
             ("ask", "tab", "Name of the new tab?", "text"),
             ("run", ["nr.py", "edit", "{test}"],
              "add {tab}, Deploy, then Ctrl-C"),
-            ("run", ["normalize.py", "--write", "apps/{test_app}/flows.json"],
-             "canonicalize so the diff reads cleanly"),
             ("do", 'commit and push: git commit -am "flows({test}): add {tab}" && git push'),
             ("do", "deploy {test} in Jenkins, then try it"),
             ("run", ["nr.py", "promote", "{test}", "{prod}", "{tab}", "--move"],
@@ -108,9 +104,15 @@ TASKS: dict[str, dict] = {
             ("run", ["nr.py", "edit", "{test}"],
              'install the module through "Manage palette"; the session carries it into '
              "apps/{test_app}/package.json for you"),
-            ("run", ["git", "diff", "apps/{test_app}/package.json", "registry.yml"],
-             "review the pinned version and the raised palette-build suffix the session wrote"),
-            ("do", 'commit both: git commit -am "palette({test}): add <module>" && git push'),
+            ("run", ["git", "diff", "apps/{test_app}/package.json", "registry.yml",
+                     "apps/build-image-pipeline.yml"],
+             "review the pinned version, the raised palette-build suffix, and the "
+             "regenerated build pipeline the session wrote"),
+            ("do", 'commit all three: git commit -am "palette({test}): add <module>" && git push'),
+            ("do", "get it onto the default branch: CI builds images only there, and only "
+                   "when package.json or the Dockerfile changed"),
+            ("do", "wait until the new tag is in Harbor — the deploy pulls it, and a deploy "
+                   "started too early fails on the pull"),
             ("do", "Jenkins with DEPLOY_PALETTE=true, DRY_RUN=false: it deploys the flow "
                    "first, then recreates the container"),
         ],

@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Node-RED multi-instance deployment, **live**. Git holds the flows, CI deploys them, and every one of the 18 instances across 10 servers runs that way — including the two that came off FlowFuse in September 2026. No two instances share a flow: every one is its own application.
+Node-RED multi-instance deployment, **live**. Git holds the flows, CI deploys them, and every one of the 18 instances across 9 servers runs that way — including the two that came off FlowFuse in September 2026. No two instances share a flow: every one is its own application.
 
 Start with [`README.md`](README.md), which is the working cheatsheet. Then, for
 anything non-obvious:

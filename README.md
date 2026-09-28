@@ -1,4 +1,4 @@
-# dap-node-red
+# node-red-fleet
 
 Git holds the flows for 18 Node-RED instances, CI deploys them, and that is
 how every one of them runs today. Nothing is edited on a production instance by
@@ -30,7 +30,6 @@ python3 scripts/nr.py promote wfm-prod wfm-test "Flow 1" --copy   # arrives DISA
 git commit -am "promote(wfm-test): Flow 1 onto the workbench" && git push
 
 python3 scripts/nr.py edit wfm-test        # enable that one tab, change it, Deploy, Ctrl-C
-python3 scripts/normalize.py --write apps/wfm-test/flows.json
 git diff apps/wfm-test/flows.json
 git commit -am "flows(wfm-test): ..." && git push
 ```
@@ -51,7 +50,6 @@ Same loop without the first promotion.
 
 ```bash
 python3 scripts/nr.py edit wfm-test        # add a tab, Deploy, Ctrl-C
-python3 scripts/normalize.py --write apps/wfm-test/flows.json
 git commit -am "flows(wfm-test): add <tab>" && git push
 # deploy wfm-test, try it
 python3 scripts/nr.py promote wfm-test wfm-prod "<tab>" --move
@@ -61,7 +59,9 @@ git commit -am "promote(wfm-prod): ship <tab>" && git push
 
 ## Deploy
 
-Jenkins writes. Two runs, and the second is pinned to what the first showed you.
+Jenkins writes, and a person starts it: it is a parameterized build, one
+instance at a time, not something a push triggers. Two runs, and the second is
+pinned to what the first showed you.
 
 | | `INSTANCE` | `DRY_RUN` | `EXPECT_REV` |
 |---|---|---|---|
@@ -86,6 +86,10 @@ container.
 - **Secrets stay in Jenkins.** Never in a commit, a log, or a chat. Some
   nodes keep a password in the flow instead of the credential store —
   `secrets-to-env.py` finds those.
+- **Fields set to `env` need the value twice.** On the host it is the compose
+  service, before the flow is deployed. Locally it is `.env` at the repo root,
+  copied from `.env.example`, which `nr.py edit` passes into the editor. Empty
+  in either place and the node connects with nothing, successfully.
 - **Name the compose service.** `docker compose up -d node-red-prod`. That file
   holds other people's services too.
 
@@ -103,7 +107,7 @@ container.
 | `nr.py promote <a> <b> <tab>` | Move one tab and its dependencies. `--copy` or `--move`. |
 | `cutover-plan.py <flow>` | Which tabs can move to another runtime alone, and which are linked together. |
 | `secrets-to-env.py <flow>` | Finds plaintext passwords in a flow; `--write` moves them to environment variables. |
-| `normalize.py --write <flow>` | Canonicalize a flow so it diffs readably. Before every commit. |
+| `normalize.py --write <flow>` | Canonicalize a flow so it diffs readably. Only after editing `flows.json` by hand — `edit`, `capture` and `promote` all write it normalized. |
 | `validate-registry.py` | Registry against the schema and the rules around it. |
 | `drift-check.py --all --json <out>` | Read-only fleet sweep. `--host <h>` for the instances of one host, which is what the scheduled job runs. |
 | `render-drift.py <json> -o <html>` | A downloaded `drift.json` as one static page. Optional and local — no pipeline runs it. |
@@ -134,6 +138,7 @@ container `nr.py` stops with that exact command instead of failing in compose.
 |---|---|
 | `registry.yml` | What runs where. Every tool reads it; nothing hard-codes an instance. |
 | `apps/<app>/` | `flows.json` as deployed, `package.json` as the palette, its `Dockerfile`. |
+| `apps/build-image-pipeline.yml` | Generated from `registry.yml` — the build and sign job per app. Never edited by hand; CI fails if it is stale. |
 | `scripts/nodered.py` | The shared library: instance list, addresses, Admin API, image tags. |
 | `docs/handover.md` | What the system does and how to run it, on one page — the overview to hand to someone new. |
 | `docs/runbook.md` | Operating it: backup gate, deploys, `409` recovery, moving an instance. |
