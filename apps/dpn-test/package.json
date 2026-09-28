@@ -1,6 +1,6 @@
 {
   "name": "node-red-dpn-test",
-  "description": "Palette for dpn-test",
+  "description": "Palette for dpn-test instance",
   "private": true,
   "dependencies": {
     "@flowfuse/node-red-dashboard": "~1.15.0",

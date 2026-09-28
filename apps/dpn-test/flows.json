@@ -11,7 +11,7 @@
     "id": "f0a0000000000001",
     "type": "tab",
     "label": "Foam Test Import",
-    "info": "Mehrstufiger Full-Replace-Import für legacy .xls/.xlsx. Multi-Site (2000/5000/8200), DE/PL/RO, Excel ist SSOT pro Site.",
+    "info": "Mehrstufiger Full-Replace-Import für legacy .xls/.xlsx. Multi-Site (2000/5000/8200), DE/PL/RO, Excel pro Site.",
     "disabled": false
   },
   {
