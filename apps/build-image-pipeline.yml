@@ -199,7 +199,7 @@ include:
     job_name: build:buildah:wag-prod
     dockerfile: apps/wag-prod/Dockerfile
     image_name: dap-node-red/wag-prod
-    image_tag: 5.0.1-1
+    image_tag: 5.0.1-2
     enable_layers_cache: false
 - component: $CI_SERVER_FQDN/infrastructure/ci-cd-catalog/cosign/cosign-sign@~latest
   inputs:
@@ -493,7 +493,7 @@ build:buildah:wag-prod:
     - apps/wag-prod/Dockerfile
 sign:cosign:wag-prod:
   variables:
-    IMAGE_TAG: 5.0.1-1
+    IMAGE_TAG: 5.0.1-2
   needs:
   - job: build:buildah:wag-prod
   rules:

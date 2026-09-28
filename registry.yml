@@ -171,7 +171,7 @@ instances:
     auth_credential_id: nodered-wag-prod-auth
     credential_secret_id: nodered-wag-prod-credsecret
     dns_search: [rah.polipol.intra]
-    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/wag-prod:5.0.1-1  # running node-red 5.0.1, 15 nodes, no palette
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/wag-prod:5.0.1-2  # running node-red 5.0.1, 15 nodes, no palette
     variables: {}
 
   - name: wag-test
