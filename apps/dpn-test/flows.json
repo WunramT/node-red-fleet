@@ -1,1 +1,77 @@
-[]
+[
+  {
+    "id": "390b40e6225d9e8c",
+    "type": "tab",
+    "label": "Flow 1",
+    "info": "",
+    "disabled": false,
+    "env": []
+  },
+  {
+    "id": "1db4abe9f1209839",
+    "type": "http response",
+    "z": "390b40e6225d9e8c",
+    "name": "",
+    "headers": {},
+    "statusCode": "204",
+    "x": 740,
+    "y": 160,
+    "wires": []
+  },
+  {
+    "id": "9e2eafcc8c48ac6b",
+    "type": "debug",
+    "z": "390b40e6225d9e8c",
+    "name": "debug 1",
+    "active": true,
+    "complete": "true",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "targetType": "full",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 940,
+    "y": 260,
+    "wires": []
+  },
+  {
+    "id": "cfb34dcf0237af33",
+    "type": "http in",
+    "z": "390b40e6225d9e8c",
+    "name": "",
+    "method": "post",
+    "swaggerDoc": "",
+    "upload": false,
+    "url": "/drift",
+    "x": 360,
+    "y": 160,
+    "wires": [
+      [
+        "1db4abe9f1209839",
+        "ef92131525a49c8f",
+        "9e2eafcc8c48ac6b"
+      ]
+    ]
+  },
+  {
+    "id": "ef92131525a49c8f",
+    "type": "function",
+    "z": "390b40e6225d9e8c",
+    "name": "function 1",
+    "finalize": "",
+    "func": "const rows = Array.isArray(msg.payload) ? msg.payload : [];\n   const now = {};\n   let drifted = 0;\n   for (const row of rows) {\n       // Der Vergleichsschlüssel ist Zustand plus Umfang: aus \"clean\" wird\n       // \"drifted\", und aus 4 geänderten Zeilen werden 40 — beides ist eine\n       // Änderung, eine unveränderte Drift ist keine.\n       now[row.instance] = row.state === \"drifted\"\n           ? `drifted:${row.changed_lines}`\n           : row.state;\n       if (row.state === \"drifted\") { drifted++; }\n   }\n\n   const before = flow.get(\"driftState\") || {};\n   flow.set(\"driftState\", now);\n\n   const stamp = new Date().toTimeString().slice(0, 5);\n   const seen = `${stamp} · ${rows.length} Instanzen, ${drifted} drifted`;\n\n   // Beim allerersten Lauf ist alles \"neu\" — das ist der Anfang der Messung,\n   // kein Ereignis. Dasselbe nach einem Neustart: der Kontext liegt im\n   // Speicher, also beginnt die Messung dort von vorn.\n   if (!Object.keys(before).length) {\n       node.status({ fill: \"grey\", shape: \"ring\", text: `${seen} · Startwert` });\n       return null;\n   }\n\n   const changed = Object.keys(now)\n       .filter(k => now[k] !== before[k])\n       .map(k => `${k}: ${before[k] || \"unbekannt\"} → ${now[k]}`);\n\n   if (!changed.length) {\n       node.status({ fill: \"green\", shape: \"dot\", text: `${seen} · unverändert` });\n       return null;\n   }\n\n   node.status({ fill: \"yellow\", shape: \"dot\", text: `${seen} · ${changed.length} Änderung(en)` });\n   msg.payload = changed.join(\"\\n\");\n   msg.topic = `Node-RED Drift: ${changed.length} Änderung(en)`;\n   return msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 580,
+    "y": 320,
+    "wires": [
+      [
+        "9e2eafcc8c48ac6b"
+      ]
+    ]
+  }
+]
