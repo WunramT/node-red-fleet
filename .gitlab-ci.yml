@@ -71,11 +71,30 @@ validate:registry:
     # base commit is not always knowable — a first push, a shallow clone — and
     # then this says so rather than passing quietly.
     - |
-      base="${CI_MERGE_REQUEST_DIFF_BASE_SHA:-$CI_COMMIT_BEFORE_SHA}"
+      # Which base answers "did a palette change without its tag moving"?
+      #   merge request  -> the MR's own base, which is what gets merged
+      #   default branch -> the push that just landed
+      #   any other push -> where this branch left the default branch
+      #
+      # CI_COMMIT_BEFORE_SHA alone means "since your last push", and that is not
+      # the same question. A branch pushed in one go has a before-SHA reaching
+      # back to the import, so every app's Dockerfile counts as changed and the
+      # guard fires on ten instances nobody touched — which teaches people to
+      # ignore it. Against the default branch the answer is the same on every
+      # re-run, because it compares with what CI actually builds from.
+      if [ -n "$CI_MERGE_REQUEST_DIFF_BASE_SHA" ]; then
+          base="$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+      elif [ "$CI_COMMIT_REF_NAME" = "$CI_DEFAULT_BRANCH" ]; then
+          base="$CI_COMMIT_BEFORE_SHA"
+      else
+          git fetch --quiet origin "$CI_DEFAULT_BRANCH" 2>/dev/null || true
+          base="$(git merge-base FETCH_HEAD HEAD 2>/dev/null || true)"
+      fi
       case "$base" in
         ""|0000000000000000000000000000000000000000)
           echo "no base commit to compare against — palette-tag check skipped" ;;
         *)
+          echo "palette-tag check against $base"
           python3 scripts/validate-registry.py --changed-since "$base" ;;
       esac
     # The generated pipeline carries registry.yml's image tags. If it is stale,
