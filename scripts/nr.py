@@ -550,6 +550,20 @@ def act(action: str, inst: dict | None, cfg: dict, baked: bool = False,
         if os.environ.get("LOCAL_WORKSPACE_FOLDER"):
             env["REPO_ROOT"] = os.environ["LOCAL_WORKSPACE_FOLDER"]
 
+        # The editor reads the flow's env variables from .env at the repo root
+        # (compose/editor.yml). Compose fails outright on an env_file that is
+        # not there, and "no such file" would be a confusing way to learn that
+        # a feature you are not using exists — so an empty one is enough.
+        dotenv = ROOT / ".env"
+        if not dotenv.exists():
+            dotenv.write_text(
+                "# Values for the fields a flow reads from the environment.\n"
+                "# Gitignored. The names are in .env.example; the values are\n"
+                "# yours locally and come from Jenkins credentials in the estate.\n",
+                encoding="utf-8")
+            print(f"created {dotenv.name} — empty. Fields set to 'env' in this flow "
+                  f"resolve to nothing\nuntil it holds them; see .env.example for the names.")
+
         # The registry pins each instance to the Node-RED version it runs, and
         # the editor has to match it: a 5.x editor writes fields a 4.0.x runtime
         # does not know, into a file that is meant to deploy unchanged.

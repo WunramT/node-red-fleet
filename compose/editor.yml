@@ -63,8 +63,19 @@ services:
       # this file; inside one the docker daemon runs on the host and cannot see
       # /workspaces/..., so nr.py sets REPO_ROOT to the host path instead.
       - ${REPO_ROOT:-..}/${EDITOR_DATA:?set EDITOR_DATA, or use scripts/nr.py edit}:/data
+    # Fields a flow set to "env" hold only the NAME of a variable; the value
+    # comes from the container's environment. Without this the local editor
+    # resolves them to empty and a node connects with no password — the same
+    # silent failure as a missing variable in a host's compose service.
+    #
+    # .env at the repository root is that file. It is gitignored, .env.example
+    # lists the names, and nr.py creates an empty one when it is missing,
+    # because compose fails on an env_file that does not exist.
+    env_file:
+      - ${REPO_ROOT:-..}/.env
     environment:
       # Load the flow, do not run it — covers the window before the first Deploy.
+      # Set here rather than in .env: this one is not the flow's to change.
       NODE_RED_ENABLE_SAFE_MODE: "true"
     networks:
       - ${EDITOR_NETWORK:-bridged}

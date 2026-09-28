@@ -676,6 +676,19 @@ Check without revealing a value:
 docker exec <service> printenv | cut -d= -f1 | sort
 ```
 
+**The local editor needs them too.** `compose/editor.yml` passes `.env` from the
+repository root into the editor container, so a field set to `env` resolves
+there the way it does on the host. `.env` is gitignored; `.env.example` lists
+the names the flows actually use and which app uses each one. `nr.py edit`
+creates an empty `.env` when there is none, because compose fails outright on a
+missing `env_file` — so an editor that starts is not proof that the values are
+there. A name left empty behaves exactly like a missing variable on a host: the
+node connects with nothing and reports success.
+
+Do **not** put a value into a tab's or group's environment in the editor
+instead. Those are stored in `flows.json`, which is committed — that is a
+plaintext secret in Git, which is the thing `secrets-to-env.py` exists to undo.
+
 `registry.yml: variables` describes what an instance's environment should hold.
 No tool writes it into a container — the host's compose file does, by hand
 (`registry.md`).
