@@ -95,7 +95,7 @@ include:
     job_name: build:buildah:jan-prod
     dockerfile: apps/jan-prod/Dockerfile
     image_name: dap-node-red/jan-prod
-    image_tag: 4.0.9-1
+    image_tag: 4.0.9-2
     enable_layers_cache: false
 - component: $CI_SERVER_FQDN/infrastructure/ci-cd-catalog/cosign/cosign-sign@~latest
   inputs:
@@ -357,7 +357,7 @@ build:buildah:jan-prod:
     - apps/jan-prod/Dockerfile
 sign:cosign:jan-prod:
   variables:
-    IMAGE_TAG: 4.0.9-1
+    IMAGE_TAG: 4.0.9-2
   needs:
   - job: build:buildah:jan-prod
   rules:

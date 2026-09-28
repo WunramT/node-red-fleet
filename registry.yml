@@ -81,7 +81,7 @@ instances:
     auth_credential_id: nodered-jan-prod-auth
     credential_secret_id: nodered-jan-prod-credsecret
     dns_search: [rah.polipol.intra]
-    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/jan-prod:4.0.9-1  # running node-red 4.0.9, 42 nodes, no palette
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/jan-prod:4.0.9-2  # running node-red 4.0.9, 42 nodes, no palette
     variables: {}
 
   - name: jan-test
