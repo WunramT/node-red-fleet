@@ -555,6 +555,11 @@ def act(action: str, inst: dict | None, cfg: dict, baked: bool = False,
         # not there, and "no such file" would be a confusing way to learn that
         # a feature you are not using exists — so an empty one is enough.
         dotenv = ROOT / ".env"
+        # Absolute, and from THIS process's view of the tree: compose reads the
+        # env file itself, unlike a volume, which the daemon resolves. In a dev
+        # container the two are different paths to the same directory, and
+        # REPO_ROOT is the daemon's.
+        env["EDITOR_ENV_FILE"] = str(dotenv)
         if not dotenv.exists():
             dotenv.write_text(
                 "# Values for the fields a flow reads from the environment.\n"

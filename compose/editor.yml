@@ -71,8 +71,14 @@ services:
     # .env at the repository root is that file. It is gitignored, .env.example
     # lists the names, and nr.py creates an empty one when it is missing,
     # because compose fails on an env_file that does not exist.
+    #
+    # NOT ${REPO_ROOT}, which is the path the DAEMON needs — inside a dev
+    # container that is the Windows host path, and the compose client running
+    # in the container cannot open C:\Users\... So this one is the client's
+    # own path: nr.py passes it absolute, and the fallback is relative to this
+    # file's directory for a compose call made by hand.
     env_file:
-      - ${REPO_ROOT:-..}/.env
+      - ${EDITOR_ENV_FILE:-../.env}
     environment:
       # Load the flow, do not run it — covers the window before the first Deploy.
       # Set here rather than in .env: this one is not the flow's to change.
