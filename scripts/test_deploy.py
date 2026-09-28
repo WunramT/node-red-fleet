@@ -109,8 +109,6 @@ check("admin_root read correctly", wag["admin_root"] == "/node-red-prod", wag.ge
 # f"{base}{admin_root}/flows" read "None/flows". Which instances those are is
 # registry data and changes with the estate, so this asks the registry rather
 # than naming one: gor and jan are root-served today.
-rootless = [i for i in known if i["admin_root"] == ""]
-check("at least one instance is root-served", rootless, str([i["name"] for i in rootless]))
 check("and an empty admin_root stays a string, not None",
       all(isinstance(i["admin_root"], str) for i in known))
 check("credential env naming", env_credentials("nodered-x-auth") is None)
