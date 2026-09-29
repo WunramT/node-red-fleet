@@ -420,6 +420,22 @@ Removing a module is therefore a manual edit of `apps/<app>/package.json`.
    with the `rev` it printed and `DEPLOY_PALETTE=true`. A `409` aborts before
    anything is pulled or recreated.
 
+   **Tick `DEPLOY_PALETTE` on the look-run too.** It changes nothing — no pull,
+   no recreate — and reports the four things that decide whether the write will
+   work:
+
+   ```
+   --- palette, dry run ---
+   pinned in registry.yml: harbor…/jan-prod:4.0.9-2
+   container runs now:     harbor…/jan-prod:4.0.9-1
+   compose would use:      harbor…/jan-prod:4.0.9-2
+   image on this host:     no — the real run pulls it
+   ```
+
+   If "compose would use" is not the pinned tag, that host's service does not
+   read its `IMAGE_<SERVICE>` variable, and the real run would recreate the
+   container on the old image. Better to learn it here than from a green build.
+
 **Nothing is edited on the host.** The compose services take their image from an
 environment variable whose fallback is the tag pinned at the time:
 

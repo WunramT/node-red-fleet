@@ -91,9 +91,11 @@ Jenkins writes. Two runs, and the second is pinned to what the first showed you:
 Without `EXPECT_REV` the deploy overwrites whatever it finds, and says so. With
 it, anything that changed the instance in between stops the write.
 
-A palette deploy is the same two runs with `DEPLOY_PALETTE=true` on the second.
-It writes the flow first and recreates the container after, so the `rev`
-handshake still applies and a `409` stops it before anything is pulled.
+A palette deploy is the same two runs with `DEPLOY_PALETTE=true` on **both**.
+On the dry run it only reports — the pinned tag, what the container runs, what
+compose would use, whether the image is on the host. On the write it deploys the
+flow first and recreates the container after, so the `rev` handshake still
+applies and a `409` stops it before anything is pulled.
 
 ## Watching it
 
