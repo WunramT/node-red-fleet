@@ -16,6 +16,14 @@
     "env": []
   },
   {
+    "id": "6f9cc73b79d52fc1",
+    "type": "tab",
+    "label": "Baeumer",
+    "info": "",
+    "disabled": false,
+    "env": []
+  },
+  {
     "id": "76b3786a13d77125",
     "type": "subflow",
     "name": "Insert Queue V4 DPN",
@@ -46,14 +54,6 @@
         }
       ]
     }
-  },
-  {
-    "id": "6f9cc73b79d52fc1",
-    "type": "tab",
-    "label": "Baeumer",
-    "info": "",
-    "disabled": false,
-    "env": []
   },
   {
     "id": "03b4b6bcc523e2a5",
@@ -3056,387 +3056,6 @@
     ]
   },
   {
-    "id": "05654549c6edc225",
-    "type": "comment",
-    "z": "76b3786a13d77125",
-    "name": "Subflow description",
-    "info": "# Insert Queue\n\nProcess of this subflow:\n 1. queue messages\n 2. insert message by message into postgresql node\n 3. drop the message from the queue, when it was processed succesfull\n 4. peek a new message from the queue\n 5. repeat\n\nEach input will be queued inside the q-gate node. (FIFO)\nDuring start of the subflow a Trigger will be activated. This trigger will send a \"control: peek\" message at a given interval.\nThis is necessary because when the queue is empty we need to periodically check if a new message is available.\nWhen a message is dequeued the trigger will be deactivated (msg.reset: true) until the message is processed by the postgresql node.\n",
-    "x": 150,
-    "y": 40,
-    "wires": []
-  },
-  {
-    "id": "0c080fdb1fbac39c",
-    "type": "function",
-    "z": "76b3786a13d77125",
-    "name": "status message",
-    "finalize": "",
-    "func": "return msg;",
-    "initialize": "",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 520,
-    "y": 460,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "0ca4a63e853d0c9f",
-    "type": "status",
-    "z": "76b3786a13d77125",
-    "name": "status",
-    "scope": [
-      "a563cea57d73f796",
-      "858ee01069666424"
-    ],
-    "x": 270,
-    "y": 460,
-    "wires": [
-      [
-        "0c080fdb1fbac39c"
-      ]
-    ]
-  },
-  {
-    "id": "32d8e2edfcc6a2f2",
-    "type": "q-gate",
-    "z": "76b3786a13d77125",
-    "name": "q-gate",
-    "closeCmd": "close",
-    "controlTopic": "control",
-    "defaultCmd": "default",
-    "defaultState": "queueing",
-    "dropCmd": "drop",
-    "flushCmd": "flush",
-    "keepNewest": false,
-    "maxQueueLength": "3000",
-    "openCmd": "open",
-    "peekCmd": "peek",
-    "persist": true,
-    "qToggle": false,
-    "queueCmd": "queue",
-    "resetCmd": "reset",
-    "statusCmd": "status",
-    "storeName": "memory",
-    "toggleCmd": "toggle",
-    "triggerCmd": "trigger",
-    "x": 270,
-    "y": 100,
-    "wires": [
-      [
-        "6705c95239a26a46",
-        "e5ac8fac2308fd36"
-      ]
-    ]
-  },
-  {
-    "id": "4d40c96f9af9d485",
-    "type": "function",
-    "z": "76b3786a13d77125",
-    "name": "peek",
-    "finalize": "",
-    "func": "// get errorFlag\nconst errorFlag = flow.get('errorFlag') || false;\n\n// if errorFlag is True, do nothing and set errorFlag to false\nif (errorFlag) {\n    flow.set('errorFlag', false)\n    return null\n} else {\n    msg.topic = 'control'\n    msg.payload = 'peek'\n    return msg\n}",
-    "initialize": "",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": "",
-    "x": 990,
-    "y": 200,
-    "wires": [
-      [
-        "fe9839ef8da4c078"
-      ]
-    ]
-  },
-  {
-    "id": "521690d20c4de49f",
-    "type": "status",
-    "z": "76b3786a13d77125",
-    "name": "status",
-    "scope": [
-      "32d8e2edfcc6a2f2"
-    ],
-    "x": 270,
-    "y": 520,
-    "wires": [
-      [
-        "566311abd0d4a3be"
-      ]
-    ]
-  },
-  {
-    "id": "566311abd0d4a3be",
-    "type": "function",
-    "z": "76b3786a13d77125",
-    "name": "Set queueText",
-    "finalize": "",
-    "func": "// Set the queue text to use it in another node status\nflow.set(\"queueText\", msg.status.text)",
-    "initialize": "",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 520,
-    "y": 520,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "6705c95239a26a46",
-    "type": "postgresql",
-    "z": "76b3786a13d77125",
-    "name": "insert",
-    "outputs": 1,
-    "postgreSQLConfig": "f43294141dfb4f45",
-    "query": "",
-    "rowsPerMsg": 1,
-    "split": false,
-    "x": 430,
-    "y": 80,
-    "wires": [
-      [
-        "de6e9bd1104ea4ad"
-      ]
-    ]
-  },
-  {
-    "id": "858ee01069666424",
-    "type": "function",
-    "z": "76b3786a13d77125",
-    "name": "Queue Success status",
-    "finalize": "",
-    "func": "// Set the Flow status to the status message of the q-gate\nconst queueText = flow.get(\"queueText\") || \"Queue: 0\";\nnode.status({ fill: \"yellow\", shape: \"ring\", text: queueText});",
-    "initialize": "",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 480,
-    "y": 380,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "89f05afa55943516",
-    "type": "function",
-    "z": "76b3786a13d77125",
-    "name": "set errorFlag & change delay",
-    "finalize": "",
-    "func": "const errorFlag = flow.get(\"errorFlag\") || false;\nif (!errorFlag) {\n    flow.set(\"errorFlag\", true)\n};\nmsg.delay = 10000;  // 10 seconds between retry\nreturn msg;",
-    "initialize": "",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 540,
-    "y": 200,
-    "wires": [
-      [
-        "c585d6f27fd51bdd"
-      ]
-    ]
-  },
-  {
-    "id": "903bfea62df56fcd",
-    "type": "inject",
-    "z": "76b3786a13d77125",
-    "name": "init trigger",
-    "crontab": "",
-    "once": true,
-    "onceDelay": "1",
-    "payload": "",
-    "payloadType": "date",
-    "props": [
-      {
-        "p": "payload"
-      }
-    ],
-    "repeat": "",
-    "topic": "",
-    "x": 460,
-    "y": 260,
-    "wires": [
-      [
-        "c585d6f27fd51bdd"
-      ]
-    ]
-  },
-  {
-    "id": "a563cea57d73f796",
-    "type": "function",
-    "z": "76b3786a13d77125",
-    "name": "SQL Error Status Message",
-    "finalize": "",
-    "func": "// Combine the error message and the queueText\n\nconst errorMessage = msg.error.message;\nconst queueText = flow.get(\"queueText\") || \"Queue: 0\";\nconst combinedMessage = `${queueText} - ${errorMessage}`\nnode.status({ fill: \"red\", shape: \"ring\", text: combinedMessage});",
-    "initialize": "",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 500,
-    "y": 320,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "ab8a2539d5f8c5f1",
-    "type": "comment",
-    "z": "76b3786a13d77125",
-    "name": "",
-    "info": "",
-    "x": 800,
-    "y": 360,
-    "wires": []
-  },
-  {
-    "id": "c0a699da6d0e1dc1",
-    "type": "catch",
-    "z": "76b3786a13d77125",
-    "name": "SQL Error",
-    "scope": [
-      "6705c95239a26a46"
-    ],
-    "uncaught": false,
-    "x": 280,
-    "y": 200,
-    "wires": [
-      [
-        "89f05afa55943516",
-        "a563cea57d73f796"
-      ]
-    ]
-  },
-  {
-    "id": "c585d6f27fd51bdd",
-    "type": "trigger",
-    "z": "76b3786a13d77125",
-    "name": "Trigger",
-    "bytopic": "all",
-    "duration": "-10",
-    "extend": false,
-    "op1": "1",
-    "op1type": "str",
-    "op2": "0",
-    "op2type": "num",
-    "outputs": 1,
-    "overrideDelay": true,
-    "reset": "",
-    "topic": "topic",
-    "units": "s",
-    "x": 820,
-    "y": 200,
-    "wires": [
-      [
-        "4d40c96f9af9d485"
-      ]
-    ]
-  },
-  {
-    "id": "cce986b7f5e614d1",
-    "type": "link in",
-    "z": "76b3786a13d77125",
-    "name": "",
-    "links": [
-      "fe9839ef8da4c078"
-    ],
-    "x": 125,
-    "y": 280,
-    "wires": [
-      [
-        "32d8e2edfcc6a2f2",
-        "858ee01069666424"
-      ]
-    ]
-  },
-  {
-    "id": "de6e9bd1104ea4ad",
-    "type": "function",
-    "z": "76b3786a13d77125",
-    "name": "drop message & reactivate trigger",
-    "finalize": "",
-    "func": "// Delete the oldest message on success\n// Send a delay message to the trigger which will change the delay settings and restart the trigger\nnode.send([\n    {topic: \"control\", payload: \"drop\"},  // Output 1\n    {delay: 1000} // Output 2\n]);",
-    "initialize": "// Der Code hier wird ausgeführt,\n// wenn der Node gestartet wird\n\n// Set a initial state to see if a message has reached this node.\nconst errorFlag = flow.get(\"errorFlag\") || false;",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 2,
-    "timeout": "",
-    "x": 700,
-    "y": 100,
-    "wires": [
-      [
-        "fe9839ef8da4c078"
-      ],
-      [
-        "c585d6f27fd51bdd"
-      ]
-    ]
-  },
-  {
-    "id": "e5ac8fac2308fd36",
-    "type": "function",
-    "z": "76b3786a13d77125",
-    "name": "reset trigger",
-    "finalize": "",
-    "func": "// Reset the trigger and set the delay to high value to avoid\n// peeking the same message from the queue again,\n// if the database is not responding within a few seconds\n\nmsg.reset = true;\nreturn msg;",
-    "initialize": "",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 450,
-    "y": 140,
-    "wires": [
-      [
-        "c585d6f27fd51bdd"
-      ]
-    ]
-  },
-  {
-    "id": "f43294141dfb4f45",
-    "type": "postgreSQLConfig",
-    "z": "76b3786a13d77125",
-    "name": "DPN_SVR_postgres",
-    "applicationName": "",
-    "applicationNameType": "str",
-    "connectionTimeout": 10000,
-    "connectionTimeoutFieldType": "num",
-    "database": "iot",
-    "databaseFieldType": "str",
-    "host": "192.168.48.209",
-    "hostFieldType": "str",
-    "idle": 1000,
-    "idleFieldType": "num",
-    "max": 10,
-    "maxFieldType": "num",
-    "password": "DPN_SVR_POSTGRES_PASSWORD_iot_user_sub",
-    "passwordFieldType": "env",
-    "port": "6432",
-    "portFieldType": "num",
-    "ssl": "false",
-    "sslFieldType": "bool",
-    "user": "iot_user_sub",
-    "userFieldType": "str"
-  },
-  {
-    "id": "fe9839ef8da4c078",
-    "type": "link out",
-    "z": "76b3786a13d77125",
-    "name": "",
-    "links": [
-      "cce986b7f5e614d1"
-    ],
-    "x": 1085,
-    "y": 100,
-    "wires": []
-  },
-  {
     "id": "025a81a4f3e24ae2",
     "type": "inject",
     "z": "6f9cc73b79d52fc1",
@@ -3722,7 +3341,7 @@
     "z": "6f9cc73b79d52fc1",
     "g": "6d24dcdf1e53403f",
     "name": "is_m_2_3576_diagnostic_interval",
-    "broker": "4e714f14d7af13f4",
+    "broker": "922fa28be1dcb7a7",
     "datatype": "auto-detect",
     "inputs": 0,
     "nl": false,
@@ -3765,7 +3384,7 @@
     "z": "6f9cc73b79d52fc1",
     "g": "5f581117d6694636",
     "name": "ofs_vs_12_0384_knife_cycle",
-    "broker": "4e714f14d7af13f4",
+    "broker": "922fa28be1dcb7a7",
     "datatype": "auto-detect",
     "inputs": 0,
     "nl": false,
@@ -3787,7 +3406,7 @@
     "z": "6f9cc73b79d52fc1",
     "g": "751cc3be20554e23",
     "name": "ofs_he3_11_1786_knife_cycle",
-    "broker": "4e714f14d7af13f4",
+    "broker": "922fa28be1dcb7a7",
     "datatype": "auto-detect",
     "inputs": 0,
     "nl": false,
@@ -3840,7 +3459,7 @@
     "z": "6f9cc73b79d52fc1",
     "g": "751cc3be20554e23",
     "name": "ofs_he3_11_1786_device_state",
-    "broker": "4e714f14d7af13f4",
+    "broker": "922fa28be1dcb7a7",
     "datatype": "auto-detect",
     "inputs": 0,
     "nl": false,
@@ -3932,7 +3551,7 @@
     "z": "6f9cc73b79d52fc1",
     "g": "5f581117d6694636",
     "name": "ofs_vs_12_0384_jobs",
-    "broker": "4e714f14d7af13f4",
+    "broker": "922fa28be1dcb7a7",
     "datatype": "auto-detect",
     "inputs": 0,
     "nl": false,
@@ -4318,7 +3937,7 @@
     "z": "6f9cc73b79d52fc1",
     "g": "6d24dcdf1e53403f",
     "name": "is_m_2_3576_diagnostic_fault_trigger",
-    "broker": "4e714f14d7af13f4",
+    "broker": "922fa28be1dcb7a7",
     "datatype": "auto-detect",
     "inputs": 0,
     "nl": false,
@@ -4420,7 +4039,7 @@
     "z": "6f9cc73b79d52fc1",
     "g": "751cc3be20554e23",
     "name": "ofs_he3_11_1786_diagnostic_interval",
-    "broker": "4e714f14d7af13f4",
+    "broker": "922fa28be1dcb7a7",
     "datatype": "auto-detect",
     "inputs": 0,
     "nl": false,
@@ -4525,7 +4144,7 @@
     "z": "6f9cc73b79d52fc1",
     "g": "5f581117d6694636",
     "name": "ofs_vs_12_0384_diagnostic_interval",
-    "broker": "4e714f14d7af13f4",
+    "broker": "922fa28be1dcb7a7",
     "datatype": "auto-detect",
     "inputs": 0,
     "nl": false,
@@ -4610,7 +4229,7 @@
     "z": "6f9cc73b79d52fc1",
     "g": "751cc3be20554e23",
     "name": "ofs_he3_11_1786_jobs",
-    "broker": "4e714f14d7af13f4",
+    "broker": "922fa28be1dcb7a7",
     "datatype": "auto-detect",
     "inputs": 0,
     "nl": false,
@@ -4795,7 +4414,7 @@
     "z": "6f9cc73b79d52fc1",
     "g": "5f581117d6694636",
     "name": "ofs_vs_12_0384_device_state",
-    "broker": "4e714f14d7af13f4",
+    "broker": "922fa28be1dcb7a7",
     "datatype": "auto-detect",
     "inputs": 0,
     "nl": false,
@@ -4890,7 +4509,7 @@
     "z": "6f9cc73b79d52fc1",
     "g": "6d24dcdf1e53403f",
     "name": "is_m_2_3576_device_state",
-    "broker": "4e714f14d7af13f4",
+    "broker": "922fa28be1dcb7a7",
     "datatype": "auto-detect",
     "inputs": 0,
     "nl": false,
@@ -4905,6 +4524,387 @@
         "2e8d036176e6501a"
       ]
     ]
+  },
+  {
+    "id": "05654549c6edc225",
+    "type": "comment",
+    "z": "76b3786a13d77125",
+    "name": "Subflow description",
+    "info": "# Insert Queue\n\nProcess of this subflow:\n 1. queue messages\n 2. insert message by message into postgresql node\n 3. drop the message from the queue, when it was processed succesfull\n 4. peek a new message from the queue\n 5. repeat\n\nEach input will be queued inside the q-gate node. (FIFO)\nDuring start of the subflow a Trigger will be activated. This trigger will send a \"control: peek\" message at a given interval.\nThis is necessary because when the queue is empty we need to periodically check if a new message is available.\nWhen a message is dequeued the trigger will be deactivated (msg.reset: true) until the message is processed by the postgresql node.\n",
+    "x": 150,
+    "y": 40,
+    "wires": []
+  },
+  {
+    "id": "0c080fdb1fbac39c",
+    "type": "function",
+    "z": "76b3786a13d77125",
+    "name": "status message",
+    "finalize": "",
+    "func": "return msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 520,
+    "y": 460,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "0ca4a63e853d0c9f",
+    "type": "status",
+    "z": "76b3786a13d77125",
+    "name": "status",
+    "scope": [
+      "a563cea57d73f796",
+      "858ee01069666424"
+    ],
+    "x": 270,
+    "y": 460,
+    "wires": [
+      [
+        "0c080fdb1fbac39c"
+      ]
+    ]
+  },
+  {
+    "id": "32d8e2edfcc6a2f2",
+    "type": "q-gate",
+    "z": "76b3786a13d77125",
+    "name": "q-gate",
+    "closeCmd": "close",
+    "controlTopic": "control",
+    "defaultCmd": "default",
+    "defaultState": "queueing",
+    "dropCmd": "drop",
+    "flushCmd": "flush",
+    "keepNewest": false,
+    "maxQueueLength": "3000",
+    "openCmd": "open",
+    "peekCmd": "peek",
+    "persist": true,
+    "qToggle": false,
+    "queueCmd": "queue",
+    "resetCmd": "reset",
+    "statusCmd": "status",
+    "storeName": "memory",
+    "toggleCmd": "toggle",
+    "triggerCmd": "trigger",
+    "x": 270,
+    "y": 100,
+    "wires": [
+      [
+        "6705c95239a26a46",
+        "e5ac8fac2308fd36"
+      ]
+    ]
+  },
+  {
+    "id": "4d40c96f9af9d485",
+    "type": "function",
+    "z": "76b3786a13d77125",
+    "name": "peek",
+    "finalize": "",
+    "func": "// get errorFlag\nconst errorFlag = flow.get('errorFlag') || false;\n\n// if errorFlag is True, do nothing and set errorFlag to false\nif (errorFlag) {\n    flow.set('errorFlag', false)\n    return null\n} else {\n    msg.topic = 'control'\n    msg.payload = 'peek'\n    return msg\n}",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": "",
+    "x": 990,
+    "y": 200,
+    "wires": [
+      [
+        "fe9839ef8da4c078"
+      ]
+    ]
+  },
+  {
+    "id": "521690d20c4de49f",
+    "type": "status",
+    "z": "76b3786a13d77125",
+    "name": "status",
+    "scope": [
+      "32d8e2edfcc6a2f2"
+    ],
+    "x": 270,
+    "y": 520,
+    "wires": [
+      [
+        "566311abd0d4a3be"
+      ]
+    ]
+  },
+  {
+    "id": "566311abd0d4a3be",
+    "type": "function",
+    "z": "76b3786a13d77125",
+    "name": "Set queueText",
+    "finalize": "",
+    "func": "// Set the queue text to use it in another node status\nflow.set(\"queueText\", msg.status.text)",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 520,
+    "y": 520,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "6705c95239a26a46",
+    "type": "postgresql",
+    "z": "76b3786a13d77125",
+    "name": "insert",
+    "outputs": 1,
+    "postgreSQLConfig": "f43294141dfb4f45",
+    "query": "",
+    "rowsPerMsg": 1,
+    "split": false,
+    "x": 430,
+    "y": 80,
+    "wires": [
+      [
+        "de6e9bd1104ea4ad"
+      ]
+    ]
+  },
+  {
+    "id": "858ee01069666424",
+    "type": "function",
+    "z": "76b3786a13d77125",
+    "name": "Queue Success status",
+    "finalize": "",
+    "func": "// Set the Flow status to the status message of the q-gate\nconst queueText = flow.get(\"queueText\") || \"Queue: 0\";\nnode.status({ fill: \"yellow\", shape: \"ring\", text: queueText});",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 480,
+    "y": 380,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "89f05afa55943516",
+    "type": "function",
+    "z": "76b3786a13d77125",
+    "name": "set errorFlag & change delay",
+    "finalize": "",
+    "func": "const errorFlag = flow.get(\"errorFlag\") || false;\nif (!errorFlag) {\n    flow.set(\"errorFlag\", true)\n};\nmsg.delay = 10000;  // 10 seconds between retry\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 540,
+    "y": 200,
+    "wires": [
+      [
+        "c585d6f27fd51bdd"
+      ]
+    ]
+  },
+  {
+    "id": "903bfea62df56fcd",
+    "type": "inject",
+    "z": "76b3786a13d77125",
+    "name": "init trigger",
+    "crontab": "",
+    "once": true,
+    "onceDelay": "1",
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 460,
+    "y": 260,
+    "wires": [
+      [
+        "c585d6f27fd51bdd"
+      ]
+    ]
+  },
+  {
+    "id": "a563cea57d73f796",
+    "type": "function",
+    "z": "76b3786a13d77125",
+    "name": "SQL Error Status Message",
+    "finalize": "",
+    "func": "// Combine the error message and the queueText\n\nconst errorMessage = msg.error.message;\nconst queueText = flow.get(\"queueText\") || \"Queue: 0\";\nconst combinedMessage = `${queueText} - ${errorMessage}`\nnode.status({ fill: \"red\", shape: \"ring\", text: combinedMessage});",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 500,
+    "y": 320,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "ab8a2539d5f8c5f1",
+    "type": "comment",
+    "z": "76b3786a13d77125",
+    "name": "",
+    "info": "",
+    "x": 800,
+    "y": 360,
+    "wires": []
+  },
+  {
+    "id": "c0a699da6d0e1dc1",
+    "type": "catch",
+    "z": "76b3786a13d77125",
+    "name": "SQL Error",
+    "scope": [
+      "6705c95239a26a46"
+    ],
+    "uncaught": false,
+    "x": 280,
+    "y": 200,
+    "wires": [
+      [
+        "89f05afa55943516",
+        "a563cea57d73f796"
+      ]
+    ]
+  },
+  {
+    "id": "c585d6f27fd51bdd",
+    "type": "trigger",
+    "z": "76b3786a13d77125",
+    "name": "Trigger",
+    "bytopic": "all",
+    "duration": "-10",
+    "extend": false,
+    "op1": "1",
+    "op1type": "str",
+    "op2": "0",
+    "op2type": "num",
+    "outputs": 1,
+    "overrideDelay": true,
+    "reset": "",
+    "topic": "topic",
+    "units": "s",
+    "x": 820,
+    "y": 200,
+    "wires": [
+      [
+        "4d40c96f9af9d485"
+      ]
+    ]
+  },
+  {
+    "id": "cce986b7f5e614d1",
+    "type": "link in",
+    "z": "76b3786a13d77125",
+    "name": "",
+    "links": [
+      "fe9839ef8da4c078"
+    ],
+    "x": 125,
+    "y": 280,
+    "wires": [
+      [
+        "32d8e2edfcc6a2f2",
+        "858ee01069666424"
+      ]
+    ]
+  },
+  {
+    "id": "de6e9bd1104ea4ad",
+    "type": "function",
+    "z": "76b3786a13d77125",
+    "name": "drop message & reactivate trigger",
+    "finalize": "",
+    "func": "// Delete the oldest message on success\n// Send a delay message to the trigger which will change the delay settings and restart the trigger\nnode.send([\n    {topic: \"control\", payload: \"drop\"},  // Output 1\n    {delay: 1000} // Output 2\n]);",
+    "initialize": "// Der Code hier wird ausgeführt,\n// wenn der Node gestartet wird\n\n// Set a initial state to see if a message has reached this node.\nconst errorFlag = flow.get(\"errorFlag\") || false;",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 2,
+    "timeout": "",
+    "x": 700,
+    "y": 100,
+    "wires": [
+      [
+        "fe9839ef8da4c078"
+      ],
+      [
+        "c585d6f27fd51bdd"
+      ]
+    ]
+  },
+  {
+    "id": "e5ac8fac2308fd36",
+    "type": "function",
+    "z": "76b3786a13d77125",
+    "name": "reset trigger",
+    "finalize": "",
+    "func": "// Reset the trigger and set the delay to high value to avoid\n// peeking the same message from the queue again,\n// if the database is not responding within a few seconds\n\nmsg.reset = true;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 450,
+    "y": 140,
+    "wires": [
+      [
+        "c585d6f27fd51bdd"
+      ]
+    ]
+  },
+  {
+    "id": "f43294141dfb4f45",
+    "type": "postgreSQLConfig",
+    "z": "76b3786a13d77125",
+    "name": "DPN_SVR_postgres",
+    "applicationName": "",
+    "applicationNameType": "str",
+    "connectionTimeout": 10000,
+    "connectionTimeoutFieldType": "num",
+    "database": "iot",
+    "databaseFieldType": "str",
+    "host": "192.168.48.209",
+    "hostFieldType": "str",
+    "idle": 1000,
+    "idleFieldType": "num",
+    "max": 10,
+    "maxFieldType": "num",
+    "password": "DPN_SVR_POSTGRES_PASSWORD_iot_user_sub",
+    "passwordFieldType": "env",
+    "port": "6432",
+    "portFieldType": "num",
+    "ssl": "false",
+    "sslFieldType": "bool",
+    "user": "iot_user_sub",
+    "userFieldType": "str"
+  },
+  {
+    "id": "fe9839ef8da4c078",
+    "type": "link out",
+    "z": "76b3786a13d77125",
+    "name": "",
+    "links": [
+      "cce986b7f5e614d1"
+    ],
+    "x": 1085,
+    "y": 100,
+    "wires": []
   },
   {
     "id": "4a03d5fa9a0e0313",
