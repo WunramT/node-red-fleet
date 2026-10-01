@@ -1490,6 +1490,23 @@
     "y": 2479
   },
   {
+    "id": "1199116c44d82f07",
+    "type": "postgresql",
+    "z": "3e548bf2265f6cf1",
+    "g": "59f1a3c6f2d4e146",
+    "name": "",
+    "outputs": 1,
+    "postgreSQLConfig": "bd4067eedecda5b1",
+    "query": "",
+    "rowsPerMsg": 1,
+    "split": false,
+    "x": 940,
+    "y": 1680,
+    "wires": [
+      []
+    ]
+  },
+  {
     "id": "124a3f47355dcb28",
     "type": "rbe",
     "z": "3e548bf2265f6cf1",
@@ -1632,6 +1649,27 @@
     ]
   },
   {
+    "id": "1699e7c3fbdc2ca8",
+    "type": "function",
+    "z": "3e548bf2265f6cf1",
+    "g": "eb780e7fcfe16d2a",
+    "name": "SQL",
+    "finalize": "",
+    "func": "// INSERT prepared from msg.sql; values are passed as parameters.\nconst quoteIdentifier = name => '\"' + String(name).replace(/\"/g, '\"\"') + '\"';\nconst schema = quoteIdentifier(msg.sql.schema);\nconst table = quoteIdentifier(msg.sql.table);\nconst columns = msg.sql.columns.map(quoteIdentifier).join(\", \");\nconst placeholders = msg.sql.values.map((_, index) => \"$\" + (index + 1)).join(\", \");\n\nmsg.query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${placeholders});`;\nmsg.params = msg.sql.values;\n\nreturn msg;\n",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 720,
+    "y": 3440,
+    "wires": [
+      [
+        "1b3c7c69999c5595"
+      ]
+    ]
+  },
+  {
     "id": "189cb326bc140cb2",
     "type": "function",
     "z": "3e548bf2265f6cf1",
@@ -1689,6 +1727,23 @@
       [
         "39dfaa8c606c2448"
       ]
+    ]
+  },
+  {
+    "id": "1b3c7c69999c5595",
+    "type": "postgresql",
+    "z": "3e548bf2265f6cf1",
+    "g": "eb780e7fcfe16d2a",
+    "name": "",
+    "outputs": 1,
+    "postgreSQLConfig": "bd4067eedecda5b1",
+    "query": "",
+    "rowsPerMsg": 1,
+    "split": false,
+    "x": 900,
+    "y": 3440,
+    "wires": [
+      []
     ]
   },
   {
@@ -1842,6 +1897,27 @@
     "y": 540,
     "wires": [
       []
+    ]
+  },
+  {
+    "id": "26aed0df979e21c7",
+    "type": "rbe",
+    "z": "3e548bf2265f6cf1",
+    "g": "eb780e7fcfe16d2a",
+    "name": "datachange time",
+    "func": "rbe",
+    "gap": "",
+    "inout": "out",
+    "property": "payload.timestamp",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 340,
+    "y": 3460,
+    "wires": [
+      [
+        "b02dc1c8579907ab"
+      ]
     ]
   },
   {
@@ -2507,6 +2583,27 @@
     "y": 39
   },
   {
+    "id": "49d0067b160e40cd",
+    "type": "function",
+    "z": "3e548bf2265f6cf1",
+    "g": "59f1a3c6f2d4e146",
+    "name": "prepare",
+    "finalize": "",
+    "func": "/*\nPreparation of the queryParameters for the following SQL Node\n{\n    \"device_id\": \"6711\",\n    \"timestamp\": \"2026-10-01T08:56:46.283744Z\",\n    \"name\": \"Sensor_Niveau\",\n    \"value\": false\n}\n*/\n\nvar payload = msg.payload;  // copy payload to var\n\n// Validate required fields\nconst requiredFields = [\"device_id\", \"timestamp\", \"name\", \"value\"];\nfor (let field of requiredFields) {\n    if (!payload.hasOwnProperty(field) || payload[field] === null) {\n        node.warn(`Missing or null field: ${field}`);\n        return null;  // Drop the message if validation fails\n    }\n}\n\n// Rename timestamp to ts\npayload.ts = payload.timestamp;\ndelete payload.timestamp;\n\n// Remove computation_time_ms if it exists\ndelete payload.computation_time_ms;\n\n// SQL object\nmsg.sql = {\n    \"schema\": \"huh\",\n    \"table\": `signals_${payload.device_id}`,\n    \"columns\": [],\n    \"values\": []\n};\n\n// iterate over payload\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key])\n};\n\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 610,
+    "y": 1680,
+    "wires": [
+      [
+        "4e8634b60c5e766d"
+      ]
+    ]
+  },
+  {
     "id": "4ce1590ea9345f3f",
     "type": "mqtt in",
     "z": "3e548bf2265f6cf1",
@@ -2568,6 +2665,27 @@
     "wires": [
       [
         "162254eedc1ead7d"
+      ]
+    ]
+  },
+  {
+    "id": "4e8634b60c5e766d",
+    "type": "function",
+    "z": "3e548bf2265f6cf1",
+    "g": "59f1a3c6f2d4e146",
+    "name": "SQL",
+    "finalize": "",
+    "func": "// INSERT prepared from msg.sql; values are passed as parameters.\nconst quoteIdentifier = name => '\"' + String(name).replace(/\"/g, '\"\"') + '\"';\nconst schema = quoteIdentifier(msg.sql.schema);\nconst table = quoteIdentifier(msg.sql.table);\nconst columns = msg.sql.columns.map(quoteIdentifier).join(\", \");\nconst placeholders = msg.sql.values.map((_, index) => \"$\" + (index + 1)).join(\", \");\n\nmsg.query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${placeholders});`;\nmsg.params = msg.sql.values;\n\nreturn msg;\n",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 760,
+    "y": 1680,
+    "wires": [
+      [
+        "1199116c44d82f07"
       ]
     ]
   },
@@ -2716,6 +2834,27 @@
         "ebefb61341a325a3"
       ]
     ]
+  },
+  {
+    "id": "59f1a3c6f2d4e146",
+    "type": "group",
+    "z": "3e548bf2265f6cf1",
+    "name": "Signals STO",
+    "h": 122,
+    "nodes": [
+      "7304347ae7d6a063",
+      "dcd61550d276809d",
+      "9be981aac1acb6c8",
+      "49d0067b160e40cd",
+      "4e8634b60c5e766d",
+      "1199116c44d82f07"
+    ],
+    "style": {
+      "label": true
+    },
+    "w": 1002,
+    "x": 34,
+    "y": 1619
   },
   {
     "id": "5b6dc1c6a8321661",
@@ -3082,6 +3221,27 @@
     ]
   },
   {
+    "id": "6ae47a1b1c02f857",
+    "type": "rbe",
+    "z": "3e548bf2265f6cf1",
+    "g": "eb780e7fcfe16d2a",
+    "name": "datachange value",
+    "func": "rbe",
+    "gap": "",
+    "inout": "out",
+    "property": "payload.value",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 340,
+    "y": 3420,
+    "wires": [
+      [
+        "26aed0df979e21c7"
+      ]
+    ]
+  },
+  {
     "id": "6aeec189f28daf3e",
     "type": "function",
     "z": "3e548bf2265f6cf1",
@@ -3284,6 +3444,28 @@
     "wires": [
       [
         "eb7d9ded3fc6f754"
+      ]
+    ]
+  },
+  {
+    "id": "7304347ae7d6a063",
+    "type": "mqtt in",
+    "z": "3e548bf2265f6cf1",
+    "g": "59f1a3c6f2d4e146",
+    "name": "Sensor_Niveau",
+    "broker": "922fa28be1dcb7a7",
+    "datatype": "auto-detect",
+    "inputs": 0,
+    "nl": false,
+    "qos": "1",
+    "rap": true,
+    "rh": 0,
+    "topic": "polipol/+/sto/sto-okl/+/+/signal/Sensor_Niveau",
+    "x": 140,
+    "y": 1680,
+    "wires": [
+      [
+        "dcd61550d276809d"
       ]
     ]
   },
@@ -3819,6 +4001,28 @@
     "y": 3039
   },
   {
+    "id": "99b50dc48248accc",
+    "type": "mqtt in",
+    "z": "3e548bf2265f6cf1",
+    "g": "eb780e7fcfe16d2a",
+    "name": "Sensor_Niveau",
+    "broker": "922fa28be1dcb7a7",
+    "datatype": "auto-detect",
+    "inputs": 0,
+    "nl": false,
+    "qos": "1",
+    "rap": true,
+    "rh": 0,
+    "topic": "polipol/+/pia/pia-bon/+/+/signal/Sensor_Niveau",
+    "x": 140,
+    "y": 3440,
+    "wires": [
+      [
+        "6ae47a1b1c02f857"
+      ]
+    ]
+  },
+  {
     "id": "9a02ebb79fc50143",
     "type": "function",
     "z": "3e548bf2265f6cf1",
@@ -3900,6 +4104,27 @@
     "wires": [
       [
         "d7e5eefa6eee9059"
+      ]
+    ]
+  },
+  {
+    "id": "9be981aac1acb6c8",
+    "type": "rbe",
+    "z": "3e548bf2265f6cf1",
+    "g": "59f1a3c6f2d4e146",
+    "name": "datachange time",
+    "func": "rbe",
+    "gap": "",
+    "inout": "out",
+    "property": "payload.timestamp",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 380,
+    "y": 1700,
+    "wires": [
+      [
+        "49d0067b160e40cd"
       ]
     ]
   },
@@ -4124,6 +4349,27 @@
     "wires": [
       [
         "25c4ac3007ee0132"
+      ]
+    ]
+  },
+  {
+    "id": "b02dc1c8579907ab",
+    "type": "function",
+    "z": "3e548bf2265f6cf1",
+    "g": "eb780e7fcfe16d2a",
+    "name": "prepare",
+    "finalize": "",
+    "func": "/*\nPreparation of the queryParameters for the following SQL Node\n{\n    \"device_id\": \"6711\",\n    \"timestamp\": \"2026-10-01T08:56:46.283744Z\",\n    \"name\": \"Sensor_Niveau\",\n    \"value\": false\n}\n*/\n\nvar payload = msg.payload;  // copy payload to var\n\n// Validate required fields\nconst requiredFields = [\"device_id\", \"timestamp\", \"name\", \"value\"];\nfor (let field of requiredFields) {\n    if (!payload.hasOwnProperty(field) || payload[field] === null) {\n        node.warn(`Missing or null field: ${field}`);\n        return null;  // Drop the message if validation fails\n    }\n}\n\n// Rename timestamp to ts\npayload.ts = payload.timestamp;\ndelete payload.timestamp;\n\n// Remove computation_time_ms if it exists\ndelete payload.computation_time_ms;\n\n// SQL object\nmsg.sql = {\n    \"schema\": \"huh\",\n    \"table\": `signals_${payload.device_id}`,\n    \"columns\": [],\n    \"values\": []\n};\n\n// iterate over payload\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key])\n};\n\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 570,
+    "y": 3440,
+    "wires": [
+      [
+        "1699e7c3fbdc2ca8"
       ]
     ]
   },
@@ -4726,6 +4972,27 @@
     ]
   },
   {
+    "id": "dcd61550d276809d",
+    "type": "rbe",
+    "z": "3e548bf2265f6cf1",
+    "g": "59f1a3c6f2d4e146",
+    "name": "datachange value",
+    "func": "rbe",
+    "gap": "",
+    "inout": "out",
+    "property": "payload.value",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 380,
+    "y": 1660,
+    "wires": [
+      [
+        "9be981aac1acb6c8"
+      ]
+    ]
+  },
+  {
     "id": "dd1597064a2b1a00",
     "type": "function",
     "z": "3e548bf2265f6cf1",
@@ -5038,6 +5305,27 @@
     "wires": [
       []
     ]
+  },
+  {
+    "id": "eb780e7fcfe16d2a",
+    "type": "group",
+    "z": "3e548bf2265f6cf1",
+    "name": "Signals PIA",
+    "h": 122,
+    "nodes": [
+      "99b50dc48248accc",
+      "6ae47a1b1c02f857",
+      "26aed0df979e21c7",
+      "b02dc1c8579907ab",
+      "1699e7c3fbdc2ca8",
+      "1b3c7c69999c5595"
+    ],
+    "style": {
+      "label": true
+    },
+    "w": 962,
+    "x": 34,
+    "y": 3379
   },
   {
     "id": "eb7d9ded3fc6f754",
@@ -7244,7 +7532,7 @@
       "label": true,
       "fill": "#92d04f"
     },
-    "w": 972,
+    "w": 962,
     "x": 934,
     "y": 79
   },
