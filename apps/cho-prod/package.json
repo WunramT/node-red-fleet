@@ -2,5 +2,8 @@
   "name": "node-red-cho-prod",
   "description": "Palette for cho-prod",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "node-red-contrib-postgresql": "0.15.4",
+    "node-red-contrib-queue-gate": "1.5.5"
+  }
 }
