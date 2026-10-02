@@ -17,7 +17,7 @@ include:
     job_name: build:buildah:cho-prod
     dockerfile: apps/cho-prod/Dockerfile
     image_name: dap-node-red/cho-prod
-    image_tag: 4.0.5-1
+    image_tag: 4.0.5-3
     enable_layers_cache: false
 - component: $CI_SERVER_FQDN/infrastructure/ci-cd-catalog/cosign/cosign-sign@~latest
   inputs:
@@ -30,7 +30,7 @@ include:
     job_name: build:buildah:cho-test
     dockerfile: apps/cho-test/Dockerfile
     image_name: dap-node-red/cho-test
-    image_tag: 4.0.5-1
+    image_tag: 4.0.5-3
     enable_layers_cache: false
 - component: $CI_SERVER_FQDN/infrastructure/ci-cd-catalog/cosign/cosign-sign@~latest
   inputs:
@@ -255,7 +255,7 @@ build:buildah:cho-prod:
     - apps/cho-prod/Dockerfile
 sign:cosign:cho-prod:
   variables:
-    IMAGE_TAG: 4.0.5-1
+    IMAGE_TAG: 4.0.5-3
   needs:
   - job: build:buildah:cho-prod
   rules:
@@ -272,7 +272,7 @@ build:buildah:cho-test:
     - apps/cho-test/Dockerfile
 sign:cosign:cho-test:
   variables:
-    IMAGE_TAG: 4.0.5-1
+    IMAGE_TAG: 4.0.5-3
   needs:
   - job: build:buildah:cho-test
   rules:
