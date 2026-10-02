@@ -31,7 +31,7 @@ instances:
     auth_credential_id: nodered-cho-prod-auth
     credential_secret_id: nodered-cho-prod-credsecret
     dns_search: [rah.polipol.intra]
-    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/cho-prod:4.0.5-1  # running node-red 4.0.5, 68 nodes, no palette
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/cho-prod:4.0.5-2  # running node-red 4.0.5, 68 nodes, 2 palette modules
     variables: {}
 
   - name: cho-test
@@ -43,7 +43,7 @@ instances:
     auth_credential_id: nodered-cho-test-auth
     credential_secret_id: nodered-cho-test-credsecret
     dns_search: [rah.polipol.intra]
-    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/cho-test:4.0.5-1  # running node-red 4.0.5, 6 nodes, no palette
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/cho-test:4.0.5-2  # running node-red 4.0.5, 6 nodes, 2 palette modules
     variables: {}
 
   # --- gor-svr-lin01 --------------------------------------------------------
