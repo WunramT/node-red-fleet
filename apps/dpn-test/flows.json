@@ -26,6 +26,40 @@
     "wires": []
   },
   {
+    "id": "34b7f080a159a7f0",
+    "type": "e-mail",
+    "z": "390b40e6225d9e8c",
+    "name": "t.wunram@polipol.de",
+    "authtype": "BASIC",
+    "dname": "",
+    "port": "${SMTP_PORT}",
+    "saslformat": true,
+    "secure": false,
+    "server": "${SMTP_HOST}",
+    "tls": false,
+    "token": "oauth2Response.access_token",
+    "x": 900,
+    "y": 340,
+    "wires": []
+  },
+  {
+    "id": "987d689ae145bea5",
+    "type": "e-mail",
+    "z": "390b40e6225d9e8c",
+    "name": "j.moehlenpage@polipol.de",
+    "authtype": "BASIC",
+    "dname": "",
+    "port": "${SMTP_PORT}",
+    "saslformat": true,
+    "secure": false,
+    "server": "${SMTP_HOST}",
+    "tls": false,
+    "token": "oauth2Response.access_token",
+    "x": 920,
+    "y": 400,
+    "wires": []
+  },
+  {
     "id": "9e2eafcc8c48ac6b",
     "type": "debug",
     "z": "390b40e6225d9e8c",
@@ -67,16 +101,21 @@
     "z": "390b40e6225d9e8c",
     "name": "function 1",
     "finalize": "",
-    "func": "const rows = Array.isArray(msg.payload) ? msg.payload : [];\n   const now = {};\n   let drifted = 0;\n   for (const row of rows) {\n       // Der Vergleichsschlüssel ist Zustand plus Umfang: aus \"clean\" wird\n       // \"drifted\", und aus 4 geänderten Zeilen werden 40 — beides ist eine\n       // Änderung, eine unveränderte Drift ist keine.\n       now[row.instance] = row.state === \"drifted\"\n           ? `drifted:${row.changed_lines}`\n           : row.state;\n       if (row.state === \"drifted\") { drifted++; }\n   }\n\n   const before = flow.get(\"driftState\") || {};\n   flow.set(\"driftState\", now);\n\n   const stamp = new Date().toTimeString().slice(0, 5);\n   const seen = `${stamp} · ${rows.length} Instanzen, ${drifted} drifted`;\n\n   // Beim allerersten Lauf ist alles \"neu\" — das ist der Anfang der Messung,\n   // kein Ereignis. Dasselbe nach einem Neustart: der Kontext liegt im\n   // Speicher, also beginnt die Messung dort von vorn.\n   if (!Object.keys(before).length) {\n       node.status({ fill: \"grey\", shape: \"ring\", text: `${seen} · Startwert` });\n       return null;\n   }\n\n   const changed = Object.keys(now)\n       .filter(k => now[k] !== before[k])\n       .map(k => `${k}: ${before[k] || \"unbekannt\"} → ${now[k]}`);\n\n   if (!changed.length) {\n       node.status({ fill: \"green\", shape: \"dot\", text: `${seen} · unverändert` });\n       return null;\n   }\n\n   node.status({ fill: \"yellow\", shape: \"dot\", text: `${seen} · ${changed.length} Änderung(en)` });\n   msg.payload = changed.join(\"\\n\");\n   msg.topic = `Node-RED Drift: ${changed.length} Änderung(en)`;\n   return msg;",
+    "func": "const rows = Array.isArray(msg.payload) ? msg.payload : [];\nconst allDrifts = [];\n\n// Alle Instanzen durchgehen und alle aktuellen Drifts erfassen\nfor (const row of rows) {\n    if (row.state === \"drifted\") {\n        allDrifts.push({\n            instance: row.instance,\n            changedLines: row.changed_lines || 0,\n            stateText: `drifted (${row.changed_lines || 0} Zeilen geändert)`\n        });\n    }\n}\n\nconst stamp = new Date().toTimeString().slice(0, 5);\nconst seen = `${stamp} · ${rows.length} Instanzen, ${allDrifts.length} aktuell drifted`;\n\n// Wenn keine Drifts vorliegen: Grüner Status und Abbruch (keine Nachricht)\nif (allDrifts.length === 0) {\n    node.status({ fill: \"green\", shape: \"dot\", text: `${seen} · alles clean` });\n    return null;\n}\n\n// Sobald mindestens ein Drift existiert: Alert auslösen\nnode.status({ fill: \"yellow\", shape: \"dot\", text: `${seen} · Alert aktiv` });\n\nconst jenkinsUrl = \"https://jenkins.polipol.intra/job/PPM/job/%7BCheck%7D-dap-node-red-fleet-drift/\";\nconst jenkinsTitle = \"{Check}-dap-node-red-fleet-drift [PPM] - Jenkins\";\n\n// 1. Text-Zusammenfassung aller aktuellen Drifts\nconst driftSummaryText = allDrifts\n    .map(d => `• ${d.instance}: ${d.stateText}`)\n    .join(\"\\n\");\n\nconst topicText = `Node-RED Status: ${allDrifts.length} Instanz(en) aktuell drifted`;\n\n// --- Ausgang 1: Allgemeine Nachricht (Plaintext) ---\nconst generalMsg = {\n    ...msg,\n    topic: topicText,\n    payload: `Aktuell gedriftete Instanzen (${allDrifts.length} gesamt):\\n${driftSummaryText}\\n\\nJenkins Job: ${jenkinsTitle}\\n${jenkinsUrl}`,\n    drifts: allDrifts\n};\n\n// --- Ausgang 2: Spezifisch für Email-Node mit HTML und Link ---\n\nconst tableRows = allDrifts.map(d => `\n    <tr>\n        <td style=\"padding: 8px 12px; border-bottom: 1px solid #ddd; font-weight: bold;\">${d.instance}</td>\n        <td style=\"padding: 8px 12px; border-bottom: 1px solid #ddd; color: #d9534f; font-family: monospace;\">drifted</td>\n        <td style=\"padding: 8px 12px; border-bottom: 1px solid #ddd; text-align: right;\">${d.changedLines}</td>\n    </tr>\n`).join(\"\");\n\nconst htmlContent = `\n<div style=\"font-family: Arial, sans-serif; color: #333; line-height: 1.5;\">\n    <h3 style=\"color: #d9534f; margin-bottom: 6px;\">⚠️ Aktuelle Drift-Übersicht</h3>\n    <p style=\"font-size: 13px; color: #666; margin-top: 0;\">\n        Zeitpunkt der Prüfung: ${new Date().toLocaleString(\"de-DE\")} | Gesamt geprüft: ${rows.length} Instanzen\n    </p>\n    \n    <p>Aktuell befinden sich <strong>${allDrifts.length}</strong> Instanz(en) im Drift-Zustand:</p>\n    \n    <table style=\"width: 100%; max-width: 650px; border-collapse: collapse; margin: 15px 0; background: #fff; border: 1px solid #ddd;\">\n        <thead>\n            <tr style=\"background: #f8f9fa; text-align: left; font-size: 13px; color: #555;\">\n                <th style=\"padding: 8px 12px; border-bottom: 2px solid #ddd;\">Instanz</th>\n                <th style=\"padding: 8px 12px; border-bottom: 2px solid #ddd;\">Status</th>\n                <th style=\"padding: 8px 12px; border-bottom: 2px solid #ddd; text-align: right;\">Geänderte Zeilen</th>\n            </tr>\n        </thead>\n        <tbody>\n            ${tableRows}\n        </tbody>\n    </table>\n\n    <div style=\"margin: 20px 0; padding: 12px; background-color: #f0f7fd; border-left: 4px solid #0052cc; border-radius: 2px;\">\n        <strong>Details & Build-Status im Jenkins:</strong><br/>\n        👉 <a href=\"${jenkinsUrl}\" style=\"color: #0052cc; text-decoration: underline;\" target=\"_blank\">${jenkinsTitle}</a>\n    </div>\n\n    <p style=\"font-size: 12px; color: #888; margin-top: 25px; border-top: 1px solid #eee; padding-top: 10px;\">\n        Automatisch generiert durch die Node-RED Drift-Erkennung.\n    </p>\n</div>\n`;\n\nconst emailMsg = {\n    topic: `[Alert] ${topicText}`,\n    payload: `Aktuelle Drifts (${allDrifts.length}):\\n\\n${driftSummaryText}\\n\\nJenkins Job: ${jenkinsTitle}\\n${jenkinsUrl}`,\n    description: htmlContent\n};\n\nreturn [generalMsg, emailMsg];",
     "initialize": "",
     "libs": [],
     "noerr": 0,
-    "outputs": 1,
+    "outputs": 2,
     "timeout": 0,
-    "x": 580,
-    "y": 320,
+    "x": 540,
+    "y": 380,
     "wires": [
       [
+        "9e2eafcc8c48ac6b"
+      ],
+      [
+        "34b7f080a159a7f0",
+        "987d689ae145bea5",
         "9e2eafcc8c48ac6b"
       ]
     ]
@@ -376,16 +415,10 @@
       "ui-notification",
       "ui-control"
     ],
-    "allowInstall": false,
-    "appIcon": "",
-    "headerContent": "page",
     "includeClientData": true,
     "navigationStyle": "default",
-    "notificationDisplayTime": 1,
     "path": "/dashboard",
-    "showDisconnectNotification": true,
     "showPathInSidebar": false,
-    "showReconnectNotification": true,
     "titleBarStyle": "default"
   },
   {
@@ -412,28 +445,6 @@
     "type": "ui-page",
     "name": "Prüfdaten Import (Schaum)",
     "disabled": "false",
-    "breakpoints": [
-      {
-        "name": "Default",
-        "px": "0",
-        "cols": "3"
-      },
-      {
-        "name": "Tablet",
-        "px": "576",
-        "cols": "6"
-      },
-      {
-        "name": "Small Desktop",
-        "px": "768",
-        "cols": "9"
-      },
-      {
-        "name": "Desktop",
-        "px": "1024",
-        "cols": "12"
-      }
-    ],
     "className": "",
     "icon": "database-import",
     "layout": "grid",
@@ -449,7 +460,6 @@
     "name": "Prüfdatenimport Multi-Site",
     "disabled": "false",
     "className": "",
-    "groupType": "default",
     "height": 1,
     "order": 1,
     "page": "f0a0000000000102",
@@ -473,13 +483,13 @@
     "idleFieldType": "num",
     "max": "4",
     "maxFieldType": "num",
-    "passwordEnv": "DPN_SVR_POSTGRES_IOT_ADMIN",
+    "password": "DPN_SVR_POSTGRES_IOT_ADMIN",
     "passwordFieldType": "env",
     "port": "6432",
     "portFieldType": "num",
     "ssl": "false",
     "sslFieldType": "bool",
-    "userEnv": "PGUSER",
+    "user": "iot_admin",
     "userFieldType": "cred"
   }
 ]
