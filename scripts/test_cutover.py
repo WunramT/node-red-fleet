@@ -116,9 +116,17 @@ for path in sorted((ROOT / "apps").glob("*/flows.json")):
     check(f"{path.parent.name}: every tab lands in exactly one group",
           sorted(t["id"] for g in found for t in g) == sorted(t["id"] for t in tabs))
 
-gor = json.loads((ROOT / "apps" / "gor-test" / "flows.json").read_text(encoding="utf-8"))
+# The one real coupling in the estate, asserted against samples/ and not against
+# apps/. samples/ is the capture from before the project and does not move, so
+# this stays a fact. apps/gor-test/flows.json is the live instance: somebody
+# deleting those two tabs in the browser and capturing the result is the
+# workflow working, and a test that goes red for it would be punishing exactly
+# what it exists to protect.
+gor = json.loads((ROOT / "samples" / "gor-svr-lin01__node-red-test.flows.json")
+                 .read_text(encoding="utf-8"))
 coupled = [g for g in cutover.groups(gor) if len(g) > 1]
-check("gor-test's linked pair is the only group that must move together", len(coupled) == 1)
+check("the gor-test sample's linked pair is the only group that must move together",
+      len(coupled) == 1, str([[t["label"] for t in g] for g in coupled]))
 check("and it is ZUND with ZÜND TEST",
       sorted(t["label"] for t in coupled[0]) == ["ZUND", "ZÜND TEST"] if coupled else False,
       str([t["label"] for t in coupled[0]] if coupled else []))
