@@ -215,6 +215,33 @@ void deployInstance(Map inst, Map hosts) {
             python3 scripts/deploy.py --instance ${inst.name} ${dryRun} ${expect}
         """
 
+        if (params.DEPLOY_PALETTE && params.DRY_RUN) {
+            // A dry run used to skip this block entirely, so ticking
+            // DEPLOY_PALETTE on a look-run silently examined nothing. Everything
+            // here reads: compose config resolves the file without touching a
+            // container, and docker inspect reports what is running. No pull —
+            // that would fetch layers onto the host during a run whose promise
+            // is that it changes nothing.
+            def imageVar = 'IMAGE_' + inst.compose_service.toUpperCase().replaceAll(/[^A-Z0-9]/, '_')
+            sshCommand remote: remote, failOnError: false, command: """
+                echo '--- palette, dry run ---'
+                echo 'pinned in registry.yml: ${inst.image_tag}'
+                running=\$(docker inspect -f '{{.Config.Image}}' ${inst.compose_service} 2>/dev/null || echo '(not running)')
+                echo "container runs now:      \$running"
+                resolved=\$(${imageVar}='${inst.image_tag}' docker compose -f ${inst.compose_file} config 2>/dev/null \
+                            | awk '/^  ${inst.compose_service}:/{f=1} f&&/image:/{print \$2; exit}')
+                echo "compose would use:       \${resolved:-(could not resolve)}"
+                if [ "\$resolved" != "${inst.image_tag}" ]; then
+                    echo "!! compose does not take the pinned tag — does its service read ${imageVar}?"
+                fi
+                if docker image inspect ${inst.image_tag} >/dev/null 2>&1; then
+                    echo 'image on this host:      yes'
+                else
+                    echo 'image on this host:      no — the real run pulls it'
+                fi
+            """
+        }
+
         if (params.DEPLOY_PALETTE && !params.DRY_RUN) {
             // The host compose files take the image from an environment
             // variable with the currently pinned tag as the fallback:
