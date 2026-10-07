@@ -8,6 +8,46 @@
     "env": []
   },
   {
+    "id": "198280bbd8aa6d98",
+    "type": "tab",
+    "label": "Baeumer",
+    "info": "",
+    "disabled": false,
+    "env": []
+  },
+  {
+    "id": "6d021e54d551838e",
+    "type": "subflow",
+    "name": "Insert Queue V4 DPN",
+    "info": "",
+    "env": [],
+    "category": "",
+    "color": "#DDAA99",
+    "in": [
+      {
+        "x": 80,
+        "y": 100,
+        "wires": [
+          {
+            "id": "bb94a7467ddf76f7"
+          }
+        ]
+      }
+    ],
+    "meta": {},
+    "out": [],
+    "status": {
+      "x": 720,
+      "y": 460,
+      "wires": [
+        {
+          "id": "c908b5fc7710daa3",
+          "port": 0
+        }
+      ]
+    }
+  },
+  {
     "id": "1cd314797da37f4f",
     "type": "debug",
     "z": "c75252fe3f32fc1b",
@@ -22,6 +62,1857 @@
     "x": 140,
     "y": 60,
     "wires": []
+  },
+  {
+    "id": "0192dcc02551d57c",
+    "type": "rbe",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "",
+    "func": "rbei",
+    "gap": "",
+    "inout": "out",
+    "property": "payload",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 510,
+    "y": 980,
+    "wires": [
+      [
+        "521000b1faccbc73"
+      ]
+    ]
+  },
+  {
+    "id": "0a69fd363a52bedc",
+    "type": "inject",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "drop",
+    "payloadType": "str",
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      },
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "control",
+    "x": 1250,
+    "y": 700,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "0cdf5099a0a9f7d1",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "Transform",
+    "finalize": "",
+    "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 980,
+    "y": 260,
+    "wires": [
+      [
+        "a669457a1ad5e138"
+      ]
+    ]
+  },
+  {
+    "id": "0d9b055b87e25fda",
+    "type": "rbe",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "",
+    "func": "rbei",
+    "gap": "",
+    "inout": "out",
+    "property": "payload",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 510,
+    "y": 900,
+    "wires": [
+      [
+        "a7b38f7ef63f32b5"
+      ]
+    ]
+  },
+  {
+    "id": "125aa1a87aa76b11",
+    "type": "subflow:6d021e54d551838e",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "",
+    "x": 1520,
+    "y": 820,
+    "wires": []
+  },
+  {
+    "id": "1d8c013167ab4bad",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "prepare output",
+    "finalize": "",
+    "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'is_m_2_3450_diagnostic_fault_trigger',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 740,
+    "y": 260,
+    "wires": [
+      [
+        "0cdf5099a0a9f7d1"
+      ]
+    ]
+  },
+  {
+    "id": "201f0e222b7ad9af",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "Transform",
+    "finalize": "",
+    "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 980,
+    "y": 580,
+    "wires": [
+      [
+        "b0b3d69ee0533c26"
+      ]
+    ]
+  },
+  {
+    "id": "20ccece2a563011b",
+    "type": "group",
+    "z": "198280bbd8aa6d98",
+    "name": "ofs_he3_11_1677",
+    "h": 362,
+    "nodes": [
+      "3a884b9789b3d911",
+      "de313fceca8c4878",
+      "f8d5098281c12642",
+      "71e1576d8c875b4d",
+      "2521899ceed2d6ee",
+      "b25679c9be671685",
+      "73472e2daf2b5f8b",
+      "5ff92fb32ab83c3b",
+      "4cd86307cf0280c4",
+      "f207a65a76dac503",
+      "fe0dfabb2c817b27",
+      "201f0e222b7ad9af",
+      "28f3f9376d517f24",
+      "0a69fd363a52bedc",
+      "93484251faf7e02c",
+      "cb88d06bd24cb054",
+      "e0e0e048141858f5",
+      "5447454b5354f7ce",
+      "26d1de38885be91b",
+      "9d18cf045c182e89",
+      "7e1a8d78a7c2ad4d",
+      "dfd3436b5dfdd4a5",
+      "b0b3d69ee0533c26",
+      "a9616fc686f9e2b6"
+    ],
+    "style": {
+      "fill": "#d1d1d1",
+      "label": true,
+      "fill-opacity": "0.5"
+    },
+    "w": 1592,
+    "x": 54,
+    "y": 379
+  },
+  {
+    "id": "2521899ceed2d6ee",
+    "type": "mqtt in",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "ofs_he3_11_1677_diagnostic_interval",
+    "broker": "ae4fc7d6aa6d4ede",
+    "datatype": "auto-detect",
+    "inputs": 0,
+    "nl": false,
+    "qos": "1",
+    "rap": true,
+    "rh": 0,
+    "topic": "polipol/8200/pia/pia-cnc/pia-cnc1/11_1677/diagnostic_interval",
+    "x": 230,
+    "y": 500,
+    "wires": [
+      [
+        "26d1de38885be91b"
+      ]
+    ]
+  },
+  {
+    "id": "26d1de38885be91b",
+    "type": "rbe",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "",
+    "func": "rbei",
+    "gap": "",
+    "inout": "out",
+    "property": "payload",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 510,
+    "y": 500,
+    "wires": [
+      [
+        "73472e2daf2b5f8b"
+      ]
+    ]
+  },
+  {
+    "id": "28f3f9376d517f24",
+    "type": "mqtt in",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "ofs_he3_11_1677_knife_cycle",
+    "broker": "ae4fc7d6aa6d4ede",
+    "datatype": "auto-detect",
+    "inputs": 0,
+    "nl": false,
+    "qos": "1",
+    "rap": true,
+    "rh": 0,
+    "topic": "polipol/8200/pia/pia-cnc/pia-cnc1/11_1677/knife_cycle",
+    "x": 200,
+    "y": 660,
+    "wires": [
+      [
+        "e0e0e048141858f5"
+      ]
+    ]
+  },
+  {
+    "id": "32943c40782824e2",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "prepare output",
+    "finalize": "",
+    "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'ofs_he3_103_0345_device_state',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 740,
+    "y": 820,
+    "wires": [
+      [
+        "e720ac0b06dc4695"
+      ]
+    ]
+  },
+  {
+    "id": "3a884b9789b3d911",
+    "type": "mqtt in",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "ofs_he3_11_1677_device_state",
+    "broker": "ae4fc7d6aa6d4ede",
+    "datatype": "auto-detect",
+    "inputs": 0,
+    "nl": false,
+    "qos": "1",
+    "rap": true,
+    "rh": 0,
+    "topic": "polipol/8200/pia/pia-cnc/pia-cnc1/11_1677/device_state",
+    "x": 210,
+    "y": 420,
+    "wires": [
+      [
+        "9d18cf045c182e89"
+      ]
+    ]
+  },
+  {
+    "id": "3b9eee3d51f5222b",
+    "type": "mqtt in",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "is_m_2_3450_diagnostic_fault_trigger",
+    "broker": "ae4fc7d6aa6d4ede",
+    "datatype": "auto-detect",
+    "inputs": 0,
+    "nl": false,
+    "qos": "1",
+    "rap": true,
+    "rh": 0,
+    "topic": "polipol/8200/pia/pia-pp/pia-pp1/2_3450/diagnostic_fault_trigger",
+    "x": 230,
+    "y": 260,
+    "wires": [
+      [
+        "e4f10b6c4f09281c"
+      ]
+    ]
+  },
+  {
+    "id": "3beb714fb71bd76f",
+    "type": "inject",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "drop",
+    "payloadType": "str",
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      },
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "control",
+    "x": 1250,
+    "y": 300,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "3f9226028b841677",
+    "type": "subflow:6d021e54d551838e",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "",
+    "x": 1520,
+    "y": 1060,
+    "wires": []
+  },
+  {
+    "id": "4249a8dc54f23f60",
+    "type": "group",
+    "z": "198280bbd8aa6d98",
+    "name": "is_m_2_3450",
+    "h": 282,
+    "nodes": [
+      "8bc793adaa8150ac",
+      "ae8c1d91b7a29d40",
+      "a149a23adc4d1b7e",
+      "42e2aaf18be53de1",
+      "84965cccb3138ca8",
+      "eae4e7bf320bb761",
+      "91a9244087a35539",
+      "3b9eee3d51f5222b",
+      "3beb714fb71bd76f",
+      "1d8c013167ab4bad",
+      "0cdf5099a0a9f7d1",
+      "ee03372993c9a6d9",
+      "e4f10b6c4f09281c",
+      "bcd1bea3aa4121ce",
+      "c2bb2622d3e7a285",
+      "6862f32d635c97e2",
+      "a669457a1ad5e138",
+      "9f7353504ecaaf62"
+    ],
+    "style": {
+      "fill": "#d1d1d1",
+      "label": true,
+      "fill-opacity": "0.5"
+    },
+    "w": 1592,
+    "x": 54,
+    "y": 59
+  },
+  {
+    "id": "42e2aaf18be53de1",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "Transform",
+    "finalize": "",
+    "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 980,
+    "y": 100,
+    "wires": [
+      [
+        "9f7353504ecaaf62"
+      ]
+    ]
+  },
+  {
+    "id": "4cd86307cf0280c4",
+    "type": "mqtt in",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "ofs_he3_11_1677_jobs",
+    "broker": "ae4fc7d6aa6d4ede",
+    "datatype": "auto-detect",
+    "inputs": 0,
+    "nl": false,
+    "qos": "1",
+    "rap": true,
+    "rh": 0,
+    "topic": "polipol/8200/pia/pia-cnc/pia-cnc1/11_1677/jobs",
+    "x": 180,
+    "y": 580,
+    "wires": [
+      [
+        "5447454b5354f7ce"
+      ]
+    ]
+  },
+  {
+    "id": "521000b1faccbc73",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "prepare output",
+    "finalize": "",
+    "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'ofs_he3_103_0345_jobs',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 740,
+    "y": 980,
+    "wires": [
+      [
+        "9aeb904b58ebf041"
+      ]
+    ]
+  },
+  {
+    "id": "5447454b5354f7ce",
+    "type": "rbe",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "",
+    "func": "rbei",
+    "gap": "",
+    "inout": "out",
+    "property": "payload",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 510,
+    "y": 580,
+    "wires": [
+      [
+        "fe0dfabb2c817b27"
+      ]
+    ]
+  },
+  {
+    "id": "55d88f81559a4cec",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "prepare output",
+    "finalize": "",
+    "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'ofs_he3_103_0345_knife_cycle',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 740,
+    "y": 1060,
+    "wires": [
+      [
+        "56ac2851403335d5"
+      ]
+    ]
+  },
+  {
+    "id": "56ac2851403335d5",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "Transform",
+    "finalize": "",
+    "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 980,
+    "y": 1060,
+    "wires": [
+      [
+        "3f9226028b841677"
+      ]
+    ]
+  },
+  {
+    "id": "58df6f8c360a04d4",
+    "type": "subflow:6d021e54d551838e",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "",
+    "x": 1520,
+    "y": 980,
+    "wires": []
+  },
+  {
+    "id": "5ff92fb32ab83c3b",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "Transform",
+    "finalize": "",
+    "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 980,
+    "y": 500,
+    "wires": [
+      [
+        "dfd3436b5dfdd4a5"
+      ]
+    ]
+  },
+  {
+    "id": "6311e70a5617b741",
+    "type": "mqtt in",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "ofs_he3_103_0345_diagnostic_interval",
+    "broker": "ae4fc7d6aa6d4ede",
+    "datatype": "auto-detect",
+    "inputs": 0,
+    "nl": false,
+    "qos": "1",
+    "rap": true,
+    "rh": 0,
+    "topic": "polipol/8200/pia/pia-cnc/pia-cnc1/103_0345/diagnostic_interval",
+    "x": 230,
+    "y": 900,
+    "wires": [
+      [
+        "0d9b055b87e25fda"
+      ]
+    ]
+  },
+  {
+    "id": "66aa82b5bf5d840c",
+    "type": "inject",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "drop",
+    "payloadType": "str",
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      },
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "control",
+    "x": 1250,
+    "y": 940,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "6862f32d635c97e2",
+    "type": "subflow:6d021e54d551838e",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "",
+    "x": 1520,
+    "y": 180,
+    "wires": []
+  },
+  {
+    "id": "6f9cc84eb21d0ff6",
+    "type": "mqtt in",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "ofs_he3_103_0345_knife_cycle",
+    "broker": "ae4fc7d6aa6d4ede",
+    "datatype": "auto-detect",
+    "inputs": 0,
+    "nl": false,
+    "qos": "1",
+    "rap": true,
+    "rh": 0,
+    "topic": "polipol/8200/pia/pia-cnc/pia-cnc1/103_0345/knife_cycle",
+    "x": 210,
+    "y": 1060,
+    "wires": [
+      [
+        "d127a4a930ab59f5"
+      ]
+    ]
+  },
+  {
+    "id": "71e1576d8c875b4d",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "Transform",
+    "finalize": "",
+    "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 980,
+    "y": 420,
+    "wires": [
+      [
+        "7e1a8d78a7c2ad4d"
+      ]
+    ]
+  },
+  {
+    "id": "73472e2daf2b5f8b",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "prepare output",
+    "finalize": "",
+    "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'ofs_he3_11_1677_diagnostic_interval',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 740,
+    "y": 500,
+    "wires": [
+      [
+        "5ff92fb32ab83c3b"
+      ]
+    ]
+  },
+  {
+    "id": "7469034d5f54f527",
+    "type": "mqtt in",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "ofs_he3_103_0345_device_state",
+    "broker": "ae4fc7d6aa6d4ede",
+    "datatype": "auto-detect",
+    "inputs": 0,
+    "nl": false,
+    "qos": "1",
+    "rap": true,
+    "rh": 0,
+    "topic": "polipol/8200/pia/pia-cnc/pia-cnc1/103_0345/device_state",
+    "x": 210,
+    "y": 820,
+    "wires": [
+      [
+        "a8fe6e05d4ae1b6b"
+      ]
+    ]
+  },
+  {
+    "id": "7e1a8d78a7c2ad4d",
+    "type": "subflow:6d021e54d551838e",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "",
+    "x": 1520,
+    "y": 420,
+    "wires": []
+  },
+  {
+    "id": "7e51657deaf358bd",
+    "type": "inject",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "drop",
+    "payloadType": "str",
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      },
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "control",
+    "x": 1250,
+    "y": 1020,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "84965cccb3138ca8",
+    "type": "inject",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "drop",
+    "payloadType": "str",
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      },
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "control",
+    "x": 1250,
+    "y": 220,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "8bc793adaa8150ac",
+    "type": "mqtt in",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "is_m_2_3450_device_state",
+    "broker": "ae4fc7d6aa6d4ede",
+    "datatype": "auto-detect",
+    "inputs": 0,
+    "nl": false,
+    "qos": "1",
+    "rap": true,
+    "rh": 0,
+    "topic": "polipol/8200/pia/pia-pp/pia-pp1/2_3450/device_state",
+    "x": 190,
+    "y": 100,
+    "wires": [
+      [
+        "c2bb2622d3e7a285"
+      ]
+    ]
+  },
+  {
+    "id": "91a9244087a35539",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "Transform",
+    "finalize": "",
+    "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 980,
+    "y": 180,
+    "wires": [
+      [
+        "6862f32d635c97e2"
+      ]
+    ]
+  },
+  {
+    "id": "93484251faf7e02c",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "prepare output",
+    "finalize": "",
+    "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'ofs_he3_11_1677_knife_cycle',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 740,
+    "y": 660,
+    "wires": [
+      [
+        "cb88d06bd24cb054"
+      ]
+    ]
+  },
+  {
+    "id": "9aeb904b58ebf041",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "Transform",
+    "finalize": "",
+    "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 980,
+    "y": 980,
+    "wires": [
+      [
+        "58df6f8c360a04d4"
+      ]
+    ]
+  },
+  {
+    "id": "9b3cfd3ce0b07314",
+    "type": "group",
+    "z": "198280bbd8aa6d98",
+    "name": "ofs_he3_103_0345",
+    "h": 362,
+    "nodes": [
+      "7469034d5f54f527",
+      "f1aac1abcb726962",
+      "32943c40782824e2",
+      "e720ac0b06dc4695",
+      "6311e70a5617b741",
+      "66aa82b5bf5d840c",
+      "a7b38f7ef63f32b5",
+      "f8dd3f74e7f6ae3a",
+      "f34f8634b14a7ee1",
+      "7e51657deaf358bd",
+      "521000b1faccbc73",
+      "9aeb904b58ebf041",
+      "6f9cc84eb21d0ff6",
+      "a259a798b0e91fe8",
+      "55d88f81559a4cec",
+      "56ac2851403335d5",
+      "d127a4a930ab59f5",
+      "0192dcc02551d57c",
+      "0d9b055b87e25fda",
+      "a8fe6e05d4ae1b6b",
+      "125aa1a87aa76b11",
+      "c677f7ea3c4bcac5",
+      "58df6f8c360a04d4",
+      "3f9226028b841677"
+    ],
+    "style": {
+      "fill": "#d1d1d1",
+      "label": true,
+      "fill-opacity": "0.5"
+    },
+    "w": 1592,
+    "x": 54,
+    "y": 779
+  },
+  {
+    "id": "9d18cf045c182e89",
+    "type": "rbe",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "",
+    "func": "rbei",
+    "gap": "",
+    "inout": "out",
+    "property": "payload",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 510,
+    "y": 420,
+    "wires": [
+      [
+        "f8d5098281c12642"
+      ]
+    ]
+  },
+  {
+    "id": "9f7353504ecaaf62",
+    "type": "subflow:6d021e54d551838e",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "",
+    "x": 1520,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "a149a23adc4d1b7e",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "prepare output",
+    "finalize": "",
+    "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'is_m_2_3450_device_state',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 740,
+    "y": 100,
+    "wires": [
+      [
+        "42e2aaf18be53de1"
+      ]
+    ]
+  },
+  {
+    "id": "a259a798b0e91fe8",
+    "type": "inject",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "drop",
+    "payloadType": "str",
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      },
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "control",
+    "x": 1250,
+    "y": 1100,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "a669457a1ad5e138",
+    "type": "subflow:6d021e54d551838e",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "",
+    "x": 1520,
+    "y": 260,
+    "wires": []
+  },
+  {
+    "id": "a7b38f7ef63f32b5",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "prepare output",
+    "finalize": "",
+    "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'ofs_he3_103_0345_diagnostic_interval',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 740,
+    "y": 900,
+    "wires": [
+      [
+        "f8dd3f74e7f6ae3a"
+      ]
+    ]
+  },
+  {
+    "id": "a8fe6e05d4ae1b6b",
+    "type": "rbe",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "",
+    "func": "rbei",
+    "gap": "",
+    "inout": "out",
+    "property": "payload",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 510,
+    "y": 820,
+    "wires": [
+      [
+        "32943c40782824e2"
+      ]
+    ]
+  },
+  {
+    "id": "a9616fc686f9e2b6",
+    "type": "subflow:6d021e54d551838e",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "",
+    "x": 1520,
+    "y": 660,
+    "wires": []
+  },
+  {
+    "id": "ae8c1d91b7a29d40",
+    "type": "inject",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "drop",
+    "payloadType": "str",
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      },
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "control",
+    "x": 1250,
+    "y": 140,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "b0b3d69ee0533c26",
+    "type": "subflow:6d021e54d551838e",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "",
+    "x": 1520,
+    "y": 580,
+    "wires": []
+  },
+  {
+    "id": "b25679c9be671685",
+    "type": "inject",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "drop",
+    "payloadType": "str",
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      },
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "control",
+    "x": 1250,
+    "y": 540,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "bcd1bea3aa4121ce",
+    "type": "rbe",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "",
+    "func": "rbei",
+    "gap": "",
+    "inout": "out",
+    "property": "payload",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 510,
+    "y": 180,
+    "wires": [
+      [
+        "eae4e7bf320bb761"
+      ]
+    ]
+  },
+  {
+    "id": "c2bb2622d3e7a285",
+    "type": "rbe",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "",
+    "func": "rbei",
+    "gap": "",
+    "inout": "out",
+    "property": "payload",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 510,
+    "y": 100,
+    "wires": [
+      [
+        "a149a23adc4d1b7e"
+      ]
+    ]
+  },
+  {
+    "id": "c677f7ea3c4bcac5",
+    "type": "subflow:6d021e54d551838e",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "",
+    "x": 1520,
+    "y": 900,
+    "wires": []
+  },
+  {
+    "id": "cb88d06bd24cb054",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "Transform",
+    "finalize": "",
+    "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 980,
+    "y": 660,
+    "wires": [
+      [
+        "a9616fc686f9e2b6"
+      ]
+    ]
+  },
+  {
+    "id": "d127a4a930ab59f5",
+    "type": "rbe",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "",
+    "func": "rbei",
+    "gap": "",
+    "inout": "out",
+    "property": "payload",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 510,
+    "y": 1060,
+    "wires": [
+      [
+        "55d88f81559a4cec"
+      ]
+    ]
+  },
+  {
+    "id": "de313fceca8c4878",
+    "type": "inject",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "drop",
+    "payloadType": "str",
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      },
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "control",
+    "x": 1250,
+    "y": 460,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "dfd3436b5dfdd4a5",
+    "type": "subflow:6d021e54d551838e",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "",
+    "x": 1520,
+    "y": 500,
+    "wires": []
+  },
+  {
+    "id": "e0e0e048141858f5",
+    "type": "rbe",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "",
+    "func": "rbei",
+    "gap": "",
+    "inout": "out",
+    "property": "payload",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 510,
+    "y": 660,
+    "wires": [
+      [
+        "93484251faf7e02c"
+      ]
+    ]
+  },
+  {
+    "id": "e4f10b6c4f09281c",
+    "type": "rbe",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "",
+    "func": "rbei",
+    "gap": "",
+    "inout": "out",
+    "property": "payload",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 510,
+    "y": 260,
+    "wires": [
+      [
+        "1d8c013167ab4bad"
+      ]
+    ]
+  },
+  {
+    "id": "e720ac0b06dc4695",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "Transform",
+    "finalize": "",
+    "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 980,
+    "y": 820,
+    "wires": [
+      [
+        "125aa1a87aa76b11"
+      ]
+    ]
+  },
+  {
+    "id": "eae4e7bf320bb761",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "prepare output",
+    "finalize": "",
+    "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'is_m_2_3450_diagnostic_interval',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 740,
+    "y": 180,
+    "wires": [
+      [
+        "91a9244087a35539"
+      ]
+    ]
+  },
+  {
+    "id": "ee03372993c9a6d9",
+    "type": "mqtt in",
+    "z": "198280bbd8aa6d98",
+    "g": "4249a8dc54f23f60",
+    "name": "is_m_2_3450_diagnostic_interval",
+    "broker": "ae4fc7d6aa6d4ede",
+    "datatype": "auto-detect",
+    "inputs": 0,
+    "nl": false,
+    "qos": "1",
+    "rap": true,
+    "rh": 0,
+    "topic": "polipol/8200/pia/pia-pp/pia-pp1/2_3450/diagnostic_interval",
+    "x": 210,
+    "y": 180,
+    "wires": [
+      [
+        "bcd1bea3aa4121ce"
+      ]
+    ]
+  },
+  {
+    "id": "f1aac1abcb726962",
+    "type": "inject",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "drop",
+    "payloadType": "str",
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      },
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "control",
+    "x": 1250,
+    "y": 860,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "f207a65a76dac503",
+    "type": "inject",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "drop",
+    "payloadType": "str",
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      },
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "control",
+    "x": 1250,
+    "y": 620,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "f34f8634b14a7ee1",
+    "type": "mqtt in",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "ofs_he3_103_0345_jobs",
+    "broker": "ae4fc7d6aa6d4ede",
+    "datatype": "auto-detect",
+    "inputs": 0,
+    "nl": false,
+    "qos": "1",
+    "rap": true,
+    "rh": 0,
+    "topic": "polipol/8200/pia/pia-cnc/pia-cnc1/103_0345/jobs",
+    "x": 190,
+    "y": 980,
+    "wires": [
+      [
+        "0192dcc02551d57c"
+      ]
+    ]
+  },
+  {
+    "id": "f8d5098281c12642",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "prepare output",
+    "finalize": "",
+    "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'ofs_he3_11_1677_device_state',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 740,
+    "y": 420,
+    "wires": [
+      [
+        "71e1576d8c875b4d"
+      ]
+    ]
+  },
+  {
+    "id": "f8dd3f74e7f6ae3a",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "9b3cfd3ce0b07314",
+    "name": "Transform",
+    "finalize": "",
+    "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar values = msg.sql.values;\nvar sqlValues = values.map(value => {\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    } else if (typeof value === 'string') {\n        return `'${value}'`;\n    } else if (typeof value === 'boolean') {\n        return value ? 'TRUE' : 'FALSE';\n    } else {\n        return value;\n    }\n}).join(', ');\nvar query = `INSERT INTO ${schema}.${table} (${columns}) VALUES (${sqlValues}) ON CONFLICT DO NOTHING;`;\n\nmsg.query = query;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 980,
+    "y": 900,
+    "wires": [
+      [
+        "c677f7ea3c4bcac5"
+      ]
+    ]
+  },
+  {
+    "id": "fe0dfabb2c817b27",
+    "type": "function",
+    "z": "198280bbd8aa6d98",
+    "g": "20ccece2a563011b",
+    "name": "prepare output",
+    "finalize": "",
+    "func": "var payload = msg.payload;\n\n// Prepare SQL\nmsg.sql = {\n    schema: '\"baeumer\"',\n    table: 'ofs_he3_11_1677_jobs',\n    columns: [],\n    values: []\n};\nfor (var key in payload) {\n    msg.sql.columns.push(key);\n    msg.sql.values.push(payload[key]);\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 740,
+    "y": 580,
+    "wires": [
+      [
+        "201f0e222b7ad9af"
+      ]
+    ]
+  },
+  {
+    "id": "08579ca86112e8be",
+    "type": "inject",
+    "z": "6d021e54d551838e",
+    "name": "init trigger",
+    "crontab": "",
+    "once": true,
+    "onceDelay": "1",
+    "payload": "",
+    "payloadType": "date",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 460,
+    "y": 260,
+    "wires": [
+      [
+        "cc658a1ad82b89fa"
+      ]
+    ]
+  },
+  {
+    "id": "295d50cfc193ff3d",
+    "type": "comment",
+    "z": "6d021e54d551838e",
+    "name": "Subflow description",
+    "info": "# Insert Queue\n\nProcess of this subflow:\n 1. queue messages\n 2. insert message by message into postgresql node\n 3. drop the message from the queue, when it was processed succesfull\n 4. peek a new message from the queue\n 5. repeat\n\nEach input will be queued inside the q-gate node. (FIFO)\nDuring start of the subflow a Trigger will be activated. This trigger will send a \"control: peek\" message at a given interval.\nThis is necessary because when the queue is empty we need to periodically check if a new message is available.\nWhen a message is dequeued the trigger will be deactivated (msg.reset: true) until the message is processed by the postgresql node.\n",
+    "x": 150,
+    "y": 40,
+    "wires": []
+  },
+  {
+    "id": "34c4a2e5385414c4",
+    "type": "status",
+    "z": "6d021e54d551838e",
+    "name": "status",
+    "scope": [
+      "81a4178fc3418e96",
+      "edbec97ffca96639"
+    ],
+    "x": 270,
+    "y": 460,
+    "wires": [
+      [
+        "c908b5fc7710daa3"
+      ]
+    ]
+  },
+  {
+    "id": "407f8120d8dc0f41",
+    "type": "function",
+    "z": "6d021e54d551838e",
+    "name": "set errorFlag & change delay",
+    "finalize": "",
+    "func": "const errorFlag = flow.get(\"errorFlag\") || false;\nif (!errorFlag) {\n    flow.set(\"errorFlag\", true)\n};\nmsg.delay = 10000;  // 10 seconds between retry\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 540,
+    "y": 200,
+    "wires": [
+      [
+        "cc658a1ad82b89fa"
+      ]
+    ]
+  },
+  {
+    "id": "4b3174349dfa902d",
+    "type": "function",
+    "z": "6d021e54d551838e",
+    "name": "reset trigger",
+    "finalize": "",
+    "func": "// Reset the trigger and set the delay to high value to avoid\n// peeking the same message from the queue again,\n// if the database is not responding within a few seconds\n\nmsg.reset = true;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 450,
+    "y": 140,
+    "wires": [
+      [
+        "cc658a1ad82b89fa"
+      ]
+    ]
+  },
+  {
+    "id": "54350b07859780cf",
+    "type": "function",
+    "z": "6d021e54d551838e",
+    "name": "Set queueText",
+    "finalize": "",
+    "func": "// Set the queue text to use it in another node status\nflow.set(\"queueText\", msg.status.text)",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 520,
+    "y": 520,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "5a8106c4581260c2",
+    "type": "function",
+    "z": "6d021e54d551838e",
+    "name": "peek",
+    "finalize": "",
+    "func": "// get errorFlag\nconst errorFlag = flow.get('errorFlag') || false;\n\n// if errorFlag is True, do nothing and set errorFlag to false\nif (errorFlag) {\n    flow.set('errorFlag', false)\n    return null\n} else {\n    msg.topic = 'control'\n    msg.payload = 'peek'\n    return msg\n}",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": "",
+    "x": 990,
+    "y": 200,
+    "wires": [
+      [
+        "9f493bfba8c87738"
+      ]
+    ]
+  },
+  {
+    "id": "7a8bd8147ad13466",
+    "type": "comment",
+    "z": "6d021e54d551838e",
+    "name": "",
+    "info": "",
+    "x": 800,
+    "y": 360,
+    "wires": []
+  },
+  {
+    "id": "8099e938eed20130",
+    "type": "function",
+    "z": "6d021e54d551838e",
+    "name": "drop message & reactivate trigger",
+    "finalize": "",
+    "func": "// Delete the oldest message on success\n// Send a delay message to the trigger which will change the delay settings and restart the trigger\nnode.send([\n    {topic: \"control\", payload: \"drop\"},  // Output 1\n    {delay: 1000} // Output 2\n]);",
+    "initialize": "// Der Code hier wird ausgeführt,\n// wenn der Node gestartet wird\n\n// Set a initial state to see if a message has reached this node.\nconst errorFlag = flow.get(\"errorFlag\") || false;",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 2,
+    "timeout": "",
+    "x": 700,
+    "y": 100,
+    "wires": [
+      [
+        "9f493bfba8c87738"
+      ],
+      [
+        "cc658a1ad82b89fa"
+      ]
+    ]
+  },
+  {
+    "id": "81a4178fc3418e96",
+    "type": "function",
+    "z": "6d021e54d551838e",
+    "name": "SQL Error Status Message",
+    "finalize": "",
+    "func": "// Combine the error message and the queueText\n\nconst errorMessage = msg.error.message;\nconst queueText = flow.get(\"queueText\") || \"Queue: 0\";\nconst combinedMessage = `${queueText} - ${errorMessage}`\nnode.status({ fill: \"red\", shape: \"ring\", text: combinedMessage});",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 500,
+    "y": 320,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "8c5e016054a1ac81",
+    "type": "catch",
+    "z": "6d021e54d551838e",
+    "name": "SQL Error",
+    "scope": [
+      "94f9f83285141aa3"
+    ],
+    "uncaught": false,
+    "x": 280,
+    "y": 200,
+    "wires": [
+      [
+        "407f8120d8dc0f41",
+        "81a4178fc3418e96"
+      ]
+    ]
+  },
+  {
+    "id": "94f9f83285141aa3",
+    "type": "postgresql",
+    "z": "6d021e54d551838e",
+    "name": "insert",
+    "outputs": 1,
+    "postgreSQLConfig": "ba17b3e3684167a7",
+    "query": "",
+    "rowsPerMsg": 1,
+    "split": false,
+    "x": 430,
+    "y": 80,
+    "wires": [
+      [
+        "8099e938eed20130"
+      ]
+    ]
+  },
+  {
+    "id": "9f493bfba8c87738",
+    "type": "link out",
+    "z": "6d021e54d551838e",
+    "name": "",
+    "links": [
+      "d719c4061d15a792"
+    ],
+    "x": 1085,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "b0f58b6c16de6634",
+    "type": "status",
+    "z": "6d021e54d551838e",
+    "name": "status",
+    "scope": [
+      "bb94a7467ddf76f7"
+    ],
+    "x": 270,
+    "y": 520,
+    "wires": [
+      [
+        "54350b07859780cf"
+      ]
+    ]
+  },
+  {
+    "id": "ba17b3e3684167a7",
+    "type": "postgreSQLConfig",
+    "z": "6d021e54d551838e",
+    "name": "DPN_SVR_postgres",
+    "applicationName": "",
+    "applicationNameType": "str",
+    "connectionTimeout": "10000",
+    "connectionTimeoutFieldType": "num",
+    "database": "iot",
+    "databaseFieldType": "str",
+    "host": "192.168.48.209",
+    "hostFieldType": "str",
+    "idle": "1000",
+    "idleFieldType": "num",
+    "max": "10",
+    "maxFieldType": "num",
+    "password": "DPN_SVR_POSTGRES_PASSWORD_iot_user_sub",
+    "passwordFieldType": "env",
+    "port": "6432",
+    "portFieldType": "num",
+    "ssl": "false",
+    "sslFieldType": "bool",
+    "user": "iot_user_sub",
+    "userFieldType": "str"
+  },
+  {
+    "id": "bb94a7467ddf76f7",
+    "type": "q-gate",
+    "z": "6d021e54d551838e",
+    "name": "q-gate",
+    "closeCmd": "close",
+    "controlTopic": "control",
+    "defaultCmd": "default",
+    "defaultState": "queueing",
+    "dropCmd": "drop",
+    "flushCmd": "flush",
+    "keepNewest": false,
+    "maxQueueLength": "3000",
+    "openCmd": "open",
+    "peekCmd": "peek",
+    "persist": true,
+    "qToggle": false,
+    "queueCmd": "queue",
+    "resetCmd": "reset",
+    "statusCmd": "status",
+    "storeName": "memory",
+    "toggleCmd": "toggle",
+    "triggerCmd": "trigger",
+    "x": 270,
+    "y": 100,
+    "wires": [
+      [
+        "94f9f83285141aa3",
+        "4b3174349dfa902d"
+      ]
+    ]
+  },
+  {
+    "id": "c908b5fc7710daa3",
+    "type": "function",
+    "z": "6d021e54d551838e",
+    "name": "status message",
+    "finalize": "",
+    "func": "return msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 520,
+    "y": 460,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "cc658a1ad82b89fa",
+    "type": "trigger",
+    "z": "6d021e54d551838e",
+    "name": "Trigger",
+    "bytopic": "all",
+    "duration": "-10",
+    "extend": false,
+    "op1": "1",
+    "op1type": "str",
+    "op2": "0",
+    "op2type": "num",
+    "outputs": 1,
+    "overrideDelay": true,
+    "reset": "",
+    "topic": "topic",
+    "units": "s",
+    "x": 820,
+    "y": 200,
+    "wires": [
+      [
+        "5a8106c4581260c2"
+      ]
+    ]
+  },
+  {
+    "id": "d719c4061d15a792",
+    "type": "link in",
+    "z": "6d021e54d551838e",
+    "name": "",
+    "links": [
+      "9f493bfba8c87738"
+    ],
+    "x": 125,
+    "y": 280,
+    "wires": [
+      [
+        "bb94a7467ddf76f7",
+        "edbec97ffca96639"
+      ]
+    ]
+  },
+  {
+    "id": "edbec97ffca96639",
+    "type": "function",
+    "z": "6d021e54d551838e",
+    "name": "Queue Success status",
+    "finalize": "",
+    "func": "// Set the Flow status to the status message of the q-gate\nconst queueText = flow.get(\"queueText\") || \"Queue: 0\";\nnode.status({ fill: \"yellow\", shape: \"ring\", text: queueText});",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 480,
+    "y": 380,
+    "wires": [
+      []
+    ]
   },
   {
     "id": "06b01926f31d0cc5",
@@ -145,6 +2036,38 @@
     "sslFieldType": "bool",
     "user": "postgres",
     "userFieldType": "str"
+  },
+  {
+    "id": "ae4fc7d6aa6d4ede",
+    "type": "mqtt-broker",
+    "name": "mqtt://dpn-svr-iot",
+    "autoConnect": true,
+    "autoUnsubscribe": false,
+    "birthMsg": {},
+    "birthPayload": "",
+    "birthQos": "0",
+    "birthRetain": "false",
+    "birthTopic": "",
+    "broker": "192.168.48.240",
+    "cleansession": true,
+    "clientid": "",
+    "closeMsg": {},
+    "closePayload": "",
+    "closeQos": "0",
+    "closeRetain": "false",
+    "closeTopic": "",
+    "keepalive": "60",
+    "port": "8883",
+    "protocolVersion": "5",
+    "sessionExpiry": "3600",
+    "tls": "06b01926f31d0cc5",
+    "userProps": "",
+    "usetls": true,
+    "willMsg": {},
+    "willPayload": "",
+    "willQos": "0",
+    "willRetain": "false",
+    "willTopic": ""
   },
   {
     "id": "c4c4fc58ca91420f",
