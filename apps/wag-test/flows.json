@@ -2177,7 +2177,7 @@
     "type": "debug",
     "z": "14050e4f3f807d7b",
     "name": "debug 4",
-    "active": true,
+    "active": false,
     "complete": "true",
     "console": false,
     "statusType": "auto",
@@ -2810,6 +2810,27 @@
     "y": 300.6666564941406,
     "wires": [
       []
+    ]
+  },
+  {
+    "id": "feddc4f16a2deb9f",
+    "type": "mqtt in",
+    "z": "14050e4f3f807d7b",
+    "name": "[NATS_TEST]_trolleys",
+    "broker": "4a03d5fa9a0e0313",
+    "datatype": "auto-detect",
+    "inputs": 0,
+    "nl": false,
+    "qos": "1",
+    "rap": true,
+    "rh": 0,
+    "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/trolleys_order/#",
+    "x": 160,
+    "y": 2060,
+    "wires": [
+      [
+        "27585c9352e39f90"
+      ]
     ]
   },
   {
