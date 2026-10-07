@@ -107,7 +107,7 @@
     "topic": "D300L320199-b",
     "trim": false,
     "x": 160,
-    "y": 760,
+    "y": 860,
     "wires": [
       [
         "c0a077d70637b846"
@@ -215,7 +215,7 @@
     "base64": false,
     "datamode": "stream",
     "datatype": "utf8",
-    "host": "cho-mindpc-cut08.cho.polipol.intra",
+    "host": "cho-mindpc-cut06.cho.polipol.intra",
     "newline": ";",
     "port": "50002",
     "server": "client",
@@ -223,7 +223,7 @@
     "topic": "D300L320200-a",
     "trim": false,
     "x": 160,
-    "y": 820,
+    "y": 720,
     "wires": [
       [
         "c0a077d70637b846"
@@ -275,7 +275,7 @@
     "base64": false,
     "datamode": "stream",
     "datatype": "utf8",
-    "host": "cho-mindpc-cut06.cho.polipol.intra",
+    "host": "cho-mindpc-cut05.cho.polipol.intra",
     "newline": ";",
     "port": "50002",
     "server": "client",
@@ -364,7 +364,7 @@
     "base64": false,
     "datamode": "stream",
     "datatype": "utf8",
-    "host": "cho-mindpc-cut06.cho.polipol.intra",
+    "host": "cho-mindpc-cut05.cho.polipol.intra",
     "newline": ";",
     "port": "50003",
     "server": "client",
@@ -955,7 +955,7 @@
     "topic": "D300L320199-a",
     "trim": false,
     "x": 160,
-    "y": 720,
+    "y": 820,
     "wires": [
       [
         "c0a077d70637b846"
@@ -1113,7 +1113,7 @@
     "base64": false,
     "datamode": "stream",
     "datatype": "utf8",
-    "host": "cho-mindpc-cut08.cho.polipol.intra",
+    "host": "cho-mindpc-cut06.cho.polipol.intra",
     "newline": ";",
     "port": "50003",
     "server": "client",
@@ -1121,7 +1121,7 @@
     "topic": "D300L320200-b",
     "trim": false,
     "x": 160,
-    "y": 860,
+    "y": 760,
     "wires": [
       [
         "c0a077d70637b846"
