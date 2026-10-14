@@ -3626,7 +3626,7 @@
     "qos": "1",
     "rap": true,
     "rh": 0,
-    "topic": "polipol/8200/szw/szw-szw/szw-szw/+/sdcs/state_event",
+    "topic": "polipol/8200/szw/szw-szw/+/+/sdcs/state_event",
     "x": 160,
     "y": 340,
     "wires": [
