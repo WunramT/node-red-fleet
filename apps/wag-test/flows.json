@@ -316,8 +316,8 @@
     "id": "1fe97ba89abea2e2",
     "type": "mqtt in",
     "z": "14050e4f3f807d7b",
-    "name": "[NATS_TEST]_trolleys",
-    "broker": "4a03d5fa9a0e0313",
+    "name": "trolleys",
+    "broker": "4e714f14d7af13f4",
     "datatype": "auto-detect",
     "inputs": 0,
     "nl": false,
@@ -325,7 +325,7 @@
     "rap": true,
     "rh": 0,
     "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/trolleys/#",
-    "x": 160,
+    "x": 110,
     "y": 1960,
     "wires": [
       [
@@ -1621,8 +1621,8 @@
     "id": "9a4efc6d9d66268f",
     "type": "mqtt in",
     "z": "14050e4f3f807d7b",
-    "name": "[NATS_TEST]_stations",
-    "broker": "4a03d5fa9a0e0313",
+    "name": "stations",
+    "broker": "4e714f14d7af13f4",
     "datatype": "auto-detect",
     "inputs": 0,
     "nl": false,
@@ -1630,7 +1630,7 @@
     "rap": true,
     "rh": 0,
     "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/stations/#",
-    "x": 160,
+    "x": 110,
     "y": 2180,
     "wires": [
       [
@@ -2816,8 +2816,8 @@
     "id": "feddc4f16a2deb9f",
     "type": "mqtt in",
     "z": "14050e4f3f807d7b",
-    "name": "[NATS_TEST]_trolleys",
-    "broker": "4a03d5fa9a0e0313",
+    "name": "trolleys_order",
+    "broker": "4e714f14d7af13f4",
     "datatype": "auto-detect",
     "inputs": 0,
     "nl": false,
@@ -2825,7 +2825,7 @@
     "rap": true,
     "rh": 0,
     "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/trolleys_order/#",
-    "x": 160,
+    "x": 130,
     "y": 2060,
     "wires": [
       [
