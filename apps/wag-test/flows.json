@@ -1323,6 +1323,27 @@
     ]
   },
   {
+    "id": "6fab05a10c9d03ec",
+    "type": "rbe",
+    "z": "14050e4f3f807d7b",
+    "g": "d51ba3d40ba3f134",
+    "name": "",
+    "func": "rbe",
+    "gap": "",
+    "inout": "out",
+    "property": "payload",
+    "septopics": true,
+    "start": "",
+    "topi": "topic",
+    "x": 290,
+    "y": 2420,
+    "wires": [
+      [
+        "c0eb22046e3b6cde"
+      ]
+    ]
+  },
+  {
     "id": "6fbea0bc861e8d8f",
     "type": "subflow:76b3786a13d77125",
     "z": "14050e4f3f807d7b",
@@ -1785,6 +1806,48 @@
     "y": 1679
   },
   {
+    "id": "a1c4e2f0b7d39a01",
+    "type": "function",
+    "z": "14050e4f3f807d7b",
+    "g": "d51ba3d40ba3f134",
+    "name": "prepare output u4",
+    "finalize": "",
+    "func": "var p = msg.payload;\nif (typeof p === 'string') {\n    try { p = JSON.parse(p); } catch (e) { node.warn('u4_temperature: niepoprawny JSON'); return null; }\n}\n\n// tylko kolumny tabeli; device_id i station_id pomijamy\nvar cols = ['ts', 'up_left', 'up_center', 'up_right', 'lp_left', 'lp_center', 'lp_right'];\n\nif (!p || !p.ts) {\n    node.warn('u4_temperature: brak ts');\n    return null;\n}\n\nmsg.sql = {\n    schema: '\"purefloor\"',\n    table: 'u4_temperature',\n    columns: [],\n    values: []\n};\nfor (var i = 0; i < cols.length; i++) {\n    var key = cols[i];\n    if (p[key] === undefined) continue;\n    msg.sql.columns.push(key);\n    msg.sql.values.push(p[key]);\n}\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 830,
+    "y": 2420,
+    "wires": [
+      [
+        "a1c4e2f0b7d39a02"
+      ]
+    ]
+  },
+  {
+    "id": "a1c4e2f0b7d39a02",
+    "type": "function",
+    "z": "14050e4f3f807d7b",
+    "g": "d51ba3d40ba3f134",
+    "name": "Transform u4",
+    "finalize": "",
+    "func": "var schema = msg.sql.schema;\nvar table = msg.sql.table;\nvar columns = msg.sql.columns.join(', ');\nvar sqlValues = msg.sql.values.map(function (value, i) {\n    var col = msg.sql.columns[i];\n    if (value === null || value === undefined || value === '') {\n        return 'NULL';\n    }\n    if (col === 'ts') {\n        return \"'\" + String(value).replace(/'/g, \"''\") + \"'::timestamptz\";\n    }\n    var num = Number(value);\n    return isFinite(num) ? String(num) : 'NULL';\n}).join(', ');\n\nmsg.query = 'INSERT INTO ' + schema + '.' + table + ' (' + columns + ') VALUES (' + sqlValues + ') ON CONFLICT (ts) DO NOTHING;';\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 1030,
+    "y": 2420,
+    "wires": [
+      [
+        "b406954b9ae4d203"
+      ]
+    ]
+  },
+  {
     "id": "a31e3c859dcbafd3",
     "type": "inject",
     "z": "14050e4f3f807d7b",
@@ -1863,6 +1926,16 @@
         "bc42c28a6dc4ea0c"
       ]
     ]
+  },
+  {
+    "id": "b406954b9ae4d203",
+    "type": "subflow:76b3786a13d77125",
+    "z": "14050e4f3f807d7b",
+    "g": "d51ba3d40ba3f134",
+    "name": "",
+    "x": 1560,
+    "y": 2420,
+    "wires": []
   },
   {
     "id": "b60683f7c11a0ce6",
@@ -2064,6 +2137,27 @@
     "wires": [
       [
         "634abeae769d44a5"
+      ]
+    ]
+  },
+  {
+    "id": "c0eb22046e3b6cde",
+    "type": "function",
+    "z": "14050e4f3f807d7b",
+    "g": "d51ba3d40ba3f134",
+    "name": "FIX: \"device_id\"",
+    "finalize": "",
+    "func": "delete msg.payload.device_id\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 500,
+    "y": 2420,
+    "wires": [
+      [
+        "a1c4e2f0b7d39a01"
       ]
     ]
   },
@@ -2299,6 +2393,29 @@
         "a6209a725dd54607"
       ]
     ]
+  },
+  {
+    "id": "d51ba3d40ba3f134",
+    "type": "group",
+    "z": "14050e4f3f807d7b",
+    "name": "unit_4 temp sensors",
+    "h": 82,
+    "nodes": [
+      "a1c4e2f0b7d39a01",
+      "a1c4e2f0b7d39a02",
+      "fd3844e5dab50350",
+      "6fab05a10c9d03ec",
+      "c0eb22046e3b6cde",
+      "b406954b9ae4d203"
+    ],
+    "style": {
+      "label": true,
+      "fill": "#d1d1d1",
+      "fill-opacity": "0.5"
+    },
+    "w": 1652,
+    "x": 34,
+    "y": 2379
   },
   {
     "id": "d8ce04e87eece12c",
@@ -2791,6 +2908,28 @@
     "wires": [
       [
         "ce8d32af33f743a4"
+      ]
+    ]
+  },
+  {
+    "id": "fd3844e5dab50350",
+    "type": "mqtt in",
+    "z": "14050e4f3f807d7b",
+    "g": "d51ba3d40ba3f134",
+    "name": "u4_temp",
+    "broker": "4e714f14d7af13f4",
+    "datatype": "auto-detect",
+    "inputs": 0,
+    "nl": false,
+    "qos": "1",
+    "rap": true,
+    "rh": 0,
+    "topic": "polipol/6000/ksa/ksa-ksa/ksa-ksa1/PUReFloor/unit_4/temp",
+    "x": 120,
+    "y": 2420,
+    "wires": [
+      [
+        "6fab05a10c9d03ec"
       ]
     ]
   },
