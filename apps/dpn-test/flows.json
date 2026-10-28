@@ -43,6 +43,34 @@
     "wires": []
   },
   {
+    "id": "7a5877b977d48003",
+    "type": "debug",
+    "z": "390b40e6225d9e8c",
+    "name": "Email payload preview (wire output 2 to your existing email node)",
+    "active": false,
+    "complete": "true",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "targetType": "full",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 820,
+    "y": 600,
+    "wires": []
+  },
+  {
+    "id": "7f0c5be22c7848fe",
+    "type": "http response",
+    "z": "390b40e6225d9e8c",
+    "name": "HTTP response to sender",
+    "headers": {},
+    "statusCode": "",
+    "x": 770,
+    "y": 540,
+    "wires": []
+  },
+  {
     "id": "987d689ae145bea5",
     "type": "e-mail",
     "z": "390b40e6225d9e8c",
@@ -58,6 +86,30 @@
     "x": 920,
     "y": 400,
     "wires": []
+  },
+  {
+    "id": "9cafe17b74b2398d",
+    "type": "function",
+    "z": "390b40e6225d9e8c",
+    "name": "Validate event, dedupe, prepare email",
+    "finalize": "",
+    "func": "// Output 1 -> HTTP Response; Output 2 -> existing E-MAIL NODE.\n// Do NOT set msg.to or msg.from: existing email node owns these.\nfunction reply(status, body){\n    msg.statusCode=status;\n    msg.headers={'content-type':'application/json; charset=utf-8'};\n    msg.payload=body;\n    return [msg,null];\n}\n\n\nlet e=msg.payload;\nif (typeof e==='string') {try{e=JSON.parse(e);}catch(x){return reply(400,{accepted:false,error:'invalid_json'});}}\nif (!e||typeof e!=='object'||Array.isArray(e)) return reply(400,{accepted:false,error:'invalid_body'});\nconst eventId=e.eventId, type=e.eventType;\nif (typeof eventId!=='string'||!/^GOR-ASI-SZW1-[a-zA-Z0-9-]{8,110}$/.test(eventId) ||\n    e.source!=='GOR-ASI-SZW1'|| !['ALARM','RECOVERY','TEST'].includes(type)) {\n    return reply(400,{accepted:false,error:'invalid_event'});\n}\nconst timestamp=Date.parse(e.observedAt);\nif (!Number.isFinite(timestamp)) return reply(400,{accepted:false,error:'invalid_timestamp'});\n// The sender can legitimately retry old queued alarms after a long network outage.\nconst mapping={'Circuit 1':'ns=2;i=6074','Circuit 2':'ns=2;i=6061'};\nif (type==='TEST') {\n    if(e.circuit!=='TEST'||e.state!==null||e.nodeId!==null) return reply(400,{accepted:false,error:'invalid_test'});\n} else if (!mapping[e.circuit] || e.nodeId!==mapping[e.circuit] ||\n           e.state!==(type==='ALARM')) return reply(400,{accepted:false,error:'invalid_circuit_state'});\n\n// De-duplicate retries from the sender. When a response gets lost, the POST may arrive again.\nlet store='file',seen;\ntry {seen=flow.get('cfgWebhookSeen','file')||{};}\ncatch(x){store=undefined;seen=flow.get('cfgWebhookSeen')||{};}\nconst now=Date.now();\nfor(const [id,at] of Object.entries(seen)) if(now-at>30*86400000) delete seen[id];\nif(seen[eventId]) return reply(202,{accepted:true,eventId:eventId,duplicate:true});\n\n// Prepare a simple text email; sender and recipient stay in the existing E-Mail node.\nconst localTime=new Date(timestamp).toLocaleString('de-DE',{timeZone:'Europe/Berlin'});\nconst title=type==='ALARM'?'ALARM':type==='RECOVERY'?'ENTWARNUNG':'TEST';\nconst subject='[ConfigurationError] '+title+' - '+(type==='TEST'?'HTTP-Webhook':e.circuit);\nconst body=type==='TEST'?\n 'Node-RED HTTP webhook test.\\n\\nSource: '+e.source+'\\nTime: '+localTime+'\\nEventId: '+eventId+'\\n\\nThis test does not change the OPC-UA alarm states.':\n [type==='ALARM'?'ALARM: ConfigurationError is TRUE.':'RECOVERY: ConfigurationError is FALSE.',\n  '', 'Source: '+e.source,'Circuit: '+e.circuit,'OPC UA NodeId: '+e.nodeId,\n  'Value: '+e.state,'Observed: '+localTime+' (Europe/Berlin)',\n  'EventId: '+eventId,'','Automatic state-transition notification.',\n  'Recovery is not a manual OPC UA acknowledge.'].join('\\n');\n\n// Record before ACK, so repeated HTTP requests do not send duplicate emails.\nseen[eventId]=now;\ntry {if(store)flow.set('cfgWebhookSeen',seen,store);else flow.set('cfgWebhookSeen',seen);}\ncatch(x) {node.error('Unable to store webhook dedupe record: '+x.message,msg);return reply(503,{accepted:false,error:'dedupe_store_failed'});}\nconst emailMsg={topic:subject,payload:body,alarmEventId:eventId};\nnode.status({fill:'green',shape:'dot',text:title+' accepted '+eventId.slice(-8)});\nmsg.statusCode=202;msg.headers={'content-type':'application/json; charset=utf-8'};\nmsg.payload={accepted:true,eventId:eventId,duplicate:false};\n\nreturn [msg,emailMsg];",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 2,
+    "timeout": "",
+    "x": 370,
+    "y": 560,
+    "wires": [
+      [
+        "7f0c5be22c7848fe"
+      ],
+      [
+        "7a5877b977d48003",
+        "987d689ae145bea5"
+      ]
+    ]
   },
   {
     "id": "9e2eafcc8c48ac6b",
@@ -92,6 +144,23 @@
         "1db4abe9f1209839",
         "ef92131525a49c8f",
         "9e2eafcc8c48ac6b"
+      ]
+    ]
+  },
+  {
+    "id": "d4370c8be244456d",
+    "type": "http in",
+    "z": "390b40e6225d9e8c",
+    "name": "",
+    "method": "post",
+    "swaggerDoc": "",
+    "upload": false,
+    "url": "/asiconfigurationerror/email",
+    "x": 240,
+    "y": 480,
+    "wires": [
+      [
+        "9cafe17b74b2398d"
       ]
     ]
   },

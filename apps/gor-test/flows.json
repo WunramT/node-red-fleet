@@ -8,36 +8,11 @@
     "env": []
   },
   {
-    "id": "6d021e54d551838e",
-    "type": "subflow",
-    "name": "Insert Queue V4 DPN",
-    "info": "",
-    "env": [],
-    "category": "",
-    "color": "#DDAA99",
-    "in": [
-      {
-        "x": 80,
-        "y": 100,
-        "wires": [
-          {
-            "id": "bb94a7467ddf76f7"
-          }
-        ]
-      }
-    ],
-    "meta": {},
-    "out": [],
-    "status": {
-      "x": 720,
-      "y": 460,
-      "wires": [
-        {
-          "id": "c908b5fc7710daa3",
-          "port": 0
-        }
-      ]
-    }
+    "id": "e1c19102b78d46aa",
+    "type": "tab",
+    "label": "ConfigurationError Monitoring",
+    "info": "OPC-UA Endpoint 0fac70f12e1a4c89 nutzt Username/Passwort als Credentials. Im bereits vorhandenen Endpoint (nicht im Client): Anonymous AUS, use credentials EIN, User=${GOR-ASI-SZW1_USER}, Password=${GOR-ASI-SZW1_PASSWORD}. Credentials werden beim Export nicht mitgegeben und muessen nach dem Import einmal im Endpoint gesetzt werden. Ein Inject prueft nur, ob die ENV-Variablen existieren (keine Ausgabe von Secret-Werten). Die bestehende Endpoint-URL bleibt unveraendert. SMTP Credentials analog in E-Mail Node.",
+    "disabled": false
   },
   {
     "id": "1cd314797da37f4f",
@@ -56,384 +31,307 @@
     "wires": []
   },
   {
-    "id": "08579ca86112e8be",
+    "id": "1350b1f4aa1bda56",
+    "type": "function",
+    "z": "e1c19102b78d46aa",
+    "name": "Check HTTP 202 response",
+    "finalize": "",
+    "func": "// Receiver returns 202 {accepted:true,eventId:'...',duplicate:false}\nconst data = msg.payload;\nif (msg.statusCode === 202 && data && data.accepted === true && data.eventId === msg.eventId) {\n    node.status({ fill:'green', shape:'dot', text: 'HTTP 202 accepted' });\n    return [null, {payload:{status:'accepted',eventId:msg.eventId,duplicate:!!data.duplicate}}];\n}\nnode.status({ fill:'red', shape:'ring', text:'HTTP error '+(msg.statusCode || 'unknown') });\nnode.error('HTTP notification NOT accepted: '+(msg.statusCode || 'no status'), msg);\nreturn [ {payload:{status:'failed',statusCode:msg.statusCode || null,eventId:msg.eventId,response:data}}, null ];",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 2,
+    "timeout": 0,
+    "x": 1140,
+    "y": 120,
+    "wires": [
+      [
+        "c6f33dbb16ee08b2"
+      ],
+      [
+        "14418fa05c95e204"
+      ]
+    ]
+  },
+  {
+    "id": "14418fa05c95e204",
+    "type": "debug",
+    "z": "e1c19102b78d46aa",
+    "name": "HTTP accepted",
+    "active": false,
+    "complete": "payload",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "targetType": "msg",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 1420,
+    "y": 140,
+    "wires": []
+  },
+  {
+    "id": "14e9a4635f54825b",
+    "type": "function",
+    "z": "e1c19102b78d46aa",
+    "name": "Flanken + Quality pruefen",
+    "finalize": "",
+    "func": "const circuits = [\n    { id: \"ns=2;i=6074\", name: \"Circuit 1\" },\n    { id: \"ns=2;i=6061\", name: \"Circuit 2\" }\n];\n\n// Das Paket node-red-contrib-opcua liefert bei payload=\"ALL\"\n// ein Array von OPC-UA DataValue-Objekten auf Ausgang 1.\nconst data = msg.payload;\nif (!Array.isArray(data) || data.length !== circuits.length) {\n    node.status({ fill: \"yellow\", shape: \"ring\", text: \"ungueltige Read-Antwort\" });\n    return [null, { payload: \"OPC UA: Erwartet werden genau zwei DataValues.\", received: data }];\n}\n\n// Falls in settings.js ein Context-Store namens 'file' existiert,\n// diesen fuer neustartuebergreifende Flankenspeicherung verwenden.\nlet useFileStore = true;\nlet previous;\ntry {\n    previous = context.get(\"configurationErrorStates\", \"file\") || {};\n} catch (err) {\n    useFileStore = false;\n    previous = context.get(\"configurationErrorStates\") || {};\n}\n\nfunction isGood(status) {\n    if (status === 0 || status === \"Good\") return true;\n    if (status === null || status === undefined) return false;\n    if (typeof status === \"object\") {\n        if (typeof status.value === \"number\") return status.value === 0;\n        if (status.name === \"Good\") return true;\n        if (typeof status.toString === \"function\") return status.toString() === \"Good\";\n    }\n    return false;\n}\n\nconst outgoing = [];\nconst problems = [];\nfor (let i = 0; i < circuits.length; i++) {\n    const item = data[i];\n    const circuit = circuits[i];\n    if (!item || !isGood(item.statusCode) || !item.value ||\n        typeof item.value.value !== \"boolean\") {\n        problems.push(circuit.name + \": Status nicht Good oder Wert nicht boolean\");\n        continue;  // Fehlmessungen duerfen keine Entwarnung ausloesen.\n    }\n\n    const current = item.value.value;\n    const old = previous[circuit.id];\n    const isAlarm = current === true && old !== true;\n    const isClear = current === false && old === true;\n    previous[circuit.id] = current;\n\n    // Beim ersten gueltigen Lesen wird ein bereits aktiver Fehler\n    // sofort gemeldet; false erzeugt beim Initialisieren keine Mail.\n    if (!isAlarm && !isClear) continue;\n\n    const time = new Date().toLocaleString(\"de-DE\", { timeZone: \"Europe/Berlin\" });\n    outgoing.push({\n        topic: isAlarm\n            ? \"[ConfigurationError] ALARM - \" + circuit.name\n            : \"[ConfigurationError] ENTWARNUNG - \" + circuit.name,\n        payload: [\n            isAlarm ? \"ALARM: ConfigurationError erkannt.\" : \"ENTWARNUNG / Quittierung: ConfigurationError zurueckgesetzt.\",\n            \"\",\n            \"Circuit: \" + circuit.name,\n            \"OPC-UA NodeId: \" + circuit.id,\n            \"Aktueller Wert: \" + current,\n            \"Zeitpunkt der Erkennung: \" + time + \" (Europe/Berlin)\",\n            \"\",\n            \"Automatische Meldung aus Node-RED (60-Sekunden-Abfrage).\",\n            \"Diese Entwarnung ist keine serverseitige OPC-UA-Acknowledge-Aktion.\"\n        ].join(\"\\n\"),\n        circuitId: circuit.id,\n        configurationError: current\n    });\n}\n\nif (useFileStore) {\n    context.set(\"configurationErrorStates\", previous, \"file\");\n} else {\n    context.set(\"configurationErrorStates\", previous);\n}\n\nif (problems.length) {\n    node.status({ fill: \"yellow\", shape: \"ring\", text: \"Lesefehler bei \" + problems.length + \" Circuit(s)\" });\n} else {\n    const active = circuits.filter(c => previous[c.id] === true).length;\n    node.status({ fill: active ? \"red\" : \"green\", shape: \"dot\",\n        text: active ? active + \" ConfigurationError aktiv\" : \"beide Circuits OK\" });\n}\nreturn [outgoing.length ? outgoing : null,\n        problems.length ? { payload: problems.join(\"; \") } : null];",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 2,
+    "timeout": 0,
+    "x": 530,
+    "y": 120,
+    "wires": [
+      [
+        "8103683120536a86"
+      ],
+      [
+        "e6c39494203e951f"
+      ]
+    ]
+  },
+  {
+    "id": "2f7f70863689f00d",
+    "type": "function",
+    "z": "e1c19102b78d46aa",
+    "name": "Create HTTP TEST event",
+    "finalize": "",
+    "func": "msg._testWebhook = true;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 510,
+    "y": 280,
+    "wires": [
+      [
+        "8103683120536a86"
+      ]
+    ]
+  },
+  {
+    "id": "4f734d3fe88ae4c1",
+    "type": "catch",
+    "z": "e1c19102b78d46aa",
+    "name": "HTTP connection errors",
+    "scope": [
+      "e9c05b0cd7713136"
+    ],
+    "uncaught": false,
+    "x": 1160,
+    "y": 200,
+    "wires": [
+      [
+        "c6f33dbb16ee08b2"
+      ]
+    ]
+  },
+  {
+    "id": "631f61e23f844e8c",
+    "type": "function",
+    "z": "e1c19102b78d46aa",
+    "name": "Beide NodeIDs / 1x Read",
+    "finalize": "",
+    "func": "// Der OPC-UA-Client nutzt die Aktion \"readmultiple\".\n// Wir loeschen nur die interne Merkliste des Clients und tragen die\n// zwei NodeIDs bei jedem Zyklus erneut ein (ohne OPC-UA-Lesezugriff).\n// Erst die letzte Nachricht fuehrt EINEN gemeinsamen OPC-UA Read aus.\nnode.send({ topic: \"clearitems\" });\nnode.send({ topic: \"ns=2;i=6074;datatype=Boolean\" });\nnode.send({ topic: \"ns=2;i=6061;datatype=Boolean\" });\nnode.send({ topic: \"readmultiple\", payload: \"ALL\" });\nreturn null;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 330,
+    "y": 60,
+    "wires": [
+      [
+        "db7cbc08c5ab4f47"
+      ]
+    ]
+  },
+  {
+    "id": "8103683120536a86",
+    "type": "function",
+    "z": "e1c19102b78d46aa",
+    "name": "Prepare HTTP POST (email receiver)",
+    "finalize": "",
+    "func": "// Convert the EXISTING edge-detection result into the webhook format\n// expected by the Email Node-RED receiver.\n// No SMTP sender/recipient here. No OPC-UA credentials are transmitted.\nconst url = 'http://dpn-svr-iot.rah.polipol.intra/node-red-test/asiconfigurationerror/email';\nif (typeof url !== 'string' || !/^https?:\\/\\//i.test(url)) {\n    node.error('ALARM_WEBHOOK_URL is missing/invalid', msg);\n    node.status({ fill:'red', shape:'ring', text:'HTTP ENV missing' });\n    return null;\n}\n\nconst eventId = 'GOR-ASI-SZW1-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);\nconst isTest = msg._testWebhook === true;\nlet event;\nif (isTest) {\n    event = { eventId, source:'GOR-ASI-SZW1', circuit:'TEST',\n              nodeId:null, state:null, eventType:'TEST',\n              observedAt:new Date().toISOString() };\n} else {\n    const circuit = { 'ns=2;i=6074':'Circuit 1', 'ns=2;i=6061':'Circuit 2' }[msg.circuitId];\n    if (!circuit || typeof msg.configurationError !== 'boolean') {\n        node.error('Unsupported circuit or invalid Boolean edge', msg);\n        return null;\n    }\n    event = { eventId, source:'GOR-ASI-SZW1', circuit,\n              nodeId:msg.circuitId, state:msg.configurationError,\n              eventType:msg.configurationError ? 'ALARM' : 'RECOVERY',\n              observedAt:new Date().toISOString() };\n}\nmsg.method = 'POST';\nmsg.url = url;\nmsg.headers = { 'Content-Type':'application/json' };\nmsg.payload = event; // HTTP Request serializes JSON using Content-Type header\nmsg.eventId = eventId;\ndelete msg._testWebhook;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 830,
+    "y": 60,
+    "wires": [
+      [
+        "e9c05b0cd7713136"
+      ]
+    ]
+  },
+  {
+    "id": "acf70aa79c70796a",
     "type": "inject",
-    "z": "6d021e54d551838e",
-    "name": "init trigger",
+    "z": "e1c19102b78d46aa",
+    "name": "TEST: HTTP email webhook",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "payload": "",
+    "payloadType": "str",
+    "props": [
+      {
+        "p": "payload",
+        "v": "",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 240,
+    "y": 280,
+    "wires": [
+      [
+        "2f7f70863689f00d"
+      ]
+    ]
+  },
+  {
+    "id": "b978d5f6c492fdc1",
+    "type": "debug",
+    "z": "e1c19102b78d46aa",
+    "name": "OPC UA Status / Fehler",
+    "active": false,
+    "complete": "true",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "targetType": "full",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 490,
+    "y": 200,
+    "wires": []
+  },
+  {
+    "id": "c6f33dbb16ee08b2",
+    "type": "debug",
+    "z": "e1c19102b78d46aa",
+    "name": "HTTP failed / rejected",
+    "active": false,
+    "complete": "payload",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "targetType": "msg",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 1440,
+    "y": 80,
+    "wires": []
+  },
+  {
+    "id": "c76337ca19624a90",
+    "type": "inject",
+    "z": "e1c19102b78d46aa",
+    "name": "60 seconds",
     "crontab": "",
     "once": true,
-    "onceDelay": "1",
+    "onceDelay": 3,
     "payload": "",
-    "payloadType": "date",
+    "payloadType": "str",
     "props": [
       {
         "p": "payload"
       }
     ],
-    "repeat": "",
+    "repeat": "60",
     "topic": "",
-    "x": 460,
-    "y": 260,
+    "x": 110,
+    "y": 60,
     "wires": [
       [
-        "cc658a1ad82b89fa"
+        "631f61e23f844e8c"
       ]
     ]
   },
   {
-    "id": "295d50cfc193ff3d",
-    "type": "comment",
-    "z": "6d021e54d551838e",
-    "name": "Subflow description",
-    "info": "# Insert Queue\n\nProcess of this subflow:\n 1. queue messages\n 2. insert message by message into postgresql node\n 3. drop the message from the queue, when it was processed succesfull\n 4. peek a new message from the queue\n 5. repeat\n\nEach input will be queued inside the q-gate node. (FIFO)\nDuring start of the subflow a Trigger will be activated. This trigger will send a \"control: peek\" message at a given interval.\nThis is necessary because when the queue is empty we need to periodically check if a new message is available.\nWhen a message is dequeued the trigger will be deactivated (msg.reset: true) until the message is processed by the postgresql node.\n",
-    "x": 150,
-    "y": 40,
-    "wires": []
-  },
-  {
-    "id": "34c4a2e5385414c4",
-    "type": "status",
-    "z": "6d021e54d551838e",
-    "name": "status",
-    "scope": [
-      "81a4178fc3418e96",
-      "edbec97ffca96639"
-    ],
-    "x": 270,
-    "y": 460,
-    "wires": [
-      [
-        "c908b5fc7710daa3"
-      ]
-    ]
-  },
-  {
-    "id": "407f8120d8dc0f41",
-    "type": "function",
-    "z": "6d021e54d551838e",
-    "name": "set errorFlag & change delay",
-    "finalize": "",
-    "func": "const errorFlag = flow.get(\"errorFlag\") || false;\nif (!errorFlag) {\n    flow.set(\"errorFlag\", true)\n};\nmsg.delay = 10000;  // 10 seconds between retry\nreturn msg;",
-    "initialize": "",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 540,
-    "y": 200,
-    "wires": [
-      [
-        "cc658a1ad82b89fa"
-      ]
-    ]
-  },
-  {
-    "id": "4b3174349dfa902d",
-    "type": "function",
-    "z": "6d021e54d551838e",
-    "name": "reset trigger",
-    "finalize": "",
-    "func": "// Reset the trigger and set the delay to high value to avoid\n// peeking the same message from the queue again,\n// if the database is not responding within a few seconds\n\nmsg.reset = true;\nreturn msg;",
-    "initialize": "",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 450,
+    "id": "db7cbc08c5ab4f47",
+    "type": "OpcUa-Client",
+    "z": "e1c19102b78d46aa",
+    "name": "OPC UA - Read Multiple",
+    "action": "readmultiple",
+    "applicationName": "",
+    "applicationUri": "",
+    "certificate": "n",
+    "deadbandtype": "a",
+    "deadbandvalue": 1,
+    "endpoint": "0fac70f12e1a4c89",
+    "keepsessionalive": true,
+    "localfile": "",
+    "localkeyfile": "",
+    "maxChunkCount": 1,
+    "maxMessageSize": 8192,
+    "receiveBufferSize": 8192,
+    "securitymode": "None",
+    "securitypolicy": "None",
+    "sendBufferSize": 8192,
+    "setstatusandtime": false,
+    "time": 10,
+    "timeUnit": "s",
+    "useTransport": false,
+    "x": 210,
     "y": 140,
     "wires": [
       [
-        "cc658a1ad82b89fa"
-      ]
-    ]
-  },
-  {
-    "id": "54350b07859780cf",
-    "type": "function",
-    "z": "6d021e54d551838e",
-    "name": "Set queueText",
-    "finalize": "",
-    "func": "// Set the queue text to use it in another node status\nflow.set(\"queueText\", msg.status.text)",
-    "initialize": "",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 520,
-    "y": 520,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "5a8106c4581260c2",
-    "type": "function",
-    "z": "6d021e54d551838e",
-    "name": "peek",
-    "finalize": "",
-    "func": "// get errorFlag\nconst errorFlag = flow.get('errorFlag') || false;\n\n// if errorFlag is True, do nothing and set errorFlag to false\nif (errorFlag) {\n    flow.set('errorFlag', false)\n    return null\n} else {\n    msg.topic = 'control'\n    msg.payload = 'peek'\n    return msg\n}",
-    "initialize": "",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": "",
-    "x": 990,
-    "y": 200,
-    "wires": [
-      [
-        "9f493bfba8c87738"
-      ]
-    ]
-  },
-  {
-    "id": "7a8bd8147ad13466",
-    "type": "comment",
-    "z": "6d021e54d551838e",
-    "name": "",
-    "info": "",
-    "x": 800,
-    "y": 360,
-    "wires": []
-  },
-  {
-    "id": "8099e938eed20130",
-    "type": "function",
-    "z": "6d021e54d551838e",
-    "name": "drop message & reactivate trigger",
-    "finalize": "",
-    "func": "// Delete the oldest message on success\n// Send a delay message to the trigger which will change the delay settings and restart the trigger\nnode.send([\n    {topic: \"control\", payload: \"drop\"},  // Output 1\n    {delay: 1000} // Output 2\n]);",
-    "initialize": "// Der Code hier wird ausgeführt,\n// wenn der Node gestartet wird\n\n// Set a initial state to see if a message has reached this node.\nconst errorFlag = flow.get(\"errorFlag\") || false;",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 2,
-    "timeout": "",
-    "x": 700,
-    "y": 100,
-    "wires": [
-      [
-        "9f493bfba8c87738"
+        "14e9a4635f54825b"
       ],
       [
-        "cc658a1ad82b89fa"
-      ]
-    ]
-  },
-  {
-    "id": "81a4178fc3418e96",
-    "type": "function",
-    "z": "6d021e54d551838e",
-    "name": "SQL Error Status Message",
-    "finalize": "",
-    "func": "// Combine the error message and the queueText\n\nconst errorMessage = msg.error.message;\nconst queueText = flow.get(\"queueText\") || \"Queue: 0\";\nconst combinedMessage = `${queueText} - ${errorMessage}`\nnode.status({ fill: \"red\", shape: \"ring\", text: combinedMessage});",
-    "initialize": "",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 500,
-    "y": 320,
-    "wires": [
+        "b978d5f6c492fdc1"
+      ],
       []
     ]
   },
   {
-    "id": "8c5e016054a1ac81",
-    "type": "catch",
-    "z": "6d021e54d551838e",
-    "name": "SQL Error",
-    "scope": [
-      "94f9f83285141aa3"
-    ],
-    "uncaught": false,
-    "x": 280,
-    "y": 200,
-    "wires": [
-      [
-        "407f8120d8dc0f41",
-        "81a4178fc3418e96"
-      ]
-    ]
-  },
-  {
-    "id": "94f9f83285141aa3",
-    "type": "postgresql",
-    "z": "6d021e54d551838e",
-    "name": "insert",
-    "outputs": 1,
-    "postgreSQLConfig": "ba17b3e3684167a7",
-    "query": "",
-    "rowsPerMsg": 1,
-    "split": false,
-    "x": 430,
-    "y": 80,
-    "wires": [
-      [
-        "8099e938eed20130"
-      ]
-    ]
-  },
-  {
-    "id": "9f493bfba8c87738",
-    "type": "link out",
-    "z": "6d021e54d551838e",
-    "name": "",
-    "links": [
-      "d719c4061d15a792"
-    ],
-    "x": 1085,
-    "y": 100,
+    "id": "e6c39494203e951f",
+    "type": "debug",
+    "z": "e1c19102b78d46aa",
+    "name": "Warnungen bei ungueltigen Werten",
+    "active": false,
+    "complete": "true",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "targetType": "full",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 820,
+    "y": 140,
     "wires": []
   },
   {
-    "id": "b0f58b6c16de6634",
-    "type": "status",
-    "z": "6d021e54d551838e",
-    "name": "status",
-    "scope": [
-      "bb94a7467ddf76f7"
-    ],
-    "x": 270,
-    "y": 520,
+    "id": "e9c05b0cd7713136",
+    "type": "http request",
+    "z": "e1c19102b78d46aa",
+    "name": "POST to Email Node-RED",
+    "authType": "",
+    "headers": [],
+    "insecureHTTPParser": false,
+    "method": "use",
+    "paytoqs": "ignore",
+    "persist": false,
+    "proxy": "",
+    "ret": "obj",
+    "senderr": false,
+    "tls": "",
+    "url": "http://dpn-svr-iot.rah.polipol.intra/node-red-test/asiconfigurationerror/email",
+    "x": 1140,
+    "y": 60,
     "wires": [
       [
-        "54350b07859780cf"
+        "1350b1f4aa1bda56"
       ]
-    ]
-  },
-  {
-    "id": "ba17b3e3684167a7",
-    "type": "postgreSQLConfig",
-    "z": "6d021e54d551838e",
-    "name": "DPN_SVR_postgres",
-    "applicationName": "",
-    "applicationNameType": "str",
-    "connectionTimeout": "10000",
-    "connectionTimeoutFieldType": "num",
-    "database": "iot",
-    "databaseFieldType": "str",
-    "host": "192.168.48.209",
-    "hostFieldType": "str",
-    "idle": "1000",
-    "idleFieldType": "num",
-    "max": "10",
-    "maxFieldType": "num",
-    "password": "DPN_SVR_POSTGRES_PASSWORD_iot_user_sub",
-    "passwordFieldType": "env",
-    "port": "6432",
-    "portFieldType": "num",
-    "ssl": "false",
-    "sslFieldType": "bool",
-    "user": "iot_user_sub",
-    "userFieldType": "str"
-  },
-  {
-    "id": "bb94a7467ddf76f7",
-    "type": "q-gate",
-    "z": "6d021e54d551838e",
-    "name": "q-gate",
-    "closeCmd": "close",
-    "controlTopic": "control",
-    "defaultCmd": "default",
-    "defaultState": "queueing",
-    "dropCmd": "drop",
-    "flushCmd": "flush",
-    "keepNewest": false,
-    "maxQueueLength": "3000",
-    "openCmd": "open",
-    "peekCmd": "peek",
-    "persist": true,
-    "qToggle": false,
-    "queueCmd": "queue",
-    "resetCmd": "reset",
-    "statusCmd": "status",
-    "storeName": "memory",
-    "toggleCmd": "toggle",
-    "triggerCmd": "trigger",
-    "x": 270,
-    "y": 100,
-    "wires": [
-      [
-        "94f9f83285141aa3",
-        "4b3174349dfa902d"
-      ]
-    ]
-  },
-  {
-    "id": "c908b5fc7710daa3",
-    "type": "function",
-    "z": "6d021e54d551838e",
-    "name": "status message",
-    "finalize": "",
-    "func": "return msg;",
-    "initialize": "",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 520,
-    "y": 460,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "cc658a1ad82b89fa",
-    "type": "trigger",
-    "z": "6d021e54d551838e",
-    "name": "Trigger",
-    "bytopic": "all",
-    "duration": "-10",
-    "extend": false,
-    "op1": "1",
-    "op1type": "str",
-    "op2": "0",
-    "op2type": "num",
-    "outputs": 1,
-    "overrideDelay": true,
-    "reset": "",
-    "topic": "topic",
-    "units": "s",
-    "x": 820,
-    "y": 200,
-    "wires": [
-      [
-        "5a8106c4581260c2"
-      ]
-    ]
-  },
-  {
-    "id": "d719c4061d15a792",
-    "type": "link in",
-    "z": "6d021e54d551838e",
-    "name": "",
-    "links": [
-      "9f493bfba8c87738"
-    ],
-    "x": 125,
-    "y": 280,
-    "wires": [
-      [
-        "bb94a7467ddf76f7",
-        "edbec97ffca96639"
-      ]
-    ]
-  },
-  {
-    "id": "edbec97ffca96639",
-    "type": "function",
-    "z": "6d021e54d551838e",
-    "name": "Queue Success status",
-    "finalize": "",
-    "func": "// Set the Flow status to the status message of the q-gate\nconst queueText = flow.get(\"queueText\") || \"Queue: 0\";\nnode.status({ fill: \"yellow\", shape: \"ring\", text: queueText});",
-    "initialize": "",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 480,
-    "y": 380,
-    "wires": [
-      []
     ]
   },
   {
