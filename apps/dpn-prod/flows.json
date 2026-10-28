@@ -48,6 +48,14 @@
     "env": []
   },
   {
+    "id": "97150c8924aea14a",
+    "type": "tab",
+    "label": "ETL",
+    "info": "",
+    "disabled": false,
+    "env": []
+  },
+  {
     "id": "3b7a6706bf86e19f",
     "type": "tab",
     "label": "Koch",
@@ -10332,145 +10340,10 @@
     "outputs": 1,
     "timeout": 0,
     "x": 520,
-    "y": 900,
-    "wires": [
-      [
-        "3c127111d08ec726"
-      ]
-    ]
-  },
-  {
-    "id": "0b25e43f91388486",
-    "type": "function",
-    "z": "8b5984e1b49029d7",
-    "g": "2d1188fa34e03874",
-    "name": "tables",
-    "finalize": "",
-    "func": "//$PROMPT: Create a flow that is executing each minute a http post requests to the endpoint /api/homag/etl/mmr/states/{machine_id} for each of the following machine_id values:  0201011773  0201011764  0201011164  0201210141  0201210129  0201042272  0201051374  0250885332  0201848822  0201848824  0201848866  0201771939  0201771966  0201771967  0201738382  0201772486  0201772497  0201772498\nmsg.table = [\n    'order', 'nesting_result'\n]\n\nreturn msg",
-    "initialize": "",
-    "libs": [
-      {
-        "var": "axios",
-        "module": "axios"
-      }
-    ],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 355,
-    "y": 280,
-    "wires": [
-      [
-        "91909e60352035b6"
-      ]
-    ]
-  },
-  {
-    "id": "0e87dc48c37b6d28",
-    "type": "function",
-    "z": "8b5984e1b49029d7",
-    "g": "2d1188fa34e03874",
-    "name": "Request",
-    "finalize": "",
-    "func": "msg.url = `http://dpn-svr-iot.rah.polipol.intra/api/etl/homag/woodbase`\nmsg.payload = {\n    taskGroupId: `homag-woodbase-${msg.table}-${msg.factory}`,\n    target: \"prod\",\n    timeout: 600,\n    cacheExpiration: 3600,\n    table: msg.table,\n    siteId: msg.factory\n}\nmsg.requestTimeout = 10000;\nreturn msg;",
-    "initialize": "",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 1045,
-    "y": 280,
-    "wires": [
-      [
-        "ef7e6d81b26f30bb"
-      ]
-    ]
-  },
-  {
-    "id": "0ed67e3446603902",
-    "type": "split",
-    "z": "8b5984e1b49029d7",
-    "g": "b66e9d9242941915",
-    "name": "split Ids",
-    "addname": "",
-    "arraySplt": 1,
-    "arraySpltType": "len",
-    "property": "machineId",
-    "splt": "\\n",
-    "spltType": "str",
-    "stream": false,
-    "x": 560,
-    "y": 80,
-    "wires": [
-      [
-        "feea8c26aef2e2f8"
-      ]
-    ]
-  },
-  {
-    "id": "12e020cdc4138a1b",
-    "type": "http request",
-    "z": "8b5984e1b49029d7",
-    "g": "2d1188fa34e03874",
-    "name": "",
-    "authType": "",
-    "headers": [],
-    "insecureHTTPParser": false,
-    "method": "POST",
-    "paytoqs": "ignore",
-    "persist": false,
-    "proxy": "",
-    "ret": "txt",
-    "senderr": false,
-    "tls": "",
-    "url": "",
-    "x": 635,
-    "y": 360,
-    "wires": [
-      [
-        "d25b9bc66289c9b7"
-      ]
-    ]
-  },
-  {
-    "id": "158439a5b06a2f1d",
-    "type": "inject",
-    "z": "8b5984e1b49029d7",
-    "g": "2d1188fa34e03874",
-    "name": "each 5 minutes",
-    "crontab": "",
-    "once": true,
-    "onceDelay": 0.1,
-    "props": [
-      {
-        "p": "topic",
-        "vt": "str"
-      }
-    ],
-    "repeat": "300",
-    "topic": "",
-    "x": 160,
-    "y": 280,
-    "wires": [
-      [
-        "0b25e43f91388486"
-      ]
-    ]
-  },
-  {
-    "id": "1a9a33df154d714c",
-    "type": "link in",
-    "z": "8b5984e1b49029d7",
-    "g": "b66e9d9242941915",
-    "name": "link in 1",
-    "links": [
-      "239549ee4ad8ee9e"
-    ],
-    "x": 275,
     "y": 160,
     "wires": [
       [
-        "833049091ef63988"
+        "3c127111d08ec726"
       ]
     ]
   },
@@ -10488,131 +10361,7 @@
     "tosidebar": true,
     "tostatus": false,
     "x": 940,
-    "y": 860,
-    "wires": []
-  },
-  {
-    "id": "239549ee4ad8ee9e",
-    "type": "link out",
-    "z": "8b5984e1b49029d7",
-    "g": "b66e9d9242941915",
-    "name": "link out 1",
-    "links": [
-      "1a9a33df154d714c"
-    ],
-    "mode": "link",
-    "x": 865,
-    "y": 80,
-    "wires": []
-  },
-  {
-    "id": "25e11e9897c49459",
-    "type": "group",
-    "z": "8b5984e1b49029d7",
-    "name": "Cleanup metrics",
-    "h": 82,
-    "nodes": [
-      "8fddf5a1b4bc89a7",
-      "6482acc980ea8f8c",
-      "c23d4f46d57e8d03"
-    ],
-    "style": {
-      "fill": "#d1d1d1",
-      "label": true,
-      "fill-opacity": "0.5",
-      "color": "#000000"
-    },
-    "w": 572,
-    "x": 34,
-    "y": 639
-  },
-  {
-    "id": "267dd7c943a61037",
-    "type": "link in",
-    "z": "8b5984e1b49029d7",
-    "g": "2d1188fa34e03874",
-    "name": "link in 2",
-    "links": [
-      "ef7e6d81b26f30bb"
-    ],
-    "x": 280,
-    "y": 360,
-    "wires": [
-      [
-        "67054f9906be2066"
-      ]
-    ]
-  },
-  {
-    "id": "2c31a3385009d738",
-    "type": "inject",
-    "z": "8b5984e1b49029d7",
-    "g": "a294e6f42cf1b6da",
-    "name": "trigger",
-    "crontab": "",
-    "once": false,
-    "onceDelay": 0.1,
-    "props": [
-      {
-        "p": "topic",
-        "vt": "str"
-      }
-    ],
-    "repeat": "",
-    "topic": "",
-    "x": 130,
-    "y": 460,
-    "wires": [
-      [
-        "b043077fedff3637"
-      ]
-    ]
-  },
-  {
-    "id": "2d1188fa34e03874",
-    "type": "group",
-    "z": "8b5984e1b49029d7",
-    "name": "Woodbase",
-    "h": 162,
-    "nodes": [
-      "158439a5b06a2f1d",
-      "0b25e43f91388486",
-      "8ae1cfc97c3fa63e",
-      "91909e60352035b6",
-      "991f923859f95b80",
-      "0e87dc48c37b6d28",
-      "ef7e6d81b26f30bb",
-      "267dd7c943a61037",
-      "67054f9906be2066",
-      "12e020cdc4138a1b",
-      "d25b9bc66289c9b7"
-    ],
-    "style": {
-      "fill": "#d1d1d1",
-      "label": true,
-      "fill-opacity": "0.5",
-      "color": "#000000"
-    },
-    "w": 1177,
-    "x": 34,
-    "y": 239
-  },
-  {
-    "id": "2fc48caacc6725fb",
-    "type": "debug",
-    "z": "8b5984e1b49029d7",
-    "g": "b66e9d9242941915",
-    "name": "debug 18",
-    "active": false,
-    "complete": "true",
-    "console": false,
-    "statusType": "auto",
-    "statusVal": "",
-    "targetType": "full",
-    "tosidebar": true,
-    "tostatus": false,
-    "x": 840,
-    "y": 160,
+    "y": 120,
     "wires": []
   },
   {
@@ -10633,7 +10382,7 @@
     "tls": "",
     "url": "dpn-svr-iot.rah.polipol.intra/api/tableau_automation/tasks/core/distribute",
     "x": 730,
-    "y": 860,
+    "y": 120,
     "wires": [
       [
         "22203855e91d5ce1"
@@ -10663,106 +10412,10 @@
     "repeat": "",
     "topic": "",
     "x": 130,
-    "y": 940,
+    "y": 200,
     "wires": [
       [
         "ecb7f79a819313f7"
-      ]
-    ]
-  },
-  {
-    "id": "467f1847f00fc51a",
-    "type": "inject",
-    "z": "8b5984e1b49029d7",
-    "g": "b66e9d9242941915",
-    "name": "each 2 minutes",
-    "crontab": "",
-    "once": true,
-    "onceDelay": 0.1,
-    "props": [
-      {
-        "p": "topic",
-        "vt": "str"
-      }
-    ],
-    "repeat": "120",
-    "topic": "",
-    "x": 160,
-    "y": 80,
-    "wires": [
-      [
-        "a5fcc79df1498b56"
-      ]
-    ]
-  },
-  {
-    "id": "48f71abb0397a318",
-    "type": "http request",
-    "z": "8b5984e1b49029d7",
-    "g": "a294e6f42cf1b6da",
-    "name": "",
-    "authType": "",
-    "headers": [],
-    "insecureHTTPParser": false,
-    "method": "POST",
-    "paytoqs": "ignore",
-    "persist": false,
-    "proxy": "",
-    "ret": "txt",
-    "senderr": false,
-    "tls": "",
-    "url": "",
-    "x": 690,
-    "y": 460,
-    "wires": [
-      [
-        "93e2dc7046e5e632"
-      ]
-    ]
-  },
-  {
-    "id": "4ffadfd733f4e2e1",
-    "type": "http request",
-    "z": "8b5984e1b49029d7",
-    "g": "b66e9d9242941915",
-    "name": "",
-    "authType": "",
-    "headers": [],
-    "insecureHTTPParser": false,
-    "method": "POST",
-    "paytoqs": "ignore",
-    "persist": false,
-    "proxy": "",
-    "ret": "txt",
-    "senderr": false,
-    "tls": "",
-    "url": "",
-    "x": 630,
-    "y": 160,
-    "wires": [
-      [
-        "2fc48caacc6725fb"
-      ]
-    ]
-  },
-  {
-    "id": "6482acc980ea8f8c",
-    "type": "function",
-    "z": "8b5984e1b49029d7",
-    "g": "25e11e9897c49459",
-    "name": "Request",
-    "finalize": "",
-    "func": "msg.url = `http://dpn-svr-iot.rah.polipol.intra/api/homag/etl/results/cleanup/`\nmsg.requestTimeout = 30000;\nreturn msg;",
-    "initialize": "",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 320,
-    "y": 680,
-    "wires": [
-      [
-        "c23d4f46d57e8d03"
       ]
     ]
   },
@@ -10791,33 +10444,7 @@
     },
     "w": 1012,
     "x": 34,
-    "y": 779
-  },
-  {
-    "id": "67054f9906be2066",
-    "type": "delay",
-    "z": "8b5984e1b49029d7",
-    "g": "2d1188fa34e03874",
-    "name": "1 msg/30sec",
-    "allowrate": false,
-    "drop": false,
-    "nbRateUnits": "29",
-    "outputs": 1,
-    "pauseType": "rate",
-    "randomFirst": "1",
-    "randomLast": "5",
-    "randomUnits": "seconds",
-    "rate": "1",
-    "rateUnits": "second",
-    "timeout": "5",
-    "timeoutUnits": "seconds",
-    "x": 435,
-    "y": 360,
-    "wires": [
-      [
-        "12e020cdc4138a1b"
-      ]
-    ]
+    "y": 39
   },
   {
     "id": "6c67cc9b47f59647",
@@ -10833,7 +10460,7 @@
     "outputs": 1,
     "timeout": 0,
     "x": 560,
-    "y": 940,
+    "y": 200,
     "wires": [
       [
         "3c127111d08ec726"
@@ -10863,108 +10490,10 @@
     "repeat": "",
     "topic": "",
     "x": 300,
-    "y": 820,
+    "y": 80,
     "wires": [
       [
         "e557fa8162655fed"
-      ]
-    ]
-  },
-  {
-    "id": "833049091ef63988",
-    "type": "delay",
-    "z": "8b5984e1b49029d7",
-    "g": "b66e9d9242941915",
-    "name": "1 msg/1sec",
-    "allowrate": false,
-    "drop": false,
-    "nbRateUnits": "1",
-    "outputs": 1,
-    "pauseType": "rate",
-    "randomFirst": "1",
-    "randomLast": "5",
-    "randomUnits": "seconds",
-    "rate": "1",
-    "rateUnits": "second",
-    "timeout": "5",
-    "timeoutUnits": "seconds",
-    "x": 430,
-    "y": 160,
-    "wires": [
-      [
-        "4ffadfd733f4e2e1"
-      ]
-    ]
-  },
-  {
-    "id": "8ae1cfc97c3fa63e",
-    "type": "function",
-    "z": "8b5984e1b49029d7",
-    "g": "2d1188fa34e03874",
-    "name": "factory",
-    "finalize": "",
-    "func": "//$PROMPT: Create a flow that is executing each minute a http post requests to the endpoint /api/homag/etl/mmr/states/{machine_id} for each of the following machine_id values:  0201011773  0201011764  0201011164  0201210141  0201210129  0201042272  0201051374  0250885332  0201848822  0201848824  0201848866  0201771939  0201771966  0201771967  0201738382  0201772486  0201772497  0201772498\nmsg.factory = [\n    '2000',\n    '3000',\n    '4000',\n    '5000',\n    '6000'\n]\n\nreturn msg",
-    "initialize": "",
-    "libs": [
-      {
-        "var": "axios",
-        "module": "axios"
-      }
-    ],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 675,
-    "y": 280,
-    "wires": [
-      [
-        "991f923859f95b80"
-      ]
-    ]
-  },
-  {
-    "id": "8fddf5a1b4bc89a7",
-    "type": "inject",
-    "z": "8b5984e1b49029d7",
-    "g": "25e11e9897c49459",
-    "name": "each 1 hour",
-    "crontab": "",
-    "once": true,
-    "onceDelay": 0.1,
-    "props": [
-      {
-        "p": "topic",
-        "vt": "str"
-      }
-    ],
-    "repeat": "3600",
-    "topic": "",
-    "x": 150,
-    "y": 680,
-    "wires": [
-      [
-        "6482acc980ea8f8c"
-      ]
-    ]
-  },
-  {
-    "id": "91909e60352035b6",
-    "type": "split",
-    "z": "8b5984e1b49029d7",
-    "g": "2d1188fa34e03874",
-    "name": "split tables",
-    "addname": "",
-    "arraySplt": 1,
-    "arraySpltType": "len",
-    "property": "table",
-    "splt": "\\n",
-    "spltType": "str",
-    "stream": false,
-    "x": 515,
-    "y": 280,
-    "wires": [
-      [
-        "8ae1cfc97c3fa63e"
       ]
     ]
   },
@@ -10991,7 +10520,7 @@
     "repeat": "",
     "topic": "",
     "x": 130,
-    "y": 860,
+    "y": 120,
     "wires": [
       [
         "e557fa8162655fed",
@@ -10999,23 +10528,6 @@
         "ecb7f79a819313f7"
       ]
     ]
-  },
-  {
-    "id": "93e2dc7046e5e632",
-    "type": "debug",
-    "z": "8b5984e1b49029d7",
-    "g": "a294e6f42cf1b6da",
-    "name": "debug 10",
-    "active": false,
-    "complete": "false",
-    "console": false,
-    "statusType": "auto",
-    "statusVal": "",
-    "tosidebar": true,
-    "tostatus": false,
-    "x": 900,
-    "y": 460,
-    "wires": []
   },
   {
     "id": "94d63d07f40b6311",
@@ -11040,193 +10552,10 @@
     "repeat": "",
     "topic": "",
     "x": 130,
-    "y": 900,
+    "y": 160,
     "wires": [
       [
         "ed16edbd81447e4c"
-      ]
-    ]
-  },
-  {
-    "id": "991f923859f95b80",
-    "type": "split",
-    "z": "8b5984e1b49029d7",
-    "g": "2d1188fa34e03874",
-    "name": "split factories",
-    "addname": "",
-    "arraySplt": 1,
-    "arraySpltType": "len",
-    "property": "factory",
-    "splt": "\\n",
-    "spltType": "str",
-    "stream": false,
-    "x": 855,
-    "y": 280,
-    "wires": [
-      [
-        "0e87dc48c37b6d28"
-      ]
-    ]
-  },
-  {
-    "id": "a294e6f42cf1b6da",
-    "type": "group",
-    "z": "8b5984e1b49029d7",
-    "name": "Woodbase Single Table",
-    "h": 82,
-    "nodes": [
-      "2c31a3385009d738",
-      "b043077fedff3637",
-      "d58c1575c6e110ef",
-      "48f71abb0397a318",
-      "93e2dc7046e5e632"
-    ],
-    "style": {
-      "fill": "#d1d1d1",
-      "label": true,
-      "color": "#000000"
-    },
-    "w": 972,
-    "x": 34,
-    "y": 419
-  },
-  {
-    "id": "a5fcc79df1498b56",
-    "type": "function",
-    "z": "8b5984e1b49029d7",
-    "g": "b66e9d9242941915",
-    "name": "machineIds",
-    "finalize": "",
-    "func": "// all machine ids\nmsg.machineId = [\n    '0201011773', '0201011764', '0201011164', '0201210141', '0201210129',\n    '0201042272', '0201051374', '0250885332', '0201848822', '0201848824',\n    '0201848866', '0201771939', '0201771966', '0201771967', '0201738382',\n    '0201772486', '0201772497', '0201772498', '0201772485', '0201772500',\n    '0201736163', '0201736164', '0201737061', '0201051543',\n    '0201051791', '0201051877', '0201771968', '0201042324',\n    '0201042330', '0201042328', '0201042326', '0201210111', '0201210114',\n    '0201212685'\n]\n// old machines W5000: 0201011846, 0201011847\nreturn msg",
-    "initialize": "",
-    "libs": [
-      {
-        "var": "axios",
-        "module": "axios"
-      }
-    ],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 370,
-    "y": 80,
-    "wires": [
-      [
-        "0ed67e3446603902"
-      ]
-    ]
-  },
-  {
-    "id": "b043077fedff3637",
-    "type": "function",
-    "z": "8b5984e1b49029d7",
-    "g": "a294e6f42cf1b6da",
-    "name": "table + factory",
-    "finalize": "",
-    "func": "// msg.table = [\n//     'order', 'nesting_result'\n// ]\nmsg.table = 'nesting_result'\nmsg.factory = '3000'\n\nreturn msg",
-    "initialize": "",
-    "libs": [
-      {
-        "var": "axios",
-        "module": "axios"
-      }
-    ],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 340,
-    "y": 460,
-    "wires": [
-      [
-        "d58c1575c6e110ef"
-      ]
-    ]
-  },
-  {
-    "id": "b66e9d9242941915",
-    "type": "group",
-    "z": "8b5984e1b49029d7",
-    "name": "MMR",
-    "h": 162,
-    "nodes": [
-      "467f1847f00fc51a",
-      "a5fcc79df1498b56",
-      "0ed67e3446603902",
-      "feea8c26aef2e2f8",
-      "239549ee4ad8ee9e",
-      "1a9a33df154d714c",
-      "4ffadfd733f4e2e1",
-      "2fc48caacc6725fb",
-      "833049091ef63988"
-    ],
-    "style": {
-      "fill": "#d1d1d1",
-      "label": true,
-      "fill-opacity": "0.5",
-      "color": "#000000"
-    },
-    "w": 912,
-    "x": 34,
-    "y": 39
-  },
-  {
-    "id": "c23d4f46d57e8d03",
-    "type": "http request",
-    "z": "8b5984e1b49029d7",
-    "g": "25e11e9897c49459",
-    "name": "",
-    "authType": "",
-    "headers": [],
-    "insecureHTTPParser": false,
-    "method": "GET",
-    "paytoqs": "ignore",
-    "persist": false,
-    "proxy": "",
-    "ret": "txt",
-    "senderr": false,
-    "tls": "",
-    "url": "",
-    "x": 510,
-    "y": 680,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "d25b9bc66289c9b7",
-    "type": "debug",
-    "z": "8b5984e1b49029d7",
-    "g": "2d1188fa34e03874",
-    "name": "debug 20",
-    "active": false,
-    "complete": "false",
-    "console": false,
-    "statusType": "auto",
-    "statusVal": "",
-    "tosidebar": true,
-    "tostatus": false,
-    "x": 845,
-    "y": 360,
-    "wires": []
-  },
-  {
-    "id": "d58c1575c6e110ef",
-    "type": "function",
-    "z": "8b5984e1b49029d7",
-    "g": "a294e6f42cf1b6da",
-    "name": "Request",
-    "finalize": "",
-    "func": "msg.url = `http://dpn-svr-iot.rah.polipol.intra/api/etl/homag/woodbase`\nmsg.payload = {\n    taskGroupId: `homag-woodbase-${msg.table}-${msg.factory}`,\n    target: \"prod\",\n    timeout: 3600,\n    cacheExpiration: 3600,\n    table: msg.table,\n    siteId: msg.factory\n}\nmsg.requestTimeout = 10000;\nreturn msg;",
-    "initialize": "",
-    "libs": [],
-    "noerr": 0,
-    "outputs": 1,
-    "timeout": 0,
-    "x": 520,
-    "y": 460,
-    "wires": [
-      [
-        "48f71abb0397a318"
       ]
     ]
   },
@@ -11244,7 +10573,7 @@
     "outputs": 1,
     "timeout": 0,
     "x": 500,
-    "y": 860,
+    "y": 120,
     "wires": [
       [
         "3c127111d08ec726"
@@ -11270,7 +10599,7 @@
     "timeout": "10",
     "timeoutUnits": "seconds",
     "x": 310,
-    "y": 940,
+    "y": 200,
     "wires": [
       [
         "6c67cc9b47f59647"
@@ -11296,7 +10625,7 @@
     "timeout": "5",
     "timeoutUnits": "seconds",
     "x": 280,
-    "y": 900,
+    "y": 160,
     "wires": [
       [
         "0449efe15bcab2b1"
@@ -11304,23 +10633,1056 @@
     ]
   },
   {
+    "id": "0b25e43f91388486",
+    "type": "function",
+    "z": "97150c8924aea14a",
+    "g": "2d1188fa34e03874",
+    "name": "tables",
+    "finalize": "",
+    "func": "//$PROMPT: Create a flow that is executing each minute a http post requests to the endpoint /api/homag/etl/mmr/states/{machine_id} for each of the following machine_id values:  0201011773  0201011764  0201011164  0201210141  0201210129  0201042272  0201051374  0250885332  0201848822  0201848824  0201848866  0201771939  0201771966  0201771967  0201738382  0201772486  0201772497  0201772498\nmsg.table = [\n    'order', 'nesting_result'\n]\n\nreturn msg",
+    "initialize": "",
+    "libs": [
+      {
+        "var": "axios",
+        "module": "axios"
+      }
+    ],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 370,
+    "y": 280,
+    "wires": [
+      [
+        "91909e60352035b6"
+      ]
+    ]
+  },
+  {
+    "id": "0e87dc48c37b6d28",
+    "type": "function",
+    "z": "97150c8924aea14a",
+    "g": "2d1188fa34e03874",
+    "name": "Request",
+    "finalize": "",
+    "func": "msg.url = `http://dpn-svr-iot.rah.polipol.intra/api/etl/homag/woodbase`\nmsg.payload = {\n    taskGroupId: `homag-woodbase-${msg.table}-${msg.factory}`,\n    target: \"prod\",\n    timeout: 600,\n    cacheExpiration: 3600,\n    table: msg.table,\n    siteId: msg.factory\n}\nmsg.requestTimeout = 10000;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 1060,
+    "y": 280,
+    "wires": [
+      [
+        "ef7e6d81b26f30bb"
+      ]
+    ]
+  },
+  {
+    "id": "0ed67e3446603902",
+    "type": "split",
+    "z": "97150c8924aea14a",
+    "g": "b66e9d9242941915",
+    "name": "split Ids",
+    "addname": "",
+    "arraySplt": 1,
+    "arraySpltType": "len",
+    "property": "machineId",
+    "splt": "\\n",
+    "spltType": "str",
+    "stream": false,
+    "x": 575,
+    "y": 80,
+    "wires": [
+      [
+        "feea8c26aef2e2f8"
+      ]
+    ]
+  },
+  {
+    "id": "12e020cdc4138a1b",
+    "type": "http request",
+    "z": "97150c8924aea14a",
+    "g": "2d1188fa34e03874",
+    "name": "",
+    "authType": "",
+    "headers": [],
+    "insecureHTTPParser": false,
+    "method": "POST",
+    "paytoqs": "ignore",
+    "persist": false,
+    "proxy": "",
+    "ret": "txt",
+    "senderr": false,
+    "tls": "",
+    "url": "",
+    "x": 650,
+    "y": 360,
+    "wires": [
+      [
+        "d25b9bc66289c9b7"
+      ]
+    ]
+  },
+  {
+    "id": "158439a5b06a2f1d",
+    "type": "inject",
+    "z": "97150c8924aea14a",
+    "g": "2d1188fa34e03874",
+    "name": "each 5 minutes",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 0.1,
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "300",
+    "topic": "",
+    "x": 175,
+    "y": 280,
+    "wires": [
+      [
+        "0b25e43f91388486"
+      ]
+    ]
+  },
+  {
+    "id": "15ec288527e90b20",
+    "type": "inject",
+    "z": "97150c8924aea14a",
+    "g": "f59655af58b642be",
+    "name": "trigger",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 145,
+    "y": 560,
+    "wires": [
+      [
+        "3ed9124b875f3115"
+      ]
+    ]
+  },
+  {
+    "id": "1a9a33df154d714c",
+    "type": "link in",
+    "z": "97150c8924aea14a",
+    "g": "b66e9d9242941915",
+    "name": "link in 1",
+    "links": [
+      "239549ee4ad8ee9e"
+    ],
+    "x": 290,
+    "y": 160,
+    "wires": [
+      [
+        "833049091ef63988"
+      ]
+    ]
+  },
+  {
+    "id": "204df135d78c5b2c",
+    "type": "function",
+    "z": "97150c8924aea14a",
+    "g": "6141e4c5a66732d4",
+    "name": "Request",
+    "finalize": "",
+    "func": "msg.url = `http://dpn-svr-iot.rah.polipol.intra/test/api/etl/purefloor/production-log`\nmsg.payload = {\n    \"taskGroupId\": \"purefloor-production-log\",\n    \"target\": \"test\",\n    \"timeout\": 60,\n    \"cacheExpiration\": 3600,\n    \"truncate\": false\n}\nmsg.requestTimeout = 10000;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 540,
+    "y": 780,
+    "wires": [
+      [
+        "b2a906dbafbf1421"
+      ]
+    ]
+  },
+  {
+    "id": "239549ee4ad8ee9e",
+    "type": "link out",
+    "z": "97150c8924aea14a",
+    "g": "b66e9d9242941915",
+    "name": "link out 1",
+    "links": [
+      "1a9a33df154d714c"
+    ],
+    "mode": "link",
+    "x": 880,
+    "y": 80,
+    "wires": []
+  },
+  {
+    "id": "25e11e9897c49459",
+    "type": "group",
+    "z": "97150c8924aea14a",
+    "name": "Cleanup metrics",
+    "h": 82,
+    "nodes": [
+      "8fddf5a1b4bc89a7",
+      "6482acc980ea8f8c",
+      "c23d4f46d57e8d03"
+    ],
+    "style": {
+      "fill": "#d1d1d1",
+      "label": true,
+      "fill-opacity": "0.5",
+      "color": "#000000"
+    },
+    "w": 572,
+    "x": 54,
+    "y": 899
+  },
+  {
+    "id": "267dd7c943a61037",
+    "type": "link in",
+    "z": "97150c8924aea14a",
+    "g": "2d1188fa34e03874",
+    "name": "link in 2",
+    "links": [
+      "ef7e6d81b26f30bb"
+    ],
+    "x": 295,
+    "y": 360,
+    "wires": [
+      [
+        "67054f9906be2066"
+      ]
+    ]
+  },
+  {
+    "id": "26c5b8dffba8918d",
+    "type": "debug",
+    "z": "97150c8924aea14a",
+    "g": "6141e4c5a66732d4",
+    "name": "debug 11",
+    "active": false,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 920,
+    "y": 780,
+    "wires": []
+  },
+  {
+    "id": "29184ca1f2da93eb",
+    "type": "http request",
+    "z": "97150c8924aea14a",
+    "g": "f59655af58b642be",
+    "name": "",
+    "authType": "",
+    "headers": [],
+    "insecureHTTPParser": false,
+    "method": "POST",
+    "paytoqs": "ignore",
+    "persist": false,
+    "proxy": "",
+    "ret": "txt",
+    "senderr": false,
+    "tls": "",
+    "url": "",
+    "x": 705,
+    "y": 560,
+    "wires": [
+      [
+        "cb19686ddd6ba8cb"
+      ]
+    ]
+  },
+  {
+    "id": "2c31a3385009d738",
+    "type": "inject",
+    "z": "97150c8924aea14a",
+    "g": "a294e6f42cf1b6da",
+    "name": "trigger",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 145,
+    "y": 460,
+    "wires": [
+      [
+        "b043077fedff3637"
+      ]
+    ]
+  },
+  {
+    "id": "2d1188fa34e03874",
+    "type": "group",
+    "z": "97150c8924aea14a",
+    "name": "Woodbase",
+    "h": 162,
+    "nodes": [
+      "0b25e43f91388486",
+      "0e87dc48c37b6d28",
+      "12e020cdc4138a1b",
+      "158439a5b06a2f1d",
+      "267dd7c943a61037",
+      "67054f9906be2066",
+      "8ae1cfc97c3fa63e",
+      "91909e60352035b6",
+      "991f923859f95b80",
+      "d25b9bc66289c9b7",
+      "ef7e6d81b26f30bb"
+    ],
+    "style": {
+      "fill": "#d1d1d1",
+      "label": true,
+      "fill-opacity": "0.5",
+      "color": "#000000"
+    },
+    "w": 1177,
+    "x": 49,
+    "y": 239
+  },
+  {
+    "id": "2fc48caacc6725fb",
+    "type": "debug",
+    "z": "97150c8924aea14a",
+    "g": "b66e9d9242941915",
+    "name": "debug 18",
+    "active": false,
+    "complete": "true",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "targetType": "full",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 855,
+    "y": 160,
+    "wires": []
+  },
+  {
+    "id": "3ed9124b875f3115",
+    "type": "function",
+    "z": "97150c8924aea14a",
+    "g": "f59655af58b642be",
+    "name": "table + factory",
+    "finalize": "",
+    "func": "// msg.table = [\n//     'order', 'nesting_result'\n// ]\nmsg.table = 'nesting_result'\nmsg.factory = '3000'\n\nreturn msg",
+    "initialize": "",
+    "libs": [
+      {
+        "var": "axios",
+        "module": "axios"
+      }
+    ],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 355,
+    "y": 560,
+    "wires": [
+      [
+        "a237147fd3e0dc0e"
+      ]
+    ]
+  },
+  {
+    "id": "467f1847f00fc51a",
+    "type": "inject",
+    "z": "97150c8924aea14a",
+    "g": "b66e9d9242941915",
+    "name": "each 2 minutes",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 0.1,
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "120",
+    "topic": "",
+    "x": 175,
+    "y": 80,
+    "wires": [
+      [
+        "a5fcc79df1498b56"
+      ]
+    ]
+  },
+  {
+    "id": "48f71abb0397a318",
+    "type": "http request",
+    "z": "97150c8924aea14a",
+    "g": "a294e6f42cf1b6da",
+    "name": "",
+    "authType": "",
+    "headers": [],
+    "insecureHTTPParser": false,
+    "method": "POST",
+    "paytoqs": "ignore",
+    "persist": false,
+    "proxy": "",
+    "ret": "txt",
+    "senderr": false,
+    "tls": "",
+    "url": "",
+    "x": 705,
+    "y": 460,
+    "wires": [
+      [
+        "93e2dc7046e5e632"
+      ]
+    ]
+  },
+  {
+    "id": "4ffadfd733f4e2e1",
+    "type": "http request",
+    "z": "97150c8924aea14a",
+    "g": "b66e9d9242941915",
+    "name": "",
+    "authType": "",
+    "headers": [],
+    "insecureHTTPParser": false,
+    "method": "POST",
+    "paytoqs": "ignore",
+    "persist": false,
+    "proxy": "",
+    "ret": "txt",
+    "senderr": false,
+    "tls": "",
+    "url": "",
+    "x": 645,
+    "y": 160,
+    "wires": [
+      [
+        "2fc48caacc6725fb"
+      ]
+    ]
+  },
+  {
+    "id": "6141e4c5a66732d4",
+    "type": "group",
+    "z": "97150c8924aea14a",
+    "name": "PUREFLOOR TEST - TEST",
+    "h": 82,
+    "nodes": [
+      "e8f078fc42c6c0f5",
+      "204df135d78c5b2c",
+      "b2a906dbafbf1421",
+      "26c5b8dffba8918d"
+    ],
+    "style": {
+      "fill": "#d1d1d1",
+      "label": true,
+      "color": "#000000"
+    },
+    "w": 972,
+    "x": 54,
+    "y": 739
+  },
+  {
+    "id": "6482acc980ea8f8c",
+    "type": "function",
+    "z": "97150c8924aea14a",
+    "g": "25e11e9897c49459",
+    "name": "Request",
+    "finalize": "",
+    "func": "msg.url = `http://dpn-svr-iot.rah.polipol.intra/api/homag/etl/results/cleanup/`\nmsg.requestTimeout = 30000;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 340,
+    "y": 940,
+    "wires": [
+      [
+        "c23d4f46d57e8d03"
+      ]
+    ]
+  },
+  {
+    "id": "67054f9906be2066",
+    "type": "delay",
+    "z": "97150c8924aea14a",
+    "g": "2d1188fa34e03874",
+    "name": "1 msg/30sec",
+    "allowrate": false,
+    "drop": false,
+    "nbRateUnits": "29",
+    "outputs": 1,
+    "pauseType": "rate",
+    "randomFirst": "1",
+    "randomLast": "5",
+    "randomUnits": "seconds",
+    "rate": "1",
+    "rateUnits": "second",
+    "timeout": "5",
+    "timeoutUnits": "seconds",
+    "x": 450,
+    "y": 360,
+    "wires": [
+      [
+        "12e020cdc4138a1b"
+      ]
+    ]
+  },
+  {
+    "id": "7f5b2deaf39d42ec",
+    "type": "group",
+    "z": "97150c8924aea14a",
+    "name": "PUREFLOOR PROD - PROD",
+    "h": 82,
+    "nodes": [
+      "840bfa74df69894c",
+      "c3bf8f2a834b171d",
+      "a558b71cca0e9de2",
+      "f4436551c587cd16"
+    ],
+    "style": {
+      "fill": "#d1d1d1",
+      "label": true,
+      "color": "#000000"
+    },
+    "w": 852,
+    "x": 54,
+    "y": 639
+  },
+  {
+    "id": "833049091ef63988",
+    "type": "delay",
+    "z": "97150c8924aea14a",
+    "g": "b66e9d9242941915",
+    "name": "1 msg/1sec",
+    "allowrate": false,
+    "drop": false,
+    "nbRateUnits": "1",
+    "outputs": 1,
+    "pauseType": "rate",
+    "randomFirst": "1",
+    "randomLast": "5",
+    "randomUnits": "seconds",
+    "rate": "1",
+    "rateUnits": "second",
+    "timeout": "5",
+    "timeoutUnits": "seconds",
+    "x": 445,
+    "y": 160,
+    "wires": [
+      [
+        "4ffadfd733f4e2e1"
+      ]
+    ]
+  },
+  {
+    "id": "840bfa74df69894c",
+    "type": "function",
+    "z": "97150c8924aea14a",
+    "g": "7f5b2deaf39d42ec",
+    "name": "Request",
+    "finalize": "",
+    "func": "msg.url = `http://dpn-svr-iot.rah.polipol.intra/api/etl/purefloor/production-log`\nmsg.payload = {\n    \"taskGroupId\": \"purefloor-production-log\",\n    \"target\": \"prod\",\n    \"timeout\": 60,\n    \"cacheExpiration\": 3600,\n    \"truncate\": false\n}\nmsg.requestTimeout = 10000;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 420,
+    "y": 680,
+    "wires": [
+      [
+        "c3bf8f2a834b171d"
+      ]
+    ]
+  },
+  {
+    "id": "8ae1cfc97c3fa63e",
+    "type": "function",
+    "z": "97150c8924aea14a",
+    "g": "2d1188fa34e03874",
+    "name": "factory",
+    "finalize": "",
+    "func": "//$PROMPT: Create a flow that is executing each minute a http post requests to the endpoint /api/homag/etl/mmr/states/{machine_id} for each of the following machine_id values:  0201011773  0201011764  0201011164  0201210141  0201210129  0201042272  0201051374  0250885332  0201848822  0201848824  0201848866  0201771939  0201771966  0201771967  0201738382  0201772486  0201772497  0201772498\nmsg.factory = [\n    '2000',\n    '3000',\n    '4000',\n    '5000',\n    '6000'\n]\n\nreturn msg",
+    "initialize": "",
+    "libs": [
+      {
+        "var": "axios",
+        "module": "axios"
+      }
+    ],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 690,
+    "y": 280,
+    "wires": [
+      [
+        "991f923859f95b80"
+      ]
+    ]
+  },
+  {
+    "id": "8fddf5a1b4bc89a7",
+    "type": "inject",
+    "z": "97150c8924aea14a",
+    "g": "25e11e9897c49459",
+    "name": "each 1 hour",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 0.1,
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "3600",
+    "topic": "",
+    "x": 170,
+    "y": 940,
+    "wires": [
+      [
+        "6482acc980ea8f8c"
+      ]
+    ]
+  },
+  {
+    "id": "91909e60352035b6",
+    "type": "split",
+    "z": "97150c8924aea14a",
+    "g": "2d1188fa34e03874",
+    "name": "split tables",
+    "addname": "",
+    "arraySplt": 1,
+    "arraySpltType": "len",
+    "property": "table",
+    "splt": "\\n",
+    "spltType": "str",
+    "stream": false,
+    "x": 530,
+    "y": 280,
+    "wires": [
+      [
+        "8ae1cfc97c3fa63e"
+      ]
+    ]
+  },
+  {
+    "id": "93e2dc7046e5e632",
+    "type": "debug",
+    "z": "97150c8924aea14a",
+    "g": "a294e6f42cf1b6da",
+    "name": "debug 10",
+    "active": false,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 915,
+    "y": 460,
+    "wires": []
+  },
+  {
+    "id": "991f923859f95b80",
+    "type": "split",
+    "z": "97150c8924aea14a",
+    "g": "2d1188fa34e03874",
+    "name": "split factories",
+    "addname": "",
+    "arraySplt": 1,
+    "arraySpltType": "len",
+    "property": "factory",
+    "splt": "\\n",
+    "spltType": "str",
+    "stream": false,
+    "x": 870,
+    "y": 280,
+    "wires": [
+      [
+        "0e87dc48c37b6d28"
+      ]
+    ]
+  },
+  {
+    "id": "a237147fd3e0dc0e",
+    "type": "function",
+    "z": "97150c8924aea14a",
+    "g": "f59655af58b642be",
+    "name": "Request",
+    "finalize": "",
+    "func": "msg.url = `http://dpn-svr-iot.rah.polipol.intra/test/api/etl/homag/woodbase`\nmsg.payload = {\n    taskGroupId: `homag-woodbase-${msg.table}-${msg.factory}`,\n    target: \"test\",\n    timeout: 3600,\n    cacheExpiration: 3600,\n    table: msg.table,\n    siteId: msg.factory\n}\nmsg.requestTimeout = 10000;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 535,
+    "y": 560,
+    "wires": [
+      [
+        "29184ca1f2da93eb"
+      ]
+    ]
+  },
+  {
+    "id": "a294e6f42cf1b6da",
+    "type": "group",
+    "z": "97150c8924aea14a",
+    "name": "Woodbase Single Table",
+    "h": 82,
+    "nodes": [
+      "2c31a3385009d738",
+      "b043077fedff3637",
+      "d58c1575c6e110ef",
+      "48f71abb0397a318",
+      "93e2dc7046e5e632"
+    ],
+    "style": {
+      "fill": "#d1d1d1",
+      "label": true,
+      "color": "#000000"
+    },
+    "w": 972,
+    "x": 49,
+    "y": 419
+  },
+  {
+    "id": "a558b71cca0e9de2",
+    "type": "debug",
+    "z": "97150c8924aea14a",
+    "g": "7f5b2deaf39d42ec",
+    "name": "debug 12",
+    "active": false,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 800,
+    "y": 680,
+    "wires": []
+  },
+  {
+    "id": "a5fcc79df1498b56",
+    "type": "function",
+    "z": "97150c8924aea14a",
+    "g": "b66e9d9242941915",
+    "name": "machineIds",
+    "finalize": "",
+    "func": "// all machine ids\nmsg.machineId = [\n    '0201011773', '0201011764', '0201011164', '0201210141', '0201210129',\n    '0201042272', '0201051374', '0250885332', '0201848822', '0201848824',\n    '0201848866', '0201771939', '0201771966', '0201771967', '0201738382',\n    '0201772486', '0201772497', '0201772498', '0201772485', '0201772500',\n    '0201736163', '0201736164', '0201737061', '0201051543',\n    '0201051791', '0201051877', '0201771968', '0201042324',\n    '0201042330', '0201042328', '0201042326', '0201210111', '0201210114',\n    '0201212685'\n]\n// old machines W5000: 0201011846, 0201011847\nreturn msg",
+    "initialize": "",
+    "libs": [
+      {
+        "var": "axios",
+        "module": "axios"
+      }
+    ],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 385,
+    "y": 80,
+    "wires": [
+      [
+        "0ed67e3446603902"
+      ]
+    ]
+  },
+  {
+    "id": "b043077fedff3637",
+    "type": "function",
+    "z": "97150c8924aea14a",
+    "g": "a294e6f42cf1b6da",
+    "name": "table + factory",
+    "finalize": "",
+    "func": "// msg.table = [\n//     'order', 'nesting_result'\n// ]\nmsg.table = 'nesting_result'\nmsg.factory = '3000'\n\nreturn msg",
+    "initialize": "",
+    "libs": [
+      {
+        "var": "axios",
+        "module": "axios"
+      }
+    ],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 355,
+    "y": 460,
+    "wires": [
+      [
+        "d58c1575c6e110ef"
+      ]
+    ]
+  },
+  {
+    "id": "b2a906dbafbf1421",
+    "type": "http request",
+    "z": "97150c8924aea14a",
+    "g": "6141e4c5a66732d4",
+    "name": "",
+    "authType": "",
+    "headers": [],
+    "insecureHTTPParser": false,
+    "method": "POST",
+    "paytoqs": "ignore",
+    "persist": false,
+    "proxy": "",
+    "ret": "txt",
+    "senderr": false,
+    "tls": "",
+    "url": "",
+    "x": 710,
+    "y": 780,
+    "wires": [
+      [
+        "26c5b8dffba8918d"
+      ]
+    ]
+  },
+  {
+    "id": "b66e9d9242941915",
+    "type": "group",
+    "z": "97150c8924aea14a",
+    "name": "MMR",
+    "h": 162,
+    "nodes": [
+      "467f1847f00fc51a",
+      "a5fcc79df1498b56",
+      "0ed67e3446603902",
+      "feea8c26aef2e2f8",
+      "239549ee4ad8ee9e",
+      "1a9a33df154d714c",
+      "4ffadfd733f4e2e1",
+      "2fc48caacc6725fb",
+      "833049091ef63988"
+    ],
+    "style": {
+      "fill": "#d1d1d1",
+      "label": true,
+      "fill-opacity": "0.5",
+      "color": "#000000"
+    },
+    "w": 912,
+    "x": 49,
+    "y": 39
+  },
+  {
+    "id": "c23d4f46d57e8d03",
+    "type": "http request",
+    "z": "97150c8924aea14a",
+    "g": "25e11e9897c49459",
+    "name": "",
+    "authType": "",
+    "headers": [],
+    "insecureHTTPParser": false,
+    "method": "GET",
+    "paytoqs": "ignore",
+    "persist": false,
+    "proxy": "",
+    "ret": "txt",
+    "senderr": false,
+    "tls": "",
+    "url": "",
+    "x": 530,
+    "y": 940,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "c3bf8f2a834b171d",
+    "type": "http request",
+    "z": "97150c8924aea14a",
+    "g": "7f5b2deaf39d42ec",
+    "name": "",
+    "authType": "",
+    "headers": [],
+    "insecureHTTPParser": false,
+    "method": "POST",
+    "paytoqs": "ignore",
+    "persist": false,
+    "proxy": "",
+    "ret": "txt",
+    "senderr": false,
+    "tls": "",
+    "url": "",
+    "x": 590,
+    "y": 680,
+    "wires": [
+      [
+        "a558b71cca0e9de2"
+      ]
+    ]
+  },
+  {
+    "id": "cb19686ddd6ba8cb",
+    "type": "debug",
+    "z": "97150c8924aea14a",
+    "g": "f59655af58b642be",
+    "name": "debug 8",
+    "active": false,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 915,
+    "y": 560,
+    "wires": []
+  },
+  {
+    "id": "d25b9bc66289c9b7",
+    "type": "debug",
+    "z": "97150c8924aea14a",
+    "g": "2d1188fa34e03874",
+    "name": "debug 20",
+    "active": false,
+    "complete": "false",
+    "console": false,
+    "statusType": "auto",
+    "statusVal": "",
+    "tosidebar": true,
+    "tostatus": false,
+    "x": 860,
+    "y": 360,
+    "wires": []
+  },
+  {
+    "id": "d58c1575c6e110ef",
+    "type": "function",
+    "z": "97150c8924aea14a",
+    "g": "a294e6f42cf1b6da",
+    "name": "Request",
+    "finalize": "",
+    "func": "msg.url = `http://dpn-svr-iot.rah.polipol.intra/api/etl/homag/woodbase`\nmsg.payload = {\n    taskGroupId: `homag-woodbase-${msg.table}-${msg.factory}`,\n    target: \"prod\",\n    timeout: 3600,\n    cacheExpiration: 3600,\n    table: msg.table,\n    siteId: msg.factory\n}\nmsg.requestTimeout = 10000;\nreturn msg;",
+    "initialize": "",
+    "libs": [],
+    "noerr": 0,
+    "outputs": 1,
+    "timeout": 0,
+    "x": 535,
+    "y": 460,
+    "wires": [
+      [
+        "48f71abb0397a318"
+      ]
+    ]
+  },
+  {
+    "id": "e8f078fc42c6c0f5",
+    "type": "inject",
+    "z": "97150c8924aea14a",
+    "g": "6141e4c5a66732d4",
+    "name": "trigger",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "topic": "",
+    "x": 150,
+    "y": 780,
+    "wires": [
+      [
+        "204df135d78c5b2c"
+      ]
+    ]
+  },
+  {
     "id": "ef7e6d81b26f30bb",
     "type": "link out",
-    "z": "8b5984e1b49029d7",
+    "z": "97150c8924aea14a",
     "g": "2d1188fa34e03874",
     "name": "link out 2",
     "links": [
       "267dd7c943a61037"
     ],
     "mode": "link",
-    "x": 1170,
+    "x": 1185,
     "y": 280,
     "wires": []
   },
   {
+    "id": "f4436551c587cd16",
+    "type": "inject",
+    "z": "97150c8924aea14a",
+    "g": "7f5b2deaf39d42ec",
+    "name": "each 2 minutes",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 0.1,
+    "props": [
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "60",
+    "topic": "",
+    "x": 180,
+    "y": 680,
+    "wires": [
+      [
+        "840bfa74df69894c"
+      ]
+    ]
+  },
+  {
+    "id": "f59655af58b642be",
+    "type": "group",
+    "z": "97150c8924aea14a",
+    "name": "Woodbase Single Table TEST - TEST",
+    "h": 82,
+    "nodes": [
+      "15ec288527e90b20",
+      "3ed9124b875f3115",
+      "a237147fd3e0dc0e",
+      "29184ca1f2da93eb",
+      "cb19686ddd6ba8cb"
+    ],
+    "style": {
+      "fill": "#d1d1d1",
+      "label": true,
+      "color": "#000000"
+    },
+    "w": 972,
+    "x": 49,
+    "y": 519
+  },
+  {
     "id": "feea8c26aef2e2f8",
     "type": "function",
-    "z": "8b5984e1b49029d7",
+    "z": "97150c8924aea14a",
     "g": "b66e9d9242941915",
     "name": "Request",
     "finalize": "",
@@ -11330,7 +11692,7 @@
     "noerr": 0,
     "outputs": 1,
     "timeout": 0,
-    "x": 740,
+    "x": 755,
     "y": 80,
     "wires": [
       [
