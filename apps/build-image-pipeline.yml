@@ -69,7 +69,7 @@ include:
     job_name: build:buildah:gor-prod
     dockerfile: apps/gor-prod/Dockerfile
     image_name: dap-node-red/gor-prod
-    image_tag: 4.0.5-2
+    image_tag: 4.0.5-3
     enable_layers_cache: false
 - component: $CI_SERVER_FQDN/infrastructure/ci-cd-catalog/cosign/cosign-sign@~latest
   inputs:
@@ -82,7 +82,7 @@ include:
     job_name: build:buildah:gor-test
     dockerfile: apps/gor-test/Dockerfile
     image_name: dap-node-red/gor-test
-    image_tag: 4.0.5-2
+    image_tag: 4.0.5-3
     enable_layers_cache: false
 - component: $CI_SERVER_FQDN/infrastructure/ci-cd-catalog/cosign/cosign-sign@~latest
   inputs:
@@ -323,7 +323,7 @@ build:buildah:gor-prod:
     - apps/gor-prod/Dockerfile
 sign:cosign:gor-prod:
   variables:
-    IMAGE_TAG: 4.0.5-2
+    IMAGE_TAG: 4.0.5-3
   needs:
   - job: build:buildah:gor-prod
   rules:
@@ -340,7 +340,7 @@ build:buildah:gor-test:
     - apps/gor-test/Dockerfile
 sign:cosign:gor-test:
   variables:
-    IMAGE_TAG: 4.0.5-2
+    IMAGE_TAG: 4.0.5-3
   needs:
   - job: build:buildah:gor-test
   rules:

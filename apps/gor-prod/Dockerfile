@@ -16,6 +16,12 @@ FROM docker.io/nodered/node-red:4.0.5
 # The path is repo-root relative because the buildah component builds with the
 # repository as the context and passes only --file. Build it by hand the same
 # way: docker build -f apps/gor-prod/Dockerfile .
+#
+# The last line loads what the OPC UA nodes load. Node 20.18.0 in this base
+# cannot require() an ES module, and an unpinned node-opcua-client pulls one
+# in (hexy 0.4.0) — the image then builds clean and the nodes fail only at
+# start. Failing here keeps such an image out of Harbor. See "node-opcua-client
+# is pinned on the 4.0.5 apps" in docs/architecture.md.
 COPY --chown=node-red:node-red apps/gor-prod/package.json /tmp/palette.json
 RUN set -eu; \
     modules="$(node -p 'Object.entries(require("/tmp/palette.json").dependencies||{}).map(([n,v])=>n+"@"+v).join(" ")')"; \
@@ -24,4 +30,5 @@ RUN set -eu; \
     else \
         echo "no palette modules for this app"; \
     fi; \
-    rm /tmp/palette.json
+    rm /tmp/palette.json; \
+    node -e 'require("node-opcua-client-crawler")' >/dev/null

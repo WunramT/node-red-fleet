@@ -190,7 +190,9 @@ That also explains group 3 in the settings.js comparison: `wag`'s file carries `
 [warn] [node-red-contrib-opcua/OpcUa-Client] Error [ERR_REQUIRE_ESM]: require() of ES Module .../hexy/hexy.js ...
 ```
 
-Pinning `node-opcua-client` to the 2.160.0 that `node-opcua` itself uses satisfies the crawler's range with the tree that is already there, and `hexy` stays on 0.3.5. The 4.0.9 images run Node 20.19.0, which loads ES modules through `require()`, so they need no pin. Drop it when the 4.0.5 apps move to a newer Node-RED — or when `node-red-contrib-opcua` raises its `node-opcua` pin, raise this one with it.
+Pinning `node-opcua-client` to the 2.160.0 that `node-opcua` itself uses satisfies the crawler's range with the tree that is already there, and `hexy` stays on 0.3.5. The 4.0.9 images run Node 20.19.0, which loads ES modules through `require()`, so they need no pin.
+
+Both Dockerfiles end the palette install by loading `node-opcua-client-crawler`. Without the pin that fails with the same `ERR_REQUIRE_ESM`, so the build stops instead of pushing an image whose OPC UA nodes only fail at start — which is how `gor-prod` and `gor-test:4.0.5-2` reached Harbor: built before the pin existed, and the later pin landed under the same tag. Drop it when the 4.0.5 apps move to a newer Node-RED — or when `node-red-contrib-opcua` raises its `node-opcua` pin, raise this one with it.
 
 ## Empty instances
 
