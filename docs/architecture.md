@@ -174,6 +174,16 @@ Pinning (decision 5) is therefore not one tag for everything. Pin each instance 
 
 That also explains group 3 in the settings.js comparison: `wag`'s file carries `telemetry` and `globalFunctionTimeout` blocks because 5.0.1 generated it, not because anyone edited it.
 
+### `node-opcua-client` is pinned on the 4.0.5 apps
+
+`gor-prod` and `gor-test` carry `node-opcua-client` in their palette although no flow uses it directly. `node-red-contrib-opcua` pins `node-opcua` 2.160.0 but also depends on `node-opcua-client-crawler`, which asks for `node-opcua-client >=2.124.0` with no upper bound. A fresh build therefore resolves the newest `node-opcua-client`, whose `node-opcua-debug` requires `hexy` 0.4.0 — ESM only. The 4.0.5 base image runs Node 20.18.0, which cannot `require()` an ES module, so the OPC UA nodes fail to load:
+
+```
+[warn] [node-red-contrib-opcua/OpcUa-Client] Error [ERR_REQUIRE_ESM]: require() of ES Module .../hexy/hexy.js ...
+```
+
+Pinning `node-opcua-client` to the 2.160.0 that `node-opcua` itself uses satisfies the crawler's range with the tree that is already there, and `hexy` stays on 0.3.5. The 4.0.9 images run Node 20.19.0, which loads ES modules through `require()`, so they need no pin. Drop it when the 4.0.5 apps move to a newer Node-RED — or when `node-red-contrib-opcua` raises its `node-opcua` pin, raise this one with it.
+
 ## Empty instances
 
 `slu-prod` and `slu-test` hold no flow at all — no `flows.json`, no `flows_cred.json`, `/data` untouched since July 2025. They are **running**, with `adminAuth` on and answering `401`; they are not stopped, they are empty. Starting them changes nothing, because there is nothing in them to start.

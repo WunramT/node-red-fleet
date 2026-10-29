@@ -56,7 +56,7 @@ instances:
     auth_credential_id: nodered-gor-prod-auth
     credential_secret_id: nodered-gor-prod-credsecret
     dns_search: []
-    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/gor-prod:4.0.5-1  # running node-red 4.0.5, 94 nodes, 7 palette modules
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/gor-prod:4.0.5-2  # running node-red 4.0.5, 94 nodes, 7 palette modules
     variables: {}
 
   - name: gor-test
@@ -68,7 +68,7 @@ instances:
     auth_credential_id: nodered-gor-test-auth
     credential_secret_id: nodered-gor-test-credsecret
     dns_search: []
-    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/gor-test:4.0.5-1  # running node-red 4.0.5, 132 nodes, 2 palette modules
+    image_tag: harbor.aks-infra.polipol-service.de/dap-node-red/gor-test:4.0.5-2  # running node-red 4.0.5, 132 nodes, 2 palette modules
     variables: {}
 
   # --- jan-svr-lin01 --------------------------------------------------------
