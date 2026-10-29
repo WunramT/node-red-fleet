@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@martip/node-red-xlsx": "~1.0.2",
+    "node-opcua-client": "2.160.0",
     "node-red-contrib-mssql-plus": "~0.12.2",
     "node-red-contrib-opcua": "~0.2.339",
     "node-red-contrib-postgresql": "~0.14.2",

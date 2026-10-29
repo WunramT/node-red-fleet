@@ -3,6 +3,7 @@
   "description": "Palette for gor-test",
   "private": true,
   "dependencies": {
+    "node-opcua-client": "2.160.0",
     "node-red-contrib-opcua": "~0.2.348",
     "node-red-contrib-postgresql": "~0.14.2",
     "node-red-contrib-queue-gate": "1.5.5"
